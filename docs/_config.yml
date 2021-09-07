@@ -4,6 +4,6 @@ description: Todo todo todo todo todo todo todooooo
 baseurl: ''
 url: 'https://somsouk.xyz'
 github_username: JeremySomsouk
-theme: jekyll-theme-merlot
+theme: jekyll-theme-slate
 plugins:
   - jekyll-feed
