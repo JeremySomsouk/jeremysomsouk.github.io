@@ -60,7 +60,7 @@ content:
         sub_title: Software engineer
         caption: September 2020 - Present
         description: |
-          Developing within a team of 4 back-end developers for the piloting of the bus technical product of BlaBlaCar.
+          Development within a team of 4 back-end developers for the development of the technical bus platform of BlaBlaCar.
           - Working with international teams
           - Onboarding of new team members
           - Learning how to apply agile methods in a larger organization
@@ -70,7 +70,7 @@ content:
         sub_title: Software engineer
         caption: April 2020 - August 2020
         description: |
-          Developing within a team of 2 back-end developers, for the creation of an invoicing management system for ManoMano auto-entrepreneurs.
+          Developing within a team of 2 back-end developers for the creation of an invoicing management system for ManoMano auto-entrepreneurs.
           - Leading the migration of a PHP component to a brand new Java Spring boot application
       - layout: left
         title: Happn
