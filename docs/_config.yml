@@ -1,9 +1,117 @@
-title: Jeremy Somsouk
-email: jh.somsouk@gmail.com
-description: Todo todo todo todo todo todo todooooo
-baseurl: ''
-url: 'https://somsouk.xyz'
-github_username: JeremySomsouk
-theme: jekyll-theme-slate
-plugins:
-  - jekyll-feed
+# Site
+repository: sproogen/resume-theme
+favicon: images/favicon.ico
+
+# Content configuration version
+version: 2
+
+# Personal info
+name: Jeremy Somsouk
+title: Software engineer @ BlaBlaCar
+email: jsomsouk@protonmail.com
+#website: https://github.com/JeremySomsouk
+
+# Dark Mode (true/false/never)
+darkmode: true
+
+# Social links
+github_username:  JeremySomsouk
+linkedin_username: jeremy-somsouk-dev
+# stackoverflow_username: "00000001"
+# dribbble_username: jekyll
+# facebook_username: jekyll
+# flickr_username: jekyll
+# instagram_username: jekyll
+# xing_username: jekyll
+# pinterest_username: jekyll
+# youtube_username: jekyll
+# googleplus_username: +jekyll
+# orcid_username: 0000-0000-0000-0000
+
+# Additional icon links
+additional_links:
+- title: You're never gonna believe me
+  icon: fas fa-globe
+  url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+# Google Analytics and Tag Manager
+# Using more than one of these may cause issues with reporting
+# gtm: "GTM-0000000"
+# gtag: "UA-00000000-0"
+# google_analytics: "UA-00000000-0"
+
+# About section
+about_profile_image: images/profile.jpeg
+about_content: |
+  Hi, my name's Jeremy and I'm a software engineer currently working at BlaBlaCar. I have worked for several companies gaining teamwork, hard skills but but above all soft skills to lead projects from the ground up.
+
+  I am most skilled in: <mark>Java</mark> and making <mark>phở</mark>
+
+  And I am still learning how to be a <mark>great dad</mark> and that kind of leave me sleepless sometimes, but that is worth all the riches of the world.
+
+# Main content section
+content:
+  - title: Experience
+    layout: list
+    content:
+      - layout: left
+        title: BlaBlaCar
+        link: blablacar.com
+        sub_title: Software engineer
+        caption: September 2020 - Present
+        description: |
+          Developing within a team of 4 back-end developers for the piloting of the bus technical product of BlaBlaCar.
+          - Working with international teams
+          - Onboarding of new team members
+          - Learning how to apply agile methods in a larger organization
+      - layout: left
+        title: ManoMano
+        link: manomano.com
+        sub_title: Software engineer
+        caption: April 2020 - August 2020
+        description: |
+          Developing within a team of 2 back-end developers, for the creation of an invoicing management system for ManoMano auto-entrepreneurs.
+          - Leading the migration of a PHP component to a brand new Java Spring boot application
+      - layout: left
+        title: Happn
+        link: happn.com
+        sub_title: Software engineer
+        caption: december 2017 - february 2020
+        description: |
+          Developing within a team of 13 back-end developers for the maintenance of the happn API and the creation of new Java microservices.
+          - Leading the specifications and design of new features
+          - Improvements and maintenance of Java back-end microservices
+          - Creation of a microservice of data storage for CRM purposes
+  - title: Education
+    layout: list
+    content:
+      - layout: left
+        title: EPITA
+        caption: 2012 - 2017
+        sub_title: Systems, Networks and Security Engineer diploma
+        #quote: >
+        #  "Created 30 years ago, the EPITA computer intelligence engineering school trains those who design, develop and advance information technologies."
+        description: |
+          During my time at EPITA I learned the most teamwork and rigor which I try to carry on in my career. I thoroughly enjoyed my time at this school and learned how to learn fast new technologies and becoming an all around engineer.
+
+  - title: A Little More About Me
+    layout: text
+    content: |
+      Alongside my interests in software engineering some of my other interests and hobbies are:
+      - Gaming
+      - Photography
+      - [Chess](https://www.chess.com/member/ichirow)
+
+# Footer
+footer_show_references: false
+# references_title: References on request (Override references text)
+
+# Build settings
+remote_theme: sproogen/resume-theme
+
+sass:
+  sass_dir: _sass
+  style: compressed
+
+#plugins:
+# - jekyll-seo-tag
