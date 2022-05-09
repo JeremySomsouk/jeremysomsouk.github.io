@@ -7,8 +7,8 @@ version: 2
 
 # Personal info
 name: Jeremy Somsouk
-title: Software engineer @ BlaBlaCar
-email: jsomsouk@protonmail.com
+title: Software engineer @ Streamroot Lumen
+email: jsomsouk@proton.me
 #website: https://github.com/JeremySomsouk
 
 # Dark Mode (true/false/never)
@@ -43,7 +43,7 @@ additional_links:
 # About section
 about_profile_image: images/profile.jpeg
 about_content: |
-  Hi, my name's Jeremy and I'm a software engineer currently working at BlaBlaCar. I have worked for several companies gaining teamwork and hard skills but above all, soft skills to lead projects from the ground up.
+  Hi, my name's Jeremy and I'm a software engineer currently working at Streamroot. I have worked for several companies gaining teamwork and hard skills but above all, soft skills to lead projects from the ground up.
 
   I am most skilled in: <mark>Java</mark> and making <mark>phở</mark>
 
@@ -55,28 +55,29 @@ content:
     layout: list
     content:
       - layout: left
+        title: Streamroot Lumen
+        link: https://streamroot.io/
+        sub_title: Software engineer
+        caption: 2022 - Ongoing
+        description: |
+          Making data services safer and easier to develop.
+          - Migration of Google cloud data instances from one project to another
+          - Addition of CI/CD pipelines for the data projects
+      - layout: left
         title: BlaBlaCar
         link: blablacar.com
         sub_title: Software engineer
-        caption: September 2020 - Present
+        caption: 2020 - 2022
         description: |
           Development within a team of 4 back-end developers for the development of the technical bus platform of BlaBlaCar.
           - Working with international teams : Ukrainian, Russian and Brazilian
           - Onboarding of new team members
           - Learning how to apply agile methods in a larger organization
       - layout: left
-        title: ManoMano
-        link: manomano.com
-        sub_title: Software engineer
-        caption: April 2020 - August 2020
-        description: |
-          Developing within a team of 2 back-end developers for the creation of an invoicing management system for ManoMano auto-entrepreneurs.
-          - Leading the migration of a PHP component to a brand new Java Spring boot application
-      - layout: left
         title: Happn
         link: happn.com
         sub_title: Software engineer
-        caption: december 2017 - february 2020
+        caption: 2017 - 2020
         description: |
           Developing within a team of 13 back-end developers for the maintenance of the happn API and the creation of new Java microservices.
           - Leading the specifications and design of new features
