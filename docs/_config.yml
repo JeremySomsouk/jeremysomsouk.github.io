@@ -7,7 +7,7 @@ version: 2
 
 # Personal info
 name: Jeremy Somsouk
-title: Software engineer @ Streamroot Lumen
+title: Software engineer
 email: jsomsouk@proton.me
 #website: https://github.com/JeremySomsouk
 
@@ -58,7 +58,7 @@ content:
         title: Streamroot Lumen
         link: streamroot.io
         sub_title: Software engineer
-        caption: 2022 - Ongoing
+        caption: 2022
         description: |
           Making data services safer and easier to develop.
           - Migration of Google cloud data instances from one project to another
@@ -103,7 +103,7 @@ content:
       Alongside my interests in software engineering some of my other interests and hobbies are:
       - Gaming
       - Photography
-      - [Chess](https://www.chess.com/member/ichirow)
+      - Chess
 
 # Footer
 footer_show_references: false
