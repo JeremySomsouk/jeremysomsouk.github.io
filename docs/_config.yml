@@ -8,7 +8,7 @@ version: 2
 # Personal info
 name: Jeremy Somsouk
 title: Software engineer
-email: jsomsouk@proton.me
+email: jeremy@somsouk.fr
 #website: https://github.com/JeremySomsouk
 
 # Dark Mode (true/false/never)
@@ -43,7 +43,7 @@ additional_links:
 # About section
 about_profile_image: images/profile.jpeg
 about_content: |
-  Hi, my name's Jeremy and I'm a software engineer currently working at Streamroot. I have worked for several companies gaining teamwork and hard skills but above all, soft skills to lead projects from the ground up.
+  Hi, my name's Jeremy and I'm a software engineer. I have worked for several companies gaining teamwork and hard skills but above all, soft skills to lead projects from the ground up.
 
   I am most skilled in: <mark>Java</mark> and making <mark>phở</mark>
 
