@@ -61,10 +61,10 @@ content:
         caption: 2020 - 2023
         description: |
           Development within several teams of back-end developers for the development of the BlaBlaCar bus and carpooling inventory technical platform.
-          – Migration of route search for different partners
-          – Added discount display for bus trip details
-          – Integration of the Zendesk application with our own APIs
-          – Migration and improvement of PHP code bases to Java
+            – Migration of route search for different partners
+            – Added discount display for bus trip details
+            – Integration of the Zendesk application with our own APIs
+            – Migration and improvement of PHP code bases to Java
       - layout: left
         title: Streamroot Lumen
         link: streamroot.io
