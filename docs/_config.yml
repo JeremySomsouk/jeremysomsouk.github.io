@@ -55,6 +55,17 @@ content:
     layout: list
     content:
       - layout: left
+        title: BlaBlaCar
+        link: blablacar.com
+        sub_title: Software engineer
+        caption: 2020 - 2023
+        description: |
+          Development within several teams of back-end developers for the development of the BlaBlaCar bus and carpooling inventory technical platform.
+          – Migration of route search for different partners
+          – Added discount display for bus trip details
+          – Integration of the Zendesk application with our own APIs
+          – Migration and improvement of PHP code bases to Java
+      - layout: left
         title: Streamroot Lumen
         link: streamroot.io
         sub_title: Software engineer
@@ -63,16 +74,6 @@ content:
           Making data services safer and easier to develop.
           - Migration of Google cloud data instances from one project to another
           - Addition of CI/CD pipelines for the data projects
-      - layout: left
-        title: BlaBlaCar
-        link: blablacar.com
-        sub_title: Software engineer
-        caption: 2020 - 2022
-        description: |
-          Development within a team of 4 back-end developers for the development of the technical bus platform of BlaBlaCar.
-          - Working with international teams : Ukrainian, Russian and Brazilian
-          - Onboarding of new team members
-          - Learning how to apply agile methods in a larger organization
       - layout: left
         title: Happn
         link: happn.com
