@@ -55,6 +55,13 @@ content:
     layout: list
     content:
       - layout: left
+        title: Doctolib
+        link: doctolib.fr
+        sub_title: Software engineer
+        caption: 2026 - Present
+        description: |
+          Development of healthcare software solutions, working on the patient health platform.
+      - layout: left
         title: BlaBlaCar
         link: blablacar.com
         sub_title: Software engineer
