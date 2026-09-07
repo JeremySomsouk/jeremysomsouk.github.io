@@ -3,3 +3,84 @@
 ---
 
 @import 'modern-resume-theme';
+
+$js-ink: #0b0826;
+$js-deep: #1c1058;
+$js-purple: #5624f2;
+$js-violet: #9864fa;
+$js-lilac: #d0a9fa;
+$js-text: #f3efff;
+$js-muted: #c9c2df;
+
+.dark {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(86, 36, 242, 0.16), transparent 34rem),
+    radial-gradient(circle at 88% 18%, rgba(152, 100, 250, 0.10), transparent 28rem),
+    $js-ink;
+  color: $js-text;
+
+  a {
+    color: $js-violet;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: $js-lilac;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: $js-lilac;
+  }
+
+  .layout .details h4,
+  .layout .details h4 a {
+    color: $js-violet;
+  }
+
+  .header-container h1 {
+    color: $js-text;
+    text-shadow: 0 0 28px rgba(86, 36, 242, 0.28);
+  }
+
+  .header-container h2,
+  .header-right,
+  .footer-container,
+  p,
+  li {
+    color: $js-muted;
+  }
+
+  .contact a {
+    color: $js-violet;
+  }
+
+  .contact a:hover {
+    color: $js-lilac;
+  }
+
+  mark {
+    color: $js-ink;
+    background: linear-gradient(135deg, $js-lilac, $js-violet);
+    border-radius: 0.25rem;
+    padding: 0.05em 0.3em;
+  }
+
+  .border-weak {
+    border-bottom-color: rgba(152, 100, 250, 0.32);
+  }
+
+  .profile-img {
+    box-shadow:
+      0 0 0 2px rgba(152, 100, 250, 0.65),
+      0 0 28px rgba(86, 36, 242, 0.28);
+  }
+}
+
+@media print {
+  .dark {
+    background: #fff;
+    color: #222;
+  }
+}
