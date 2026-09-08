@@ -104,7 +104,7 @@ try {
   restart.disabled = false;
 } catch (error) {
   status.textContent = 'Le jeu n’a pas pu se charger. Recharge la page pour réessayer.';
-  console.error('Chargement du Memory impossible', error);
+  console.error('Failed to load Memory', error);
 } finally {
   board.setAttribute('aria-busy', 'false');
 }

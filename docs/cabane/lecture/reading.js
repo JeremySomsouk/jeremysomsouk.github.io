@@ -135,7 +135,7 @@ try {
     const notice = document.querySelector('#schedule-warning');
     notice.textContent = 'Le texte prévu n’a pas pu être sélectionné. Choisis ton texte dans la liste.';
     notice.hidden = false;
-    console.error('Chargement du planning impossible', error);
+    console.error('Failed to load reading schedule', error);
   }
   choice.disabled = false;
   start.disabled = false;
@@ -143,5 +143,5 @@ try {
 } catch (error) {
   document.querySelector('#poem-title').textContent = 'Les textes ne sont pas disponibles.';
   status.textContent = 'Recharge la page pour réessayer.';
-  console.error('Chargement des textes impossible', error);
+  console.error('Failed to load reading texts', error);
 }
