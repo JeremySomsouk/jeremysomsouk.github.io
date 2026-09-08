@@ -12,6 +12,16 @@ $js-lilac: #d0a9fa;
 $js-text: #f3efff;
 $js-muted: #c9c2df;
 
+.header-container h1::before {
+  content: '';
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  margin-right: 0.55rem;
+  vertical-align: -0.2em;
+  background: url('../images/favicon.ico') center / contain no-repeat;
+}
+
 .dark {
   background:
     radial-gradient(circle at 12% 0%, rgba(86, 36, 242, 0.16), transparent 34rem),
@@ -79,6 +89,10 @@ $js-muted: #c9c2df;
 }
 
 @media print {
+  .header-container h1::before {
+    display: none;
+  }
+
   .dark {
     background: #fff;
     color: #222;
