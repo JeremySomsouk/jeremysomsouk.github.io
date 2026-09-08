@@ -22,13 +22,6 @@ $js-muted: #c9c2df;
   background: url('../images/favicon.ico') center / contain no-repeat;
 }
 
-@media (min-width: 992px) {
-  .profile-img {
-    width: 250px;
-    height: 250px;
-  }
-}
-
 .dark {
   background:
     radial-gradient(circle at 12% 0%, rgba(86, 36, 242, 0.16), transparent 34rem),
