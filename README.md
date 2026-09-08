@@ -1,27 +1,29 @@
 # JeremySomsouk.github.io
 
-Le site existant est publié par GitHub Pages depuis `docs/`.
+GitHub Pages publishes the existing site from `docs/`.
 
 ## La cabane à découvertes
 
-Le menu se trouve à `/cabane/`, avec deux activités indépendantes :
+Developer documentation, code identifiers, and diagnostic logs use English. Interfaces, accessibility labels, and reading texts remain in French.
 
-- `/cabane/memory/` : moteur Rust compilé en WebAssembly, interface HTML/CSS et SVG locaux. Une partie contient trois grilles de 3, 4 et 5 paires, tirées au hasard. Rejouer ou recommencer repart à 3 paires. Aucune progression sauvegardée.
-- `/cabane/lecture/` : choix du texte, texte agrandissable, chronomètre sous le texte, historique daté. L'atelier utilise les API natives du navigateur en JavaScript, sans dépendre du module WASM du Memory.
+The menu is available at `/cabane/` and contains two independent activities:
 
-Les pages n'utilisent ni serveur applicatif, ni ressources tierces, ni bibliothèque JavaScript. Les illustrations SVG et les trois poèmes de démonstration ont été créés pour ce prototype. Aucun enregistrement audio n'est réalisé.
+- `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
+- `/cabane/lecture/`: text selection, adjustable text size, a timer below the text, and dated reading history. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
 
-### Prévisualiser
+The pages require no application server, third-party assets, or JavaScript libraries. The SVG illustrations and three sample poems were created for this prototype. No audio is recorded.
+
+### Preview locally
 
 ```sh
 python3 -m http.server 8765 --directory docs
 ```
 
-Ouvrir `http://localhost:8765/cabane/`. Utiliser un serveur HTTP, pas une ouverture directe en `file://`. Ce serveur ne rend pas le CV Jekyll à la racine, mais permet de tester les activités.
+Open `http://localhost:8765/cabane/`. Use an HTTP server rather than opening files directly with `file://`. This server lets you test the activities but does not render the Jekyll resume at the site root.
 
-### Compiler le Memory
+### Build Memory
 
-Le binaire `docs/cabane/memory/game.wasm` est inclus pour permettre la publication habituelle de `docs/` sans changer le déploiement Jekyll. Après toute modification du moteur, régénérer ce fichier et le versionner avec les sources.
+The `docs/cabane/memory/game.wasm` binary is included so that the existing Jekyll deployment can publish `docs/` without changes. Whenever you modify the engine, rebuild this file and commit it alongside the source changes.
 
 ```sh
 rustup toolchain install 1.96.0 --profile minimal
@@ -29,9 +31,9 @@ rustup target add wasm32-unknown-unknown --toolchain 1.96.0
 bash scripts/build-games.sh
 ```
 
-La version Rust est fixée dans le script pour que la compilation utilise la même chaîne, même si un autre Rust est installé via Homebrew.
+The script pins the Rust version to keep builds on the same toolchain, even if another Rust version is installed through Homebrew.
 
-### Vérifier
+### Run checks
 
 ```sh
 rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
@@ -39,17 +41,17 @@ rustup run 1.96.0 cargo clippy --manifest-path games/memory/Cargo.toml --all-tar
 node --test scripts/reading*.test.mjs
 ```
 
-### Ajouter les textes de lecture
+### Add reading texts
 
-Modifier `docs/cabane/lecture/texts.json`. Chaque entrée contient `id`, `title`, `author` et `body` ; `\n` sépare les vers, `\n\n` les strophes. Le contenu est affiché comme du texte, sans interpréter de HTML.
+Edit `docs/cabane/lecture/texts.json`. Each entry contains `id`, `title`, `author`, and `body`. Use `\n` between lines and `\n\n` between stanzas. Content is displayed as plain text without interpreting HTML.
 
-Utiliser un identifiant unique et stable. Si le texte change sensiblement, créer un nouvel identifiant (par exemple `mon-texte-v2`) pour distinguer les versions dans les données enregistrées.
+Use a unique, stable identifier. If a text changes significantly, create a new identifier (for example, `my-text-v2`) to distinguish versions in saved records.
 
-Le chronomètre mesure toute la durée entre Démarrer et Terminer, sans possibilité de pause. Le changement de texte est désactivé pendant la lecture. Terminer ajoute le titre, l'identifiant du texte, la date et la durée à `localStorage` sous `cabane.readings.v1`. Les temps sont partagés entre les utilisateurs du même navigateur ; ils ne sont pas synchronisés entre appareils. L'effacement des données du navigateur les supprime. Si la sauvegarde échoue, l'interface le signale et conserve le temps sur la page.
+The timer measures the full duration between the “Démarrer” (Start) and “Terminer” (Finish) buttons, with no pause option. Text selection is disabled during a reading. Finishing adds the title, text identifier, date, and duration to `localStorage` under `cabane.readings.v1`. Records are shared by users of the same browser and are not synchronized across devices. Clearing browser data deletes them. If saving fails, the interface displays a message and keeps the time visible on the page.
 
-### Programmer le texte par défaut
+### Schedule the default text
 
-Modifier `docs/cabane/lecture/schedule.json`, puis publier le site normalement. Aucune compilation Rust n'est nécessaire.
+Edit `docs/cabane/lecture/schedule.json`, then publish the site as usual. Rebuilding the Rust module is not necessary.
 
 ```json
 {
@@ -61,10 +63,10 @@ Modifier `docs/cabane/lecture/schedule.json`, puis publier le site normalement. 
 }
 ```
 
-`from` est une date incluse au format `AAAA-MM-JJ`. `textId` correspond à l'identifiant dans `texts.json`. Le texte de la date la plus récente déjà atteinte reste sélectionné jusqu'au prochain changement prévu. Avant la première date, `defaultTextId` s'applique. Les dates doivent être uniques ; l'ordre des entrées est libre.
+`from` is an inclusive start date in `YYYY-MM-DD` format. `textId` matches an identifier in `texts.json`. The text with the most recent applicable date remains selected until the next scheduled change. Before the first date, `defaultTextId` applies. Dates must be unique; entries can appear in any order.
 
-Le choix est calculé à chaque ouverture ou rechargement selon la date locale de l'appareil. Il reste possible de choisir un autre texte dans la liste. Une erreur dans le planning laisse les textes accessibles et affiche un message. Le planning inclus est un exemple à remplacer par les devoirs réels.
+The selection is calculated whenever the page opens or reloads, using the device's local date. Users can still select another text from the list. If the schedule is invalid, texts remain available and a message is displayed. The included schedule is an example to replace with actual homework assignments.
 
-### Ajouter une activité
+### Add an activity
 
-Créer un sous-dossier de `docs/cabane/` avec son `index.html`, puis ajouter sa carte au menu `docs/cabane/index.html`. Utiliser des chemins relatifs pour les ressources et `../` pour le retour au menu.
+Create a subdirectory under `docs/cabane/` containing its own `index.html`, then add its card to the menu in `docs/cabane/index.html`. Use relative asset paths and `../` to return to the menu.
