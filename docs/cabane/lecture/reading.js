@@ -1,12 +1,15 @@
 import { ReadingTimer, formatDuration } from './timer.mjs';
 import { scheduledTextId } from './schedule.mjs';
-import { setupShare } from '../share.mjs';
+import { trackReadingViewport } from './viewport.mjs';
+import { setupShare } from '../share.mjs?v=20260908-mobile-2';
 
 const choice = document.querySelector('#text-choice');
 const start = document.querySelector('#start');
 const stop = document.querySelector('#stop');
 const status = document.querySelector('#reading-status');
 const elapsed = document.querySelector('#elapsed');
+const liveElapsed = document.querySelector('#live-elapsed');
+let ticker;
 const warning = document.querySelector('#storage-warning');
 const historyList = document.querySelector('#history-list');
 const storageKey = 'cabane.readings.v1';
@@ -15,7 +18,13 @@ let texts = [];
 let readings = [];
 const result = document.querySelector('#reading-result');
 const controls = document.querySelector('#reading-controls');
-setupShare(() => ({ title: `${texts.find(text => text.id === choice.value).title} · La Fluence · Cabane`, url: location.href }));
+trackReadingViewport(controls);
+setupShare(() => {
+  const text = texts.find(text => text.id === choice.value);
+  const url = new URL(location.href);
+  url.searchParams.set('text', text.id);
+  return { title: `${text.title} · La Fluence · Cabane`, url: url.href };
+});
 let storageAvailable = true;
 
 function showStorageWarning(message) {
@@ -64,9 +73,15 @@ function renderTimer() {
   stop.hidden = !active;
 }
 
+function renderElapsed() {
+  liveElapsed.textContent = formatDuration(timer.elapsed());
+}
+
 function selectText() {
   const text = texts.find(text => text.id === choice.value);
+  clearInterval(ticker);
   timer.reset();
+  renderElapsed();
   result.hidden = true;
   controls.hidden = false;
   elapsed.textContent = '';
@@ -92,6 +107,8 @@ document.querySelector('#font-size').addEventListener('click', event => {
 start.addEventListener('click', () => {
   if (!timer.start()) return;
   status.textContent = 'Bonne lecture !';
+  renderElapsed();
+  ticker = setInterval(renderElapsed, 100);
   renderTimer();
 
   stop.focus({ preventScroll: true });
@@ -100,6 +117,8 @@ start.addEventListener('click', () => {
 stop.addEventListener('click', () => {
   const duration = timer.stop();
   if (duration === null) return;
+  clearInterval(ticker);
+  renderElapsed();
 
   const text = texts.find(text => text.id === choice.value);
   readings.push({ textId: text.id, title: text.title, date: new Date().toISOString(), duration });
@@ -126,6 +145,8 @@ document.querySelector('#retry').addEventListener('click', () => {
   document.querySelector('#poem').scrollIntoView({ block: 'start' });
   start.focus({ preventScroll: true });
 });
+
+document.addEventListener('visibilitychange', renderElapsed);
 
 window.addEventListener('beforeunload', event => {
   if (timer.state !== 'idle') {
