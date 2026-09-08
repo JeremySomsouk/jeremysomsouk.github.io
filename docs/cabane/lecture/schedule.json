@@ -1,0 +1,8 @@
+{
+  "defaultTextId": "petit-matin-v1",
+  "entries": [
+    { "from": "2026-09-08", "textId": "petit-matin-v1" },
+    { "from": "2026-09-14", "textId": "bateau-v1" },
+    { "from": "2026-09-21", "textId": "jardin-v1" }
+  ]
+}
