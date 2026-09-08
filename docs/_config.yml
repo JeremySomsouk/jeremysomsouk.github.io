@@ -31,8 +31,8 @@ linkedin_username: jeremy-somsouk-dev
 # Additional icon links
 additional_links:
 - title: La cabane à découvertes
-  icon: fas fa-book-open
-  url: /cabane/
+  icon: fas fa-home
+  url: https://www.somsouk.fr/cabane/
 - title: You're never gonna believe me
   icon: fas fa-globe
   url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
