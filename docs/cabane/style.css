@@ -526,3 +526,44 @@ h2 {
     padding:25px 20px;
   }
 }
+
+/* Keep the reading action reachable without showing a live clock. */
+.reading {
+  padding-bottom:calc(100px + env(safe-area-inset-bottom, 0px));
+}
+.reading-controls {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:10;
+  display:flex;
+  justify-content:center;
+  padding:8px 16px calc(8px + env(safe-area-inset-bottom, 0px));
+  background:var(--paper);
+  border-top:1px solid #dedbce;
+}
+.reading-controls .primary {
+  width:min(100%, 320px);
+}
+#poem {
+  scroll-margin-top:16px;
+}
+#reading-status {
+  color:var(--green);
+  text-align:center;
+}
+.toolbar {
+  flex-wrap:wrap;
+}
+#share-status {
+  color:var(--green);
+  overflow-wrap:anywhere;
+}
+#share-status input {
+  display:block;
+  width:100%;
+  min-height:48px;
+  margin-top:8px;
+  font:inherit;
+}
