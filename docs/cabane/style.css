@@ -527,15 +527,17 @@ h2 {
   }
 }
 
-/* Keep the reading action reachable without showing a live clock. */
+/* Keep the compact reading action anchored to the visible viewport. */
 .reading {
   padding-bottom:calc(100px + env(safe-area-inset-bottom, 0px));
 }
 .reading-controls {
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+  top:var(--controls-top, auto);
+  bottom:var(--controls-bottom, 0);
+  left:var(--controls-left, 0);
+  width:var(--controls-width, 100%);
+  transform:var(--controls-transform, none);
   z-index:10;
   display:flex;
   justify-content:center;
@@ -568,4 +570,17 @@ h2 {
   min-height:48px;
   margin-top:8px;
   font:inherit;
+}
+
+.reading-clock {
+  text-align:center;
+  color:var(--muted);
+  margin:24px 0 12px;
+}
+.reading-clock output {
+  display:inline-block;
+  color:var(--green);
+  font-variant-numeric:tabular-nums;
+  font-weight:750;
+  min-width:5.5em;
 }
