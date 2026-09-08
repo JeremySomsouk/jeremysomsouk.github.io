@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f8f4eb">
   <title>La Fluence · La cabane à découvertes</title>
-  <link rel="stylesheet" href="../style.css">
-  <script src="./reading.js" type="module"></script>
+  <link rel="stylesheet" href="../style.css?v=20260908-mobile-2">
+  <script src="./reading.js?v=20260908-mobile-2" type="module"></script>
 </head>
 <body>
   <main class="shell reading">
@@ -16,8 +16,8 @@
     <div class="reading-options"><div><label for="text-choice">Le texte du jour</label><select id="text-choice" disabled><option>Chargement…</option></select></div><button id="font-size" class="quiet" aria-pressed="false">Agrandir le texte</button></div>
     <p id="schedule-warning" role="status" hidden></p>
     <article id="poem" class="poem" aria-labelledby="poem-title"><div class="poem-heading"><span class="tag" id="word-count"></span><h2 id="poem-title">Les textes arrivent…</h2><p id="author"></p></div><div id="poem-body"></div></article>
+    <p class="reading-clock">Temps de lecture : <output id="live-elapsed" role="timer" aria-live="off" aria-label="Temps écoulé">00:00.0</output></p>
     <p id="reading-status" role="status">Préparation de la lecture…</p>
-    <div id="reading-controls" class="reading-controls" role="group" aria-label="Chronométrer la lecture"><button id="start" class="primary" disabled>Démarrer</button><button id="stop" class="primary" hidden>Terminer</button></div>
     <section id="reading-result" class="timer-panel" aria-labelledby="timer-title" tabindex="-1" hidden>
       <h2 id="timer-title">Mon temps de lecture</h2>
       <output id="elapsed" aria-label="Durée de la lecture">00:00.0</output>
@@ -26,5 +26,6 @@
     <section class="history" aria-labelledby="history-title"><h2 id="history-title">Mes lectures</h2><p class="history-note">Les temps restent dans ce navigateur, sur cet appareil.</p><p id="storage-warning" role="status" hidden></p><p id="empty-history">Ton premier temps apparaîtra ici.</p><ol id="history-list"></ol></section>
     <noscript><p>Active JavaScript dans ton navigateur pour lire et utiliser le chronomètre.</p></noscript>
   </main>
+  <div id="reading-controls" class="reading-controls" role="group" aria-label="Chronométrer la lecture"><button id="start" class="primary" disabled>Démarrer</button><button id="stop" class="primary" hidden>Terminer</button></div>
 </body>
 </html>
