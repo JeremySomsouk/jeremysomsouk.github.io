@@ -1,5 +1,6 @@
 import { ReadingTimer, formatDuration } from './timer.mjs';
 import { scheduledTextId } from './schedule.mjs';
+import { setupShare } from '../share.mjs';
 
 const choice = document.querySelector('#text-choice');
 const start = document.querySelector('#start');
@@ -12,7 +13,9 @@ const storageKey = 'cabane.readings.v1';
 const timer = new ReadingTimer();
 let texts = [];
 let readings = [];
-let ticker;
+const result = document.querySelector('#reading-result');
+const controls = document.querySelector('#reading-controls');
+setupShare(() => ({ title: `${texts.find(text => text.id === choice.value).title} · La Fluence · Cabane`, url: location.href }));
 let storageAvailable = true;
 
 function showStorageWarning(message) {
@@ -55,7 +58,6 @@ function renderHistory() {
 }
 
 function renderTimer() {
-  elapsed.textContent = formatDuration(timer.elapsed());
   const active = timer.state !== 'idle';
   choice.disabled = active;
   start.hidden = active;
@@ -65,13 +67,19 @@ function renderTimer() {
 function selectText() {
   const text = texts.find(text => text.id === choice.value);
   timer.reset();
+  result.hidden = true;
+  controls.hidden = false;
+  elapsed.textContent = '';
+  document.querySelector('#share-status').hidden = true;
   renderTimer();
   document.querySelector('#poem-title').textContent = text.title;
   document.querySelector('#author').textContent = text.author;
   document.querySelector('#poem-body').textContent = text.body;
   document.querySelector('#word-count').textContent = `${text.body.trim().split(/\s+/u).length} mots`;
   status.textContent = 'Prêt pour une nouvelle lecture ?';
-  start.textContent = 'Démarrer';
+  const url = new URL(location.href);
+  url.searchParams.set('text', text.id);
+  history.replaceState(null, '', url);
 }
 
 choice.addEventListener('change', selectText);
@@ -85,14 +93,14 @@ start.addEventListener('click', () => {
   if (!timer.start()) return;
   status.textContent = 'Bonne lecture !';
   renderTimer();
-  ticker = setInterval(renderTimer, 100);
+
   stop.focus({ preventScroll: true });
 });
 
 stop.addEventListener('click', () => {
   const duration = timer.stop();
   if (duration === null) return;
-  clearInterval(ticker);
+
   const text = texts.find(text => text.id === choice.value);
   readings.push({ textId: text.id, title: text.title, date: new Date().toISOString(), duration });
   let saved = false;
@@ -107,7 +115,15 @@ stop.addEventListener('click', () => {
   status.textContent = saved ? 'Bravo ! Ton temps a été enregistré.' : 'Bravo ! Ton temps est affiché ci-dessous, mais n’a pas pu être sauvegardé.';
   renderTimer();
   renderHistory();
-  start.textContent = 'Relire ce texte';
+  elapsed.textContent = formatDuration(duration);
+  result.hidden = false;
+  controls.hidden = true;
+  result.focus();
+});
+
+document.querySelector('#retry').addEventListener('click', () => {
+  selectText();
+  document.querySelector('#poem').scrollIntoView({ block: 'start' });
   start.focus({ preventScroll: true });
 });
 
@@ -127,16 +143,27 @@ try {
     text && ['id', 'title', 'author', 'body'].every(key => typeof text[key] === 'string' && text[key].trim())
   ) || new Set(texts.map(text => text.id)).size !== texts.length) throw new Error('Invalid texts');
   choice.replaceChildren(...texts.map(text => new Option(text.title, text.id)));
-  try {
-    const scheduleResponse = await fetch('./schedule.json', { cache: 'no-cache' });
-    if (!scheduleResponse.ok) throw new Error(`HTTP ${scheduleResponse.status}`);
-    choice.value = scheduledTextId(await scheduleResponse.json(), texts);
-  } catch (error) {
-    const notice = document.querySelector('#schedule-warning');
-    notice.textContent = 'Le texte prévu n’a pas pu être sélectionné. Choisis ton texte dans la liste.';
-    notice.hidden = false;
-    console.error('Failed to load reading schedule', error);
+  const sharedId = new URL(location.href).searchParams.get('text');
+  if (texts.some(text => text.id === sharedId)) {
+    choice.value = sharedId;
+  } else {
+    try {
+      const scheduleResponse = await fetch('./schedule.json', { cache: 'no-cache' });
+      if (!scheduleResponse.ok) throw new Error(`HTTP ${scheduleResponse.status}`);
+      choice.value = scheduledTextId(await scheduleResponse.json(), texts);
+    } catch (error) {
+      const notice = document.querySelector('#schedule-warning');
+      notice.textContent = 'Le texte prévu n’a pas pu être sélectionné. Choisis ton texte dans la liste.';
+      notice.hidden = false;
+      console.error('Failed to load reading schedule', error);
+    }
+    if (sharedId !== null) {
+      const notice = document.querySelector('#schedule-warning');
+      notice.textContent = 'Le texte partagé n’est plus disponible. Choisis un texte dans la liste.';
+      notice.hidden = false;
+    }
   }
+  document.querySelector('#share').disabled = false;
   choice.disabled = false;
   start.disabled = false;
   selectText();
