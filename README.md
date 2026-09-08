@@ -9,7 +9,7 @@ Developer documentation, code identifiers, and diagnostic logs use English. Inte
 The menu is available at `/cabane/` and contains two independent activities:
 
 - `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
-- `/cabane/lecture/`: text selection, adjustable text size, a timer below the text, and dated reading history. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
+- `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
 
 The pages require no application server, third-party assets, or JavaScript libraries. The SVG illustrations and three sample poems were created for this prototype. No audio is recorded.
 
@@ -47,7 +47,9 @@ Edit `docs/cabane/lecture/texts.json`. Each entry contains `id`, `title`, `autho
 
 Use a unique, stable identifier. If a text changes significantly, create a new identifier (for example, `my-text-v2`) to distinguish versions in saved records.
 
-The timer measures the full duration between the “Démarrer” (Start) and “Terminer” (Finish) buttons, with no pause option. Text selection is disabled during a reading. Finishing adds the title, text identifier, date, and duration to `localStorage` under `cabane.readings.v1`. Records are shared by users of the same browser and are not synchronized across devices. Clearing browser data deletes them. If saving fails, the interface displays a message and keeps the time visible on the page.
+The menu and activities offer native sharing with a copy-link fallback. La Fluence links include `?text=<stable-id>` and open that text before considering the daily schedule. Unknown IDs show a notice and fall back to the scheduled text. Sharing Memory opens the game, without transferring randomized board state or progress.
+
+The timer stays invisible during reading. Fixed bottom controls show only “Démarrer” then “Terminer”; the duration and “Recommencer” appear in the result after stopping. The timer measures the full duration between the “Démarrer” (Start) and “Terminer” (Finish) buttons, with no pause option. Text selection is disabled during a reading. Finishing adds the title, text identifier, date, and duration to `localStorage` under `cabane.readings.v1`. Records are shared by users of the same browser and are not synchronized across devices. Clearing browser data deletes them. If saving fails, the interface displays a message and keeps the time visible on the page.
 
 ### Schedule the default text
 
