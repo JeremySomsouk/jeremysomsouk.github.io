@@ -6,11 +6,13 @@ GitHub Pages publishes the existing site from `docs/`.
 
 Developer documentation, code identifiers, and diagnostic logs use English. Interfaces, accessibility labels, and reading texts remain in French.
 
-The menu is available at `/cabane/` and contains four independent activities:
+The menu is available at `/cabane/` and contains five independent activities:
 
 - `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
 - `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the game’s WASM module.
 - `/cabane/chemin/`: Le Chemin, a 5×5 path puzzle. Start at 1, connect checkpoints in order, and cover every cell exactly once. Drag with touch, mouse, or stylus; use arrow keys after focusing the board. Backtracking removes one segment. Restart keeps the same puzzle; a new puzzle changes its seed.
+- `/cabane/calculs/`: Les Petits Calculs, progressive arithmetic with handwritten answers.
+- `/cabane/lumiere/`: La Lumière, ten spatial puzzles in two difficulty tiers. Mirrors redirect warm light; prisms split it to wake several ghosts at once. No timer or speed score.
 
 The pages require no application server, third-party assets, or JavaScript libraries. The SVG illustrations and three sample poems were created for this prototype. No audio is recorded.
 
@@ -81,6 +83,18 @@ Multiple solutions may exist; uniqueness and difficulty scoring are outside this
 ### Add an activity
 
 Create a subdirectory under `docs/cabane/` containing its own `index.html`, then add its card to the menu in `docs/cabane/index.html`. Use relative asset paths and `../` to return to the menu.
+
+### Light puzzles
+
+La Lumière uses native ES modules and original inline SVG art, reusing Cabane typography, paper background, buttons, navigation, and sharing. The static files in `docs/cabane/lumiere/` need no compilation and are published by the existing GitHub Pages/Jekyll build. Preview at `http://localhost:8765/cabane/lumiere/` using the server above.
+
+- `engine.mjs`: pure `propagate(level, pieces)` returns `lightPaths`, `illuminatedGhosts`, and `isSolved`. Coordinates are zero-based cell centres, with y increasing downwards. Light travels north/east/south/west, passes through ghosts, reflects on `/` or `\`, and stops at walls or room edges. A prism keeps the straight beam and queues a reflected branch. Each source shares its visited `(x,y,direction)` states across branches, terminating cycles and duplicate continuations without exponential branching. Sources contribute jointly to victory; every ghost must be illuminated in the current state.
+- `levels.mjs`: data entries contain `id`, `title`, `width`, `height`, `lights`, `ghosts`, `walls`, `availablePieces` (mirror count), optional `availablePrisms`, optional `tier` (defaults to 1), and an optional tutorial `hint`/`hintType`. Add an entry without changing the engine or renderer. Tier 1 introduces a single reflection, two ghosts in one ray, a wall detour, three reflections, and a 5×5 puzzle combining three ghosts with walls. Tier 2 adds splitting, separate detours, prism cascades, and a final puzzle with two mirrors, two prisms, and five ghosts.
+- `state.mjs`: owns separate bounded mirror/prism inventories, legal placement, rotation, movement, removal, and reset independently of the DOM. Lamps, ghosts, walls, and other pieces cannot receive a placed piece. New pieces start at `\`; moving preserves orientation and type. Solved rooms remain visible and locked until restart or room selection.
+- `board.mjs` / `art.mjs`: grid, continuous SVG rays, round mirrors, diamond-shaped prisms, sleeping/happy faces, and halos. Animation is brief and respects reduced motion.
+- `input.mjs` / `game.mjs`: Pointer Events with capture support mouse, touch, and stylus. Drag a piece from its reserve, tap to rotate, drag it again to move, or return it to the reserve to remove. Invalid drops and cancelled gestures preserve state. The tap alternative is reserve → cell; select a placed piece then use “Déplacer” → cell or “Retirer”. Native buttons also support keyboard activation. Reset and room changes cancel pending gestures.
+
+Run `node --test scripts/lumiere*.test.mjs` for optics, level solutions, inventories, prism branching/feedback loops, and pointer regression coverage, or `node --test scripts/*.test.mjs` for all JavaScript checks. The `Cabane checks` workflow runs these tests, syntax checks, and the official GitHub Pages Jekyll production build, verifies that game assets were published unchanged, and saves the built site as an artifact. No JavaScript lint or TypeScript toolchain is configured in this repository. Progress is session-only, and all ten rooms can be selected freely. There are no coloured rays, sound, persistence, or move limits in this prototype. Physical-device playtesting with children is still needed to assess difficulty and enjoyment.
 
 
 ### Arithmetic and handwriting
