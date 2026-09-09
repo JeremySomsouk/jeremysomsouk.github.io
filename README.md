@@ -9,7 +9,7 @@ Developer documentation, code identifiers, and diagnostic logs use English. Inte
 The menu is available at `/cabane/` and contains four independent activities:
 
 - `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
-- `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
+- `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the game’s WASM module.
 - `/cabane/chemin/`: Le Chemin, a 5×5 path puzzle. Start at 1, connect checkpoints in order, and cover every cell exactly once. Drag with touch, mouse, or stylus; use arrow keys after focusing the board. Backtracking removes one segment. Restart keeps the same puzzle; a new puzzle changes its seed.
 
 The pages require no application server, third-party assets, or JavaScript libraries. The SVG illustrations and three sample poems were created for this prototype. No audio is recorded.
@@ -22,7 +22,7 @@ python3 -m http.server 8765 --directory docs
 
 Open `http://localhost:8765/cabane/`. Use an HTTP server rather than opening files directly with `file://`. This server lets you test the activities but does not render the Jekyll resume at the site root.
 
-### Build Memory
+### Build Le Memory
 
 The `docs/cabane/memory/game.wasm` binary is included so that the existing Jekyll deployment can publish `docs/` without changes. Whenever you modify the engine, rebuild this file and commit it alongside the source changes.
 
@@ -48,7 +48,7 @@ Edit `docs/cabane/lecture/texts.json`. Each entry contains `id`, `title`, `autho
 
 Use a unique, stable identifier. If a text changes significantly, create a new identifier (for example, `my-text-v2`) to distinguish versions in saved records.
 
-The menu and activities offer native sharing with an immediate copy-link fallback on failure. A separate copy action stays available while a native share is pending or cancelled; when clipboard access is denied, the URL can be selected manually. La Fluence links include `?text=<stable-id>` and open that text before considering the daily schedule. Unknown IDs show a notice and fall back to the scheduled text. Sharing Memory opens the game, without transferring randomized board state or progress.
+The menu and activities offer native sharing with an immediate copy-link fallback on failure. A separate copy action stays available while a native share is pending or cancelled; when clipboard access is denied, the URL can be selected manually. La Fluence links include `?text=<stable-id>` and open that text before considering the daily schedule. Unknown IDs show a notice and fall back to the scheduled text. Sharing Le Memory opens the game, without transferring randomized board state or progress.
 
 A live clock updates below the text during reading, separate from the fixed button. The compact controls are mounted outside the main content and follow the visual viewport as mobile browser chrome or zoom changes. CSS fixed positioning is used when the Visual Viewport API is unavailable. Fixed bottom controls show only “Démarrer” then “Terminer”; the duration and “Recommencer” appear in the result after stopping. The timer measures the full duration between the “Démarrer” (Start) and “Terminer” (Finish) buttons, with no pause option. Text selection is disabled during a reading. Finishing adds the title, text identifier, date, and duration to `localStorage` under `cabane.readings.v1`. Records are shared by users of the same browser and are not synchronized across devices. Clearing browser data deletes them. If saving fails, the interface displays a message and keeps the time visible on the page.
 
