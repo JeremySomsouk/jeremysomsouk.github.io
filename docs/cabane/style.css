@@ -584,3 +584,26 @@ h2 {
   font-weight:750;
   min-width:5.5em;
 }
+
+/* The welcome artwork is scoped to the selection page. */
+.menu .welcome {
+  display:grid;
+  grid-template-columns:minmax(0,340px) minmax(0,1fr);
+  align-items:center;
+  gap:40px;
+  margin:24px 0;
+}
+.menu .welcome-brand { margin:0; line-height:0; }
+.welcome-brand img { display:block; width:100%; height:auto; }
+.welcome-copy .eyebrow { margin:0 0 16px; }
+.welcome-copy h2 { font-size:clamp(1.6rem,3vw,2.3rem); margin:0; }
+.welcome-copy .intro { margin:16px 0 24px; }
+.welcome-link { display:inline-flex; align-items:center; gap:18px; text-decoration:none; }
+.menu #games { scroll-margin-top:20px; }
+@media(max-width:650px) {
+  .menu .welcome { grid-template-columns:minmax(0,1fr); gap:12px; margin:12px 0 24px; text-align:center; }
+  .menu .welcome-brand { width:min(260px,100%); margin:auto; }
+  .welcome-copy .eyebrow,.welcome-link { display:none; }
+  .welcome-copy .intro { margin:8px 0 0; font-size:.95rem; }
+  .menu .games { margin-top:24px; }
+}
