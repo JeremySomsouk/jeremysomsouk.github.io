@@ -6,10 +6,11 @@ GitHub Pages publishes the existing site from `docs/`.
 
 Developer documentation, code identifiers, and diagnostic logs use English. Interfaces, accessibility labels, and reading texts remain in French.
 
-The menu is available at `/cabane/` and contains two independent activities:
+The menu is available at `/cabane/` and contains three independent activities:
 
 - `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
 - `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
+- `/cabane/chemin/`: Le Chemin, a 5×5 path puzzle. Start at 1, connect checkpoints in order, and cover every cell exactly once. Drag with touch, mouse, or stylus; use arrow keys after focusing the board. Backtracking removes one segment. Restart keeps the same puzzle; a new puzzle changes its seed.
 
 The pages require no application server, third-party assets, or JavaScript libraries. The SVG illustrations and three sample poems were created for this prototype. No audio is recorded.
 
@@ -38,7 +39,7 @@ The script pins the Rust version to keep builds on the same toolchain, even if a
 ```sh
 rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
 rustup run 1.96.0 cargo clippy --manifest-path games/memory/Cargo.toml --all-targets -- -D warnings
-node --test scripts/reading*.test.mjs
+node --test scripts/*.test.mjs
 ```
 
 ### Add reading texts
@@ -68,6 +69,14 @@ Edit `docs/cabane/lecture/schedule.json`, then publish the site as usual. Rebuil
 `from` is an inclusive start date in `YYYY-MM-DD` format. `textId` matches an identifier in `texts.json`. The text with the most recent applicable date remains selected until the next scheduled change. Before the first date, `defaultTextId` applies. Dates must be unique; entries can appear in any order.
 
 The selection is calculated whenever the page opens or reloads, using the device's local date. Users can still select another text from the list. If the schedule is invalid, texts remain available and a message is displayed. The included schedule is an example to replace with actual homework assignments.
+
+### Path puzzles
+
+Le Chemin uses native JavaScript modules under `docs/cabane/chemin/`, with separate generation, rules, state, input, and rendering. It reuses Cabane styles, sharing, and the reading timer. No additional build step is needed.
+
+Generation starts with a full-grid snake path, then reverses sections through adjacent endpoints to vary the route while preserving every cell and adjacency. Checkpoints are distributed along that valid path, including its first and last cells. Generated solutions are validated before play. Generation accepts a seed, dimensions, and difficulty; the first interface exposes a single 5×5 setting. The URL stores `?seed=...`, so reopening or sharing it recreates the puzzle. Progress and times remain session-only.
+
+Multiple solutions may exist; uniqueness and difficulty scoring are outside this first version. There is no daily schedule or saved record. Keyboard play uses Enter or Space to start, arrow keys to move, and Backspace to undo.
 
 ### Add an activity
 
