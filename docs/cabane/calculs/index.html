@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f8f4eb">
+<title>Les Petits Calculs · Cabane</title>
+<link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="./style.css">
+<script type="module" src="./app.mjs"></script><script type="module" src="../share.mjs"></script>
+</head>
+<body><main class="shell maths">
+<nav class="toolbar" aria-label="Navigation de Cabane"><a class="back" href="../">← La Cabane</a><button id="share" class="quiet">Partager</button></nav><p id="share-status" role="status" hidden></p>
+<header class="game-header"><p class="eyebrow">Compte, trace, découvre</p><h1>Les Petits <span>Calculs</span></h1><p class="intro">Écris ta réponse avec ton doigt.</p></header>
+<label class="level-label" for="level">Mon niveau</label><select id="level"><option value="1">1 · De 0 à 9</option><option value="2">2 · Jusqu’à 20</option></select>
+<section id="play" aria-label="Calcul en cours">
+<p id="progress"></p><progress id="bar" max="5" value="0" aria-label="Calculs terminés"></progress>
+<h2 id="question" tabindex="-1"></h2>
+<p id="instructions">Dessine un chiffre dans la case.</p>
+<div id="pads" class="pads"></div>
+<p id="recognized" role="status" aria-live="polite"></p>
+<p id="feedback" role="status" aria-live="polite"></p>
+<div class="actions"><button id="validate" class="primary" disabled>Valider</button><button id="next" class="primary" hidden>Calcul suivant →</button></div>
+</section>
+<section id="complete" class="result" hidden><h2 tabindex="-1">Bravo, série terminée !</h2><p id="summary"></p><div class="actions"><button id="advance" class="primary">Passer au niveau 2 →</button><button id="replay" class="quiet">Rejouer ce niveau</button></div></section>
+<p class="footer-note">À ton rythme, sans chronomètre. <a href="../chiffres/">Essayer les tracés libres</a></p>
+<noscript>Active JavaScript pour jouer aux Petits Calculs.</noscript>
+</main></body></html>
