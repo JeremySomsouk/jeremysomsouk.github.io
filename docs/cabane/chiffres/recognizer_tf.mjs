@@ -3,14 +3,27 @@
 // The loader constructs a tiny dense classifier (784 -> 10) using tfjs tensors built from
 // the exported weights. This provides a real TF.js inference path while keeping assets local.
 
-const TFJS_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.9.0/dist/tf.min.js';
+// Prefer a vendored local ESM build at ./vendor/tf.esm.js if present; otherwise fall back to CDN.
+const CDN_TF_ESM = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.esm.js';
 import * as weightsModule from './model/weights.mjs';
 
-export async function loadRecognizer() {
-  // Dynamically load TF.js from CDN in the browser.
+async function loadTf() {
   if (typeof window === 'undefined') throw new Error('TF.js recognizer is browser-only');
-  // eslint-disable-next-line no-undef
-  const tf = await import(TFJS_URL);
+  // Try local vendored build first
+  try {
+    // eslint-disable-next-line import/no-dynamic-require, import/no-unresolved
+    // Note: dynamic import of a relative path may fail in environments where file is missing.
+    return await import('./vendor/tf.esm.js');
+  } catch (e) {
+    // Fallback to CDN ESM
+    return await import(CDN_TF_ESM);
+  }
+}
+
+export async function loadRecognizer() {
+  // Dynamically load TF.js (vendored or CDN) in the browser.
+  const tfModule = await loadTf();
+  const tf = tfModule.tf || tfModule.default || tfModule; // accommodate various export styles
   const { weights, biases } = weightsModule;
   // weights: Float32Array length 784*10, row-major (784 rows, 10 cols)
   const wTensor = tf.tensor2d(weights, [784, 10]);
