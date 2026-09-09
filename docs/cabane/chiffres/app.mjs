@@ -1,13 +1,6 @@
 import { createDrawing } from './drawing.mjs';
 import { normalizeDigit } from './preprocess.mjs';
-// Try loading a TF.js-backed recognizer when available; fall back to the lightweight procedural recognizer.
-let loadRecognizer = null;
-try {
-  // Defer dynamic import to initialization so it doesn't block module parsing in browsers that
-  // don't need TF.js or in test environments. A runtime attempt happens in initialize().
-  // Placeholder here for variable used later.
-} catch (e) { }
-
+import { loadRecognizer } from './recognizer.mjs';
 
 const result = document.querySelector('#result');
 const confidence = document.querySelector('#confidence');
@@ -69,20 +62,6 @@ async function initialize() {
   retry.hidden = true;
   status.textContent = 'Chargement de la reconnaissance…';
   try {
-    // Prefer TF.js-backed recognizer if available in the browser and the model assets exist.
-    if (!loadRecognizer) {
-      try {
-        // Attempt to dynamically import the TF.js recognizer which will in turn load TF.js from CDN.
-        const mod = await import('./recognizer_tf.mjs');
-        loadRecognizer = mod.loadRecognizer;
-      } catch (e) {
-        // Fallback to the lightweight procedural recognizer bundled in the repo.
-        // This keeps tests and server-side environments working without TF.js.
-        // eslint-disable-next-line import/no-unresolved
-        const fallback = await import('./recognizer.mjs');
-        loadRecognizer = fallback.loadRecognizer;
-      }
-    }
     recognizer = await loadRecognizer();
     status.textContent = 'Prêt. La reconnaissance se lance après ton tracé.';
     drawing.scheduleRecognition();
