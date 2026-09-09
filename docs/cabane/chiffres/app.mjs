@@ -29,7 +29,7 @@ function showDebug(pixels, prediction) {
     .map((probability, digit) => ({ probability, digit }))
     .sort((a, b) => b.probability - a.probability)
     .slice(0, 3)
-    .map(({ digit, probability }) => `${digit} : ${Math.round(probability * 100)} %`)
+    .map(({ digit, probability }) => `${digit} : score ${Math.round(probability * 100)}`)
     .join('\n');
 }
 
@@ -43,7 +43,7 @@ const drawing = createDrawing(document.querySelector('#drawing'), {
       if (!normalized) return;
       const prediction = recognizer.predict(normalized.pixels);
       result.textContent = prediction.confident ? `Je reconnais : ${prediction.digit}` : 'Je ne suis pas sûr. Essaie encore.';
-      confidence.textContent = prediction.confident ? `Confiance : ${Math.round(prediction.confidence * 100)} %` : '';
+      confidence.textContent = prediction.confident ? `Ressemblance : ${Math.round(prediction.confidence * 100)} %` : '';
       showDebug(normalized.pixels, prediction);
     } catch {
       status.textContent = 'La reconnaissance a rencontré un problème.';
@@ -75,3 +75,4 @@ async function initialize() {
 }
 
 initialize();
+
