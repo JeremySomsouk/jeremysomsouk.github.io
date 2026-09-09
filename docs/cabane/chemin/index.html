@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4eb">
+  <title>Le Chemin · Cabane</title>
+  <link rel="stylesheet" href="../style.css?v=20260909">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="../share.mjs"></script>
+  <script type="module" src="./game.mjs"></script>
+</head>
+<body>
+  <main class="shell chemin">
+    <nav class="toolbar" aria-label="Navigation de Cabane"><a class="back" href="../">← La cabane</a><button id="share" class="quiet">Partager</button></nav>
+    <p id="share-status" role="status" hidden></p>
+    <header class="game-header">
+      <p class="eyebrow">Observe & trace</p>
+      <h1>Le <span>Chemin</span></h1>
+      <p class="intro" id="instructions">Pars de 1, relie les nombres dans l’ordre et passe par toutes les cases.</p>
+    </header>
+    <div class="path-progress"><span id="coverage">0 / 25 cases</span><span>Temps <output id="timer" aria-live="off">0:00</output></span></div>
+    <p id="status" class="status" role="status" aria-live="polite">Pars de 1.</p>
+    <div id="path-board" class="path-board" tabindex="0" role="grid" aria-label="Le Chemin, grille de 5 lignes et 5 colonnes" aria-describedby="instructions keyboard-help"></div>
+    <div class="path-actions"><button id="restart" class="quiet">Recommencer</button><button id="new-puzzle" class="primary">Nouveau puzzle</button></div>
+    <p id="keyboard-help" class="path-help">Reviens d’une case pour corriger. Au clavier : Entrée pour partir, flèches pour avancer, Retour arrière pour annuler.</p>
+    <section id="completion" class="result" hidden aria-labelledby="result-title"><h2 id="result-title">Bravo !</h2><p id="result-time"></p><button id="replay" class="quiet">Rejouer</button></section>
+    <noscript>Active JavaScript pour jouer au Chemin.</noscript>
+  </main>
+</body>
+</html>
