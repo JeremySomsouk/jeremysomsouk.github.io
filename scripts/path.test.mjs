@@ -29,6 +29,8 @@ test('start, movement, checkpoint order and immediate undo preserve the path', (
   path = advancePath(puzzle, path, solution[3]);
   assert.equal(getExpectedCheckpoint(puzzle, path), 3);
   assert.equal(canEnterCell(puzzle, path, cell(-1, 0)), false);
+  path = advancePath(puzzle, path, solution[4]);
+  assert.equal(advancePath(puzzle, path, solution[1]), path);
 });
 test('completion requires full coverage in order, not merely the final checkpoint', () => {
   const early = { ...puzzle, checkpoints: [{ ...solution[0], value: 1 }, { ...solution[1], value: 2 }] };
