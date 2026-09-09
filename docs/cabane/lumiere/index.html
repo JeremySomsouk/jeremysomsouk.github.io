@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4eb">
+  <title>La Lumière · Cabane</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="../share.mjs"></script>
+  <script type="module" src="./game.mjs"></script>
+</head>
+<body>
+  <main class="shell lumiere">
+    <nav class="toolbar" aria-label="Navigation de Cabane"><a class="back" href="../">← La cabane</a><button id="share" class="quiet">Partager</button></nav>
+    <p id="share-status" role="status" hidden></p>
+    <header class="game-header">
+      <p class="eyebrow">Observe & illumine</p>
+      <h1>La <span>Lumière</span></h1>
+      <p class="intro">Un peu de lumière pour les petits fantômes.</p>
+    </header>
+    <div class="room-heading"><label class="level-picker"><span class="sr-only">Choisir une chambre</span><select id="level-select" aria-label="Choisir une chambre"></select></label><output id="count" aria-live="off"></output></div>
+    <p id="instruction" class="status" role="status"></p>
+    <div id="play-area">
+      <div class="room"><div id="light-board" role="group" aria-label="La maison" aria-describedby="instruction controls-help"></div><svg id="rays" aria-hidden="true"></svg></div>
+      <div id="inventory" class="inventory">
+        <button id="supply" class="supply" aria-label="Prendre un miroir"><span class="reserve-icon" aria-hidden="true"></span><span>Miroirs <b id="remaining"></b></span></button>
+        <button id="prism-supply" class="supply" hidden aria-label="Prendre un prisme"><span class="reserve-icon" aria-hidden="true"></span><span>Prismes <b id="prisms-remaining"></b></span></button>
+        <span id="reserve-help" class="reserve-help">Glisse une pièce<br>dans la maison.</span>
+      </div>
+      <div id="drag-piece" class="drag-piece" hidden aria-hidden="true"></div>
+    </div>
+    <div class="piece-actions" aria-label="Actions de la pièce sélectionnée"><button id="move" class="quiet" disabled>Déplacer</button><button id="remove" class="quiet" disabled>Retirer</button><button id="restart" class="quiet">Recommencer</button></div>
+    <section id="completion" class="light-completion" hidden aria-labelledby="completion-title"><h2 id="completion-title">Toute la maison sourit !</h2><button id="next" class="primary">Chambre suivante →</button></section>
+    <p id="prism-help" class="prism-help" hidden>Le prisme garde un rayon tout droit et en envoie un autre sur le côté.</p>
+    <p id="controls-help" class="light-help">Touche une pièce pour la tourner. Pour la poser, glisse-la ou touche la réserve puis une case. Ramène-la à la réserve pour la retirer.</p>
+    <noscript>Active JavaScript pour jouer à La Lumière.</noscript>
+  </main>
+</body>
+</html>
