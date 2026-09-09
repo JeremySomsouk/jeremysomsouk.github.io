@@ -6,7 +6,7 @@ GitHub Pages publishes the existing site from `docs/`.
 
 Developer documentation, code identifiers, and diagnostic logs use English. Interfaces, accessibility labels, and reading texts remain in French.
 
-The menu is available at `/cabane/` and contains three independent activities:
+The menu is available at `/cabane/` and contains four independent activities:
 
 - `/cabane/memory/`: a Rust engine compiled to WebAssembly, with an HTML/CSS interface and local SVG illustrations. Each game contains three randomly shuffled boards with 3, 4, and 5 pairs. Playing again or restarting returns to 3 pairs. Progress is not saved.
 - `/cabane/lecture/`: La Fluence: text selection, adjustable text size, compact fixed reading controls, and dated reading history. The existing `/lecture/` route is preserved for compatibility. This activity uses native browser APIs in JavaScript and does not depend on the Memory WASM module.
@@ -81,3 +81,12 @@ Multiple solutions may exist; uniqueness and difficulty scoring are outside this
 ### Add an activity
 
 Create a subdirectory under `docs/cabane/` containing its own `index.html`, then add its card to the menu in `docs/cabane/index.html`. Use relative asset paths and `../` to return to the menu.
+
+
+### Arithmetic and handwriting
+
+`/cabane/calculs/` offers five mixed addition/subtraction questions per round. Level 1 uses operands and answers from 0–9; level 2 uses 0–20 and always includes a two-digit answer. Subtraction never yields a negative result. Completing level 1 offers level 2; both remain selectable for testing. Progress is session-only.
+
+Children draw one digit per canvas, inspect the recognized value, then explicitly validate. Level 2 always shows tens and units, so the UI does not reveal the answer length; blank tens means zero, but units are required. Recognition never receives the expected answer. Editing a stroke invalidates the previous prediction, and pending recognition blocks validation. A digit selector supports correction and keyboard input, including when recognition fails to load.
+
+`/cabane/chiffres/` is the free-drawing diagnostic page. The previously missing HTML, input module, and preprocessing module are now included. Both pages share pointer capture, multi-stroke input, and centered 28×28 preprocessing. Templates now represent complete strokes and use the same normalization as input. The recognizer remains an experimental template matcher, not a learned model; similarity and relative scores are not calibrated accuracy estimates. Real child handwriting accuracy has not been measured. No drawings are uploaded or saved.

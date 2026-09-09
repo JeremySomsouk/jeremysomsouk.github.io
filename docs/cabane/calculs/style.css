@@ -1,0 +1,25 @@
+.maths { max-width:650px; }
+.maths .game-header h1 { font-size:clamp(2.3rem,7vw,3.8rem); }
+.maths .eyebrow { margin-top:18px; }
+.maths .intro { margin-bottom:18px; }
+.level-label { font-weight:700; margin-right:10px; }
+.maths select { font:inherit; padding:12px; min-height:48px; max-width:100%; border:1px solid #bccaba; border-radius:12px; background:#fffdf8; color:var(--ink); }
+#play { text-align:center; }
+#progress { color:var(--muted); margin-bottom:6px; }
+progress { width:100%; height:8px; accent-color:var(--green); }
+#question { font-size:clamp(2.6rem,10vw,4rem); margin:18px 0 10px; }
+#instructions { color:var(--muted); line-height:1.5; }
+.pads { display:flex; justify-content:center; gap:12px; }
+.pad { flex:1; min-width:0; max-width:270px; }
+.pad label { display:block; font-size:.9rem; font-weight:700; margin-bottom:8px; }
+.pad canvas,#drawing { display:block; width:100%; aspect-ratio:1; height:auto; touch-action:none; user-select:none; background:#fffdf8; border:2px dashed #9bac99; border-radius:20px; }
+.pad canvas { margin-bottom:8px; }
+.pad select { width:100%; margin:8px 0; }
+.pad .quiet { padding:10px; min-height:44px; }
+.actions { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+.primary:disabled { opacity:.45; }
+#recognized { font-weight:750; min-height:1.5em; }
+#feedback { min-height:1.5em; color:var(--green); }
+#drawing { max-width:320px; margin:20px auto; }
+#engine-status { line-height:1.5; }
+.maths select:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
