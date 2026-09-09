@@ -1,8 +1,11 @@
 {
-  "defaultTextId": "petit-matin-v1",
+  "defaultTextId": "petit-chaperon-rouge-v1",
   "entries": [
-    { "from": "2026-09-08", "textId": "petit-matin-v1" },
-    { "from": "2026-09-14", "textId": "bateau-v1" },
-    { "from": "2026-09-21", "textId": "jardin-v1" }
+    { "from": "2026-09-07", "textId": "petit-chaperon-rouge-v1" },
+    { "from": "2026-09-14", "textId": "vilain-petit-canard-v1" },
+    { "from": "2026-09-21", "textId": "petit-poucet-v1" },
+    { "from": "2026-09-28", "textId": "boucles-or-trois-ours-v1" },
+    { "from": "2026-10-05", "textId": "hansel-gretel-v1" },
+    { "from": "2026-10-12", "textId": "petite-poule-rousse-v1" }
   ]
 }
