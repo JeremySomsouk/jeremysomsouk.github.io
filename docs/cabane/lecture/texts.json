@@ -1,20 +1,38 @@
 [
   {
-    "id": "petit-matin-v1",
-    "title": "Le petit matin",
-    "author": "Poème original de démonstration",
-    "body": "Le soleil ouvre un œil doré,\nUn petit chat vient s’étirer.\nSur le tapis, près du jardin,\nIl fait trois pas, c’est le matin.\n\nUn oiseau chante sur le toit,\nLe chat l’écoute et reste coi.\nPuis il s’endort sur un coussin,\nÀ tout à l’heure, petit coquin !"
+    "id": "petit-chaperon-rouge-v1",
+    "title": "Le Petit Chaperon Rouge",
+    "author": "Charles Perrault",
+    "body": "Il était une fois une petite fille que tout le monde\naimait au village. Sa mère lui avait confectionné un\nravissant chaperon de couleur rouge. L’enfant ne\nvoulait plus s’en séparer, si bien qu’on l’appela Le\nPetit Chaperon Rouge.\nUn beau matin, sa maman ayant fait un gâteau lui dit :\n\"-Mon enfant, va voir comment se porte ta\ngrand-mère et apporte lui ce panier qui contient du\ngâteau et un petit pot de beurre.\""
   },
   {
-    "id": "bateau-v1",
-    "title": "Le bateau de papier",
-    "author": "Poème original de démonstration",
-    "body": "J’ai fait un bateau de papier,\nPour voir les flaques du quartier.\nUne brindille est son grand mât,\nUne fourmi monte tout en bas.\n\nLe vent le pousse doucement,\nIl part au fil du petit courant.\nAu bout du monde, il trouvera\nUne feuille où dormir tout bas.\n\nQuand la pluie cesse de tomber,\nJe viens doucement le chercher.\nDans ma chambre, au bord du lit,\nMon bateau rêve toute la nuit."
+    "id": "vilain-petit-canard-v1",
+    "title": "Le vilain petit canard",
+    "author": "Hans Christian Andersen",
+    "body": "Il était une fois une cane qui couvait ses œufs depuis\ndéjà fort longtemps. Elle avait hâte que ses petits\nbrisent leur coquille et la suivent sur l’eau calme de\nl’étang. Enfin, un beau matin, des craquements se\nfirent entendre et des petites boules de plumes\ndorées se pressèrent autour de leur maman. Un des\nœufs cependant était plus gros que les autres et ne\ns’était pas ouvert. La voisine de la cane lui dit :\n\"- On dirait un œuf de dindon ! Il ne te causera que\ndes ennuis, et l’oiseau qui en sortira ne saura même\npas nager, j’en suis sure !\""
   },
   {
-    "id": "jardin-v1",
-    "title": "Le jardin des surprises",
-    "author": "Poème original de démonstration",
-    "body": "Dans le jardin de mon grand-père,\nUn escargot sort de la terre.\nIl porte sa maison sur le dos,\nEt se repose près de l’eau.\n\nSous une feuille de salade,\nDeux petits vers font une balade.\nUne abeille au manteau rayé\nVient sur les fleurs se balancer.\n\nJe marche sans faire de bruit,\nPour écouter ce monde qui vit.\nUn merle saute près de mes pieds,\nPuis va se cacher dans le pommier.\n\nJe rentre avec un beau trésor :\nUne plume et un bouton d’or.\nDemain, je reviendrai ici,\nDire bonjour à mes amis."
+    "id": "petit-poucet-v1",
+    "title": "Le Petit Poucet",
+    "author": "Charles Perrault",
+    "body": "Il était une fois un bûcheron et sa femme qui avaient\nsept garçons. Ils vivaient pauvrement. Une année de\nfamine, la disette fut telle qu’un soir les parents\ndécidèrent d’abandonner leurs enfants, en les\nperdant dans la forêt, plutôt que de les voir mourir de\nfaim. Le plus jeune des fils, si petit qu’on l’appelait le\nPetit Poucet, avait tout entendu. De bon matin, il alla\nemplir ses poches de petits cailloux blancs. Plus tard,\nle bûcheron mena sa famille jusqu’à une clairière, où\nil demanda à ses enfants de ramasser du bois. Les\ngarçons se dispersèrent et les parents en profitèrent\npour s’éloigner discrètement."
+  },
+  {
+    "id": "boucles-or-trois-ours-v1",
+    "title": "Boucles d’Or et les trois ours",
+    "author": "Robert Southey",
+    "body": "Il était une fois une famille ours qui vivait dans une\nsimple mais confortable maisonnette au fond des bois.\nIl y avait un gros Papa-Ours, un peu bourru, une\nMaman-Ours de taille moyenne et un Bébé-Ours.\nChacun possédait sa chaise et son bol. Dans la\nchambre, à côté de la pièce principale, se trouvaient\ntrois lits : un très grand pour Papa-Ours, un moyen\npour Maman-Ours et un tout petit pour Bébé-Ours.\nUn jour, Papa-Ours cuisina une bonne bouillie\nd’épeautre, en versa dans chacun des bols, y ajouta\nune pointe de miel.\n\"Nous ne pouvons pas la manger de suite, dit-il, c’est\nbeaucoup trop chaud !\""
+  },
+  {
+    "id": "hansel-gretel-v1",
+    "title": "Hansel et Gretel",
+    "author": "Frères Grimm",
+    "body": "Il était une fois près d’une grande forêt un bûcheron\nqui vivait avec sa femme, sa fille et son fils. Ils étaient\nsi pauvres que la femme insista pour que son mari\nabandonne ses enfants. A contre cœur, il les\nemmena dans la forêt profonde et leur demanda de\nse coucher près d’un arbre pendant qu’il allait couper\ndu bois. Le temps passa et personne ne vint chercher\nles petits. Ils marchèrent toute la nuit et au petit\nmatin ils arrivèrent devant une maisonnette. Ses\nmurs étaient en pain d’épices, son toit en biscuit et\nses fenêtres en sucre. Ils étaient si affamés qu’ils\ncommencèrent à la grignoter en se léchant les doigts."
+  },
+  {
+    "id": "petite-poule-rousse-v1",
+    "title": "La petite poule rousse",
+    "author": "Conte traditionnel",
+    "body": "Il était une fois tout au fond des bois, une petite\nmaison qui était habitée par une petite poule qui\ns’appelait Poulerousse. Elle passait tout son temps à\nnettoyer et astiquer car elle ne supportait pas le\ndésordre et la poussière. Lorsqu’elle n’avait pas un\nplumeau à la main, elle recevait chez elle Tourterelle,\nsa meilleure amie.\n\"- Rou rou rou ... c’est moi ! roucoulait la tourterelle\nen frappant à la porte du bout de son aile.\"\n\"- Cot cot cot ... entre donc ! caquetait Poulerousse,\nheureuse d’avoir de la visite.\"\nJamais lassées de se retrouver, elles discutaient et\njouaient aux cartes en croquant des petits gâteaux\naux amandes. L’hiver, elles cousaient et tricotaient\nsans arrêt."
   }
 ]
