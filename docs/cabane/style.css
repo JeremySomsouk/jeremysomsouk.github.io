@@ -384,9 +384,14 @@ h2 {
 .reading-preview {
   background:#f4dfc9;
 }
-.reading-preview svg {
-  height:140px;
-  width:210px;
+.illustrated-preview {
+  padding:0;
+}
+.illustrated-preview img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 .reading {
   max-width:900px;
