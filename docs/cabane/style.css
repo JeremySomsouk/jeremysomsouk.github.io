@@ -87,6 +87,9 @@ h1 span {
   margin-top:38px;
 }
 .game-tile {
+  --pebble-bg:#e3eddf;
+  --pebble-ink:#276858;
+  --pebble-edge:#b9ccb2;
   background:#fffdf8;
   border:1px solid #dcdccd;
   border-radius:26px;
@@ -95,8 +98,20 @@ h1 span {
   box-shadow:0 5px 0 #e4e2d7;
   transition:transform .2s;
 }
-.game-tile:hover {
-  transform:translateY(-4px);
+@media(hover:hover) {
+  .game-tile:hover {
+    transform:translateY(-4px);
+  }
+}
+.reading-tile,.counting-tile {
+  --pebble-bg:#f4dfc9;
+  --pebble-ink:#984327;
+  --pebble-edge:#ddbaa0;
+}
+.light-tile {
+  --pebble-bg:#e8e3f0;
+  --pebble-ink:#514368;
+  --pebble-edge:#c6bad8;
 }
 .preview {
   height:185px;
@@ -144,19 +159,29 @@ h2 {
   letter-spacing:-.04em;
   margin:12px 0;
 }
-.tile-content h2 {
-  display:flex;
-  justify-content:space-between;
-}
 .tile-content p {
   color:var(--muted);
   line-height:1.5;
 }
 .play-label {
-  display:flex;
-  justify-content:space-between;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  min-width:88px;
+  padding:10px 24px;
   margin-top:24px;
+  border:1px solid var(--pebble-edge);
+  border-radius:48% 52% 46% 54% / 50% 46% 54% 50%;
+  background:var(--pebble-bg);
+  color:var(--pebble-ink);
+  box-shadow:0 3px 0 var(--pebble-edge);
   font-weight:750;
+  transition:transform .15s,box-shadow .15s;
+}
+.game-tile:active .play-label {
+  transform:translateY(3px);
+  box-shadow:0 0 0 var(--pebble-edge);
 }
 .footer-note {
   text-align:center;
