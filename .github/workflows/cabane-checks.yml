@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - 'docs/**'
+      - 'games/**'
       - 'scripts/**'
       - '.github/workflows/cabane-checks.yml'
   push:
     branches: [master]
     paths:
       - 'docs/**'
+      - 'games/**'
       - 'scripts/**'
       - '.github/workflows/cabane-checks.yml'
 
@@ -28,8 +30,17 @@ jobs:
         run: node --test scripts/*.test.mjs
       - name: JavaScript syntax and whitespace
         run: |
-          for file in docs/cabane/lumiere/*.mjs; do node --check "$file"; done
+          for file in docs/cabane/lumiere/*.mjs docs/cabane/river/*.mjs; do node --check "$file"; done
           git diff --check
+      - name: Rust tests and Wasm build
+        run: |
+          rustup toolchain install 1.96.0 --profile minimal
+          rustup target add wasm32-unknown-unknown --toolchain 1.96.0
+          rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
+          rustup run 1.96.0 cargo test --manifest-path games/river/Cargo.toml
+          rustup run 1.96.0 cargo clippy --manifest-path games/memory/Cargo.toml --all-targets -- -D warnings
+          rustup run 1.96.0 cargo clippy --manifest-path games/river/Cargo.toml --all-targets -- -D warnings
+          bash scripts/build-games.sh
       - name: Production Jekyll build
         uses: actions/jekyll-build-pages@v1
         with:
@@ -40,6 +51,8 @@ jobs:
           for file in docs/cabane/lumiere/*; do
             cmp "$file" "_site/cabane/lumiere/$(basename "$file")"
           done
+          cmp docs/cabane/memory/game.wasm _site/cabane/memory/game.wasm
+          cmp docs/cabane/river/game.wasm _site/cabane/river/game.wasm
       - uses: actions/upload-artifact@v4
         with:
           name: cabane-site

@@ -6,7 +6,7 @@ const menuPath = new URL('../docs/cabane/index.html', import.meta.url);
 
 test('all Cabane activity cards use published preview images', () => {
   const menu = readFileSync(menuPath, 'utf8');
-  const previews = ['fluence', 'memory', 'chemin', 'calculs', 'lumiere'];
+  const previews = ['fluence', 'memory', 'chemin', 'calculs', 'lumiere', 'river'];
 
   for (const name of previews) {
     const src = `./images/${name}-preview.webp`;

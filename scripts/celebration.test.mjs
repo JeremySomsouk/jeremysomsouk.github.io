@@ -187,7 +187,7 @@ test('the shared stylesheet keeps the overlay fixed, inert and still under reduc
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.cabane-celebration[^{]*\{[^}]*animation:\s*none/s);
 });
 
-test('the five games each wire one celebration at the requested completion point', () => {
+test('the five direct games each wire one celebration at the requested completion point', () => {
   const cases = [
     ['lecture/reading.js', /result\.hidden = false;\s*\n\s*celebrate\(result\)/],
     ['chemin/game.mjs', /game\.status === 'completed' && !celebrated/],
@@ -201,4 +201,13 @@ test('the five games each wire one celebration at the requested completion point
     assert.equal((source.match(/\bcelebrate\(/g) ?? []).length, 1, `${file} calls the effect once`);
     assert.match(source, completionPattern, `${file} guards the intended completion point`);
   }
+});
+
+test('La Rivière wires one shared celebration through its controller', () => {
+  const bootstrap = readFileSync(new URL('../docs/cabane/river/game.mjs', import.meta.url), 'utf8');
+  const controller = readFileSync(new URL('../docs/cabane/river/app.mjs', import.meta.url), 'utf8');
+  assert.match(bootstrap, /import \{ celebrate \} from '\.\.\/celebration\.mjs';/);
+  assert.match(bootstrap, /celebrate: effect = celebrate/);
+  assert.equal((bootstrap.match(/\bcreateApp\(/g) ?? []).length, 1);
+  assert.match(controller, /game\.celebrate\(completion\)/);
 });

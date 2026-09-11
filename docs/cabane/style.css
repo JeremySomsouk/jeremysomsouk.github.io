@@ -113,6 +113,11 @@ h1 span {
   --pebble-ink:#514368;
   --pebble-edge:#c6bad8;
 }
+.river-tile {
+  --pebble-bg:#d7ecf5;
+  --pebble-ink:#28646f;
+  --pebble-edge:#a7ccdc;
+}
 .preview {
   height:185px;
   background:#e3eddf;
