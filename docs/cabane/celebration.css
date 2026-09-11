@@ -6,7 +6,7 @@
   pointer-events: none;
 }
 
-.cabane-celebration span {
+.cabane-celebration-burst span {
   position: absolute;
   left: var(--origin-x);
   top: var(--origin-y);
@@ -42,7 +42,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--rotation)) scale(var(--end-scale));
+    transform: translate(-50%, -50%) translate(var(--x), var(--y)) translateX(var(--drift-x)) rotate(var(--rotation)) scale(var(--end-scale));
   }
 }
 
@@ -59,7 +59,7 @@
 }
 
 @media(prefers-reduced-motion: reduce) {
-  .cabane-celebration span {
+  .cabane-celebration-burst span {
     animation: none;
     display: none;
   }
