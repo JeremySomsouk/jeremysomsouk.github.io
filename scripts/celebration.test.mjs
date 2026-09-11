@@ -75,13 +75,30 @@ test('a celebration emits rectangles and stars from its origin and removes them 
   const overlay = body.children.at(-1);
   assert.equal(overlay.className, 'cabane-celebration');
   assert.equal(overlay.getAttribute('aria-hidden'), 'true');
-  assert.equal(overlay.children.length, 60);
-  assert.equal(overlay.children.filter(child => child.className === 'cabane-celebration-rectangle').length, 42);
-  assert.equal(overlay.children.filter(child => child.className === 'cabane-celebration-star').length, 18);
-  const originX = parseInt(overlay.style.properties.get('--origin-x'), 10);
-  assert.ok(originX >= 139 && originX <= 261, `origin x ${originX} should stay within the randomized range`);
-  assert.equal(overlay.style.properties.get('--origin-y'), '160px');
-  for (const particle of overlay.children) {
+  assert.equal(overlay.children.length, 3);
+  assert.equal(overlay.children.filter(child => child.className === 'cabane-celebration-burst').length, 3);
+  const particles = overlay.children.flatMap(burst => burst.children);
+  assert.equal(particles.length, 60);
+  assert.equal(overlay.children.every(burst => burst.children.length === 20), true);
+  assert.equal(particles.filter(child => child.className === 'cabane-celebration-rectangle').length, 42);
+  assert.equal(particles.filter(child => child.className === 'cabane-celebration-star').length, 18);
+  assert.deepEqual(overlay.children.map(burst => burst.children[0].style.properties.get('--delay')), ['0.00s', '0.22s', '0.44s']);
+  const burstOrigins = overlay.children;
+  const originXs = burstOrigins
+    .map(burstOrigin => parseInt(burstOrigin.style.properties.get('--origin-x'), 10))
+    .sort((a, b) => a - b);
+  assert.ok(originXs[1] - originXs[0] >= 80, 'adjacent burst origins stay apart');
+  assert.ok(originXs[2] - originXs[1] >= 80, 'adjacent burst origins stay apart');
+  for (const burstOrigin of burstOrigins) {
+    const originX = parseInt(burstOrigin.style.properties.get('--origin-x'), 10);
+    assert.ok(originX >= 47 && originX <= 354, `origin x ${originX} should stay within the randomized range`);
+    assert.equal(burstOrigin.style.properties.get('--origin-y'), '160px');
+  }
+  const drifts = particles.map(particle => parseInt(particle.style.properties.get('--drift-x'), 10));
+  assert.equal(drifts.length, 60);
+  assert.ok(drifts.every(drift => drift >= -48 && drift <= 48), 'each drift stays within the horizontal random range');
+  assert.ok(new Set(drifts).size > 1, 'particles use more than one horizontal drift');
+  for (const particle of particles) {
     for (const property of ['--x', '--y', '--rotation', '--duration', '--delay', '--particle-color']) {
       assert.ok(particle.style.properties.has(property), `${particle.className} has ${property}`);
     }
@@ -94,15 +111,17 @@ test('a celebration emits rectangles and stars from its origin and removes them 
 
 test('the burst origin shifts randomly across part of the viewport width', () => {
   const { body, origin, frames } = setupDocument({ viewport: { width: 1024, height: 768 } });
-  const random = mock.method(Math, 'random', () => 0.25);
+  const originRandomValues = [0.1, 0.4, 0.9];
+  let randomCall = 0;
+  const random = mock.method(Math, 'random', () => originRandomValues[randomCall++] ?? 0.25);
   mock.timers.enable({ apis: ['setTimeout'] });
 
   try {
     celebrate(origin);
     flushFrames(frames);
-    const overlay = body.children.at(-1);
-    assert.equal(overlay.style.properties.get('--origin-x'), '169px');
-    assert.equal(overlay.style.properties.get('--origin-y'), '160px');
+    const burstOrigins = body.children.at(-1).children;
+    assert.deepEqual(burstOrigins.map(burst => burst.style.properties.get('--origin-x')), ['50px', '196px', '350px']);
+    assert.deepEqual(burstOrigins.map(burst => burst.style.properties.get('--origin-y')), ['160px', '160px', '160px']);
     mock.timers.tick(2600);
   } finally {
     random.mock.restore();
@@ -148,9 +167,12 @@ test('a low mobile completion point keeps the burst inside the viewport', () => 
   celebrate(origin);
   flushFrames(frames);
   const overlay = body.children.at(-1);
-  const originX = parseInt(overlay.style.properties.get('--origin-x'), 10);
-  assert.ok(originX >= 166 && originX <= 211, `origin x ${originX} should stay within the randomized range`);
-  assert.equal(overlay.style.properties.get('--origin-y'), '480px');
+  const burstOrigins = overlay.children;
+  for (const burstOrigin of burstOrigins) {
+    const originX = parseInt(burstOrigin.style.properties.get('--origin-x'), 10);
+    assert.ok(originX >= 131 && originX <= 244, `origin x ${originX} should stay within the randomized range`);
+    assert.equal(burstOrigin.style.properties.get('--origin-y'), '480px');
+  }
   mock.timers.tick(2600);
   assert.equal(body.children.length, 0);
   mock.timers.reset();
@@ -169,7 +191,7 @@ test('a celebration waits one frame so focus-driven scrolling finishes before it
   frames.splice(0).forEach(frame => frame());
 
   const overlay = body.children.at(-1);
-  assert.equal(overlay.style.properties.get('--origin-y'), '300px');
+  assert.deepEqual(overlay.children.map(burst => burst.style.properties.get('--origin-y')), ['300px', '300px', '300px']);
   mock.timers.tick(2600);
   assert.equal(body.children.length, 0);
   mock.timers.reset();
@@ -179,8 +201,10 @@ test('the shared stylesheet keeps the overlay fixed, inert and still under reduc
   const css = readFileSync(new URL('../docs/cabane/celebration.css', import.meta.url), 'utf8');
   assert.match(css, /\.cabane-celebration\s*\{[^}]*position:\s*fixed/s);
   assert.match(css, /\.cabane-celebration\s*\{[^}]*pointer-events:\s*none/s);
+  assert.match(css, /\.cabane-celebration-burst span\s*\{[^}]*left:\s*var\(--origin-x\)/s);
   assert.match(css, /\.cabane-celebration-rectangle\s*\{[^}]*border-radius/s);
   assert.match(css, /\.cabane-celebration-star\s*\{[^}]*clip-path:\s*polygon/s);
+  assert.match(css, /translateX\(var\(--drift-x\)\)/s);
   assert.match(css, /animation:\s*cabane-celebration-burst\s+var\(--duration\)[^;]*var\(--delay,\s*0s\)\s+both/s);
   assert.match(css, /@media\s*\(max-width:\s*480px\)[\s\S]*\.cabane-celebration-rectangle\s*\{[^}]*width:\s*14px[^}]*height:\s*18px/s);
   assert.match(css, /@media\s*\(max-width:\s*480px\)[\s\S]*\.cabane-celebration-star\s*\{[^}]*width:\s*20px[^}]*height:\s*20px/s);
