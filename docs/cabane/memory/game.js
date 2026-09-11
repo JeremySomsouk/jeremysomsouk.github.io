@@ -1,3 +1,5 @@
+import { celebrate } from '../celebration.mjs';
+
 const shapes = [
   ['Soleil', '<g fill="#e8aa30"><circle cx="50" cy="50" r="23"/><path d="M46 2h8v16h-8zM46 82h8v16h-8zM2 46h16v8H2zM82 46h16v8H82z"/><path d="m14 20 6-6 12 12-6 6zm54 54 6-6 12 12-6 6zm0-48 12-12 6 6-12 12zm-54 54 12-12 6 6-12 12z"/></g>'],
   ['Fleur', '<g fill="#cc7190"><circle cx="50" cy="24" r="20"/><circle cx="75" cy="43" r="20"/><circle cx="65" cy="73" r="20"/><circle cx="35" cy="73" r="20"/><circle cx="25" cy="43" r="20"/></g><circle cx="50" cy="48" r="16" fill="#f4cf63"/>'],
@@ -87,6 +89,7 @@ function reveal(index) {
     document.querySelector('#result-text').textContent = finished ? 'Une nouvelle partie ? Les cartes seront mélangées.' : `On continue avec ${round + 4} paires ?`;
     next.textContent = finished ? 'Rejouer ↻' : 'Grille suivante →';
     result.hidden = false;
+    celebrate(result);
     next.focus({ preventScroll: true });
     result.scrollIntoView({ block: 'nearest', behavior: 'instant' });
   }
