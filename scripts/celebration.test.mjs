@@ -78,7 +78,8 @@ test('a celebration emits rectangles and stars from its origin and removes them 
   assert.equal(overlay.children.length, 60);
   assert.equal(overlay.children.filter(child => child.className === 'cabane-celebration-rectangle').length, 42);
   assert.equal(overlay.children.filter(child => child.className === 'cabane-celebration-star').length, 18);
-  assert.equal(overlay.style.properties.get('--origin-x'), '200px');
+  const originX = parseInt(overlay.style.properties.get('--origin-x'), 10);
+  assert.ok(originX >= 139 && originX <= 261, `origin x ${originX} should stay within the randomized range`);
   assert.equal(overlay.style.properties.get('--origin-y'), '160px');
   for (const particle of overlay.children) {
     for (const property of ['--x', '--y', '--rotation', '--duration', '--delay', '--particle-color']) {
@@ -89,6 +90,24 @@ test('a celebration emits rectangles and stars from its origin and removes them 
   mock.timers.tick(2600);
   assert.equal(body.children.length, 0);
   mock.timers.reset();
+});
+
+test('the burst origin shifts randomly across part of the viewport width', () => {
+  const { body, origin, frames } = setupDocument({ viewport: { width: 1024, height: 768 } });
+  const random = mock.method(Math, 'random', () => 0.25);
+  mock.timers.enable({ apis: ['setTimeout'] });
+
+  try {
+    celebrate(origin);
+    flushFrames(frames);
+    const overlay = body.children.at(-1);
+    assert.equal(overlay.style.properties.get('--origin-x'), '169px');
+    assert.equal(overlay.style.properties.get('--origin-y'), '160px');
+    mock.timers.tick(2600);
+  } finally {
+    random.mock.restore();
+    mock.timers.reset();
+  }
 });
 
 test('starting another celebration replaces an unfinished one instead of stacking overlays', () => {
@@ -129,7 +148,8 @@ test('a low mobile completion point keeps the burst inside the viewport', () => 
   celebrate(origin);
   flushFrames(frames);
   const overlay = body.children.at(-1);
-  assert.equal(overlay.style.properties.get('--origin-x'), '188px');
+  const originX = parseInt(overlay.style.properties.get('--origin-x'), 10);
+  assert.ok(originX >= 166 && originX <= 211, `origin x ${originX} should stay within the randomized range`);
   assert.equal(overlay.style.properties.get('--origin-y'), '480px');
   mock.timers.tick(2600);
   assert.equal(body.children.length, 0);
