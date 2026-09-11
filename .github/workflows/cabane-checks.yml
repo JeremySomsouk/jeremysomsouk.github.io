@@ -35,6 +35,7 @@ jobs:
       - name: Rust tests and Wasm build
         run: |
           rustup toolchain install 1.96.0 --profile minimal
+          rustup component add clippy --toolchain 1.96.0
           rustup target add wasm32-unknown-unknown --toolchain 1.96.0
           rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
           rustup run 1.96.0 cargo test --manifest-path games/river/Cargo.toml
