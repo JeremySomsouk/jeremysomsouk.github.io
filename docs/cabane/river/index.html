@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4eb">
+  <title>La Rivière · Cabane</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../celebration.css">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="../share.mjs"></script>
+  <script type="module" src="./game.mjs"></script>
+</head>
+<body>
+  <main class="shell river">
+    <nav class="toolbar" aria-label="Navigation de Cabane"><a class="back" href="../">← La cabane</a><button id="share" class="quiet">Partager</button></nav>
+    <p id="share-status" role="status" hidden></p>
+    <header class="game-header">
+      <p class="eyebrow">Observe & arrose</p>
+      <h1>La <span>Rivière</span></h1>
+      <p class="intro" id="instructions">Tourne un canal, guide l’eau et arrose chaque plante.</p>
+    </header>
+    <p id="engine-status" role="status" hidden></p>
+    <button id="retry" class="quiet" hidden>Réessayer</button>
+    <div class="river-meta"><p id="progress">0 / 1 plantes arrosées</p><p id="moves">0 tour</p></div>
+    <p id="status" class="status" role="status" aria-live="polite">Le jeu se prépare.</p>
+    <div id="board" class="river-board" role="group" aria-label="Grille de La Rivière" aria-describedby="instructions" aria-busy="true"></div>
+    <div class="river-actions"><button id="undo" class="quiet" disabled>Annuler</button><button id="restart" class="quiet">Recommencer</button></div>
+    <section id="completion" class="result" hidden aria-labelledby="result-title">
+      <h2 id="result-title">La rivière coule !</h2>
+      <p id="result-text"></p>
+      <button id="next" class="primary" disabled>Rivière suivante →</button>
+    </section>
+    <noscript>Active JavaScript pour jouer à La Rivière.</noscript>
+  </main>
+</body>
+</html>

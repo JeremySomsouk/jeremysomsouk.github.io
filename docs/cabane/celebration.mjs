@@ -27,8 +27,10 @@ function originPoint(origin) {
   const viewportHeight = globalThis.innerHeight ?? Number.POSITIVE_INFINITY;
   if (!rect) return { x: '50vw', y: '45vh' };
   const maximumOriginY = viewportHeight * 0.72;
+  const centeredX = rect.left + rect.width / 2;
+  const horizontalJitter = (Math.random() - 0.5) * viewportWidth * 0.12;
   return {
-    x: `${Math.round(Math.min(Math.max(rect.left + rect.width / 2, 0), viewportWidth))}px`,
+    x: `${Math.round(Math.min(Math.max(centeredX + horizontalJitter, 0), viewportWidth))}px`,
     y: `${Math.round(Math.min(Math.max(rect.top + rect.height / 2, 0), maximumOriginY))}px`,
   };
 }
