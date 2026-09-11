@@ -1,0 +1,54 @@
+.cabane-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cabane-celebration span {
+  position: absolute;
+  left: var(--origin-x);
+  top: var(--origin-y);
+  opacity: 0;
+  animation: cabane-celebration-burst var(--duration) cubic-bezier(.2,.7,.3,1) both;
+  will-change: opacity, transform;
+}
+
+.cabane-celebration-rectangle {
+  width: 11px;
+  height: 15px;
+  border-radius: 3px;
+  background: var(--particle-color);
+}
+
+.cabane-celebration-star {
+  width: 16px;
+  height: 16px;
+  background: var(--particle-color);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+@keyframes cabane-celebration-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(var(--start-scale));
+  }
+  12% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--rotation)) scale(var(--end-scale));
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .cabane-celebration span {
+    animation: none;
+    display: none;
+  }
+}

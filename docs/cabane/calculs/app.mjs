@@ -1,6 +1,7 @@
 import { createDrawing } from '../chiffres/drawing.mjs';
 import { normalizeDigit } from '../chiffres/preprocess.mjs';
 import { createRound, readAnswer } from './game.mjs';
+import { celebrate } from '../celebration.mjs';
 const $ = id => document.getElementById(id);
 let recognizer;
 let level = 1, round, index = 0, solved = false, pads = [], digits = [], pending = [], uncertain = [];
@@ -60,7 +61,7 @@ $('validate').addEventListener('click', () => {
 $('next').addEventListener('click', () => {
   if (!solved) return;
   if (++index < round.length) { showQuestion(); $('question').focus(); }
-  else { $('play').hidden = true; $('complete').hidden = false; $('summary').textContent = `Tu as résolu les 5 calculs du niveau ${level}.`; $('advance').hidden = level === 2; $('complete').querySelector('h2').focus(); }
+  else { $('play').hidden = true; $('complete').hidden = false; celebrate($('complete')); $('summary').textContent = `Tu as résolu les 5 calculs du niveau ${level}.`; $('advance').hidden = level === 2; $('complete').querySelector('h2').focus(); }
 });
 $('level').addEventListener('change', resetRound);
 $('replay').addEventListener('click', resetRound);

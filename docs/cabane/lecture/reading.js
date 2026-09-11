@@ -2,6 +2,7 @@ import { ReadingTimer, formatDuration } from './timer.mjs';
 import { scheduledTextId } from './schedule.mjs';
 import { trackReadingViewport } from './viewport.mjs';
 import { setupShare } from '../share.mjs?v=20260908-mobile-2';
+import { celebrate } from '../celebration.mjs';
 
 const choice = document.querySelector('#text-choice');
 const start = document.querySelector('#start');
@@ -136,6 +137,7 @@ stop.addEventListener('click', () => {
   renderHistory();
   elapsed.textContent = formatDuration(duration);
   result.hidden = false;
+  celebrate(result);
   controls.hidden = true;
   result.focus();
 });

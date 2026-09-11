@@ -3,6 +3,7 @@ import { createGame } from './state.mjs';
 import { createBoard } from './board.mjs';
 import { attachInput } from './input.mjs';
 import { mirrorArt, prismArt, pieceArt } from './art.mjs';
+import { celebrate } from '../celebration.mjs';
 
 const byId = id => document.getElementById(id);
 const board = byId('light-board');
@@ -16,6 +17,7 @@ let draw;
 let selected = null;
 let moving = false;
 let input;
+let celebrated = false;
 
 const groups = [1, 2].map(tier => {
   const group = document.createElement('optgroup');
@@ -51,6 +53,10 @@ function render() {
   byId('move').disabled = byId('remove').disabled = !game.pieces.some(piece => piece.id === selected) || result.isSolved;
   byId('move').setAttribute('aria-pressed', String(moving));
   byId('completion').hidden = !result.isSolved;
+  if (result.isSolved && !celebrated) {
+    celebrated = true;
+    celebrate(byId('completion'));
+  }
   byId('next').textContent = index === levels.length - 1 ? 'Rejouer les dix chambres ↺' : levels[index + 1].tier === 2 && game.level.tier !== 2 ? 'Découvrir le niveau 2 →' : 'Chambre suivante →';
   let message = 'Éclaire tous les fantômes !';
   if (game.level.hint && game.pieces.length === 0) message = game.level.hintType === 'prism' ? 'Glisse le prisme sur le ＋ !' : 'Glisse le miroir sur le ＋ !';
@@ -65,6 +71,7 @@ function render() {
 function start(nextIndex) {
   input?.cancel();
   index = nextIndex;
+  celebrated = false;
   picker.value = String(index);
   game = createGame(levels[index]);
   selected = null;
@@ -114,6 +121,6 @@ input = attachInput({
 });
 byId('move').addEventListener('click', () => { moving = !moving; render(); });
 byId('remove').addEventListener('click', () => { if (game.remove(selected)) { selected = null; moving = false; render(); } });
-byId('restart').addEventListener('click', () => { input.cancel(); game.reset(); selected = null; moving = false; render(); });
+byId('restart').addEventListener('click', () => { input.cancel(); celebrated = false; game.reset(); selected = null; moving = false; render(); });
 byId('next').addEventListener('click', () => { start((index + 1) % levels.length); board.querySelector('button').focus({ preventScroll: true }); });
 picker.addEventListener('change', () => start(Number(picker.value)));
