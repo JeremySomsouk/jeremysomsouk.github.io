@@ -11,7 +11,7 @@
   left: var(--origin-x);
   top: var(--origin-y);
   opacity: 0;
-  animation: cabane-celebration-burst var(--duration) cubic-bezier(.2,.7,.3,1) both;
+  animation: cabane-celebration-burst var(--duration) cubic-bezier(.2,.7,.3,1) var(--delay, 0s) both;
   will-change: opacity, transform;
 }
 
@@ -43,6 +43,18 @@
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--rotation)) scale(var(--end-scale));
+  }
+}
+
+@media(max-width: 480px) {
+  .cabane-celebration-rectangle {
+    width: 14px;
+    height: 18px;
+  }
+
+  .cabane-celebration-star {
+    width: 20px;
+    height: 20px;
   }
 }
 
