@@ -54,9 +54,11 @@ function createParticle(document, index, origin, viewportScale) {
   const distance = baseDistance * viewportScale;
   const rotation = (Math.random() * 2 - 1) * 240;
   const duration = 1.35 + Math.random() * 0.4;
+  const driftX = (Math.random() - 0.5) * 96;
   particle.className = `cabane-celebration-${type}`;
   particle.style.setProperty('--x', `${Math.round(Math.cos(angle) * distance)}px`);
   particle.style.setProperty('--y', `${Math.round(Math.sin(angle) * distance)}px`);
+  particle.style.setProperty('--drift-x', `${Math.round(driftX)}px`);
   particle.style.setProperty('--rotation', `${Math.round(rotation)}deg`);
   particle.style.setProperty('--duration', `${duration.toFixed(2)}s`);
   particle.style.setProperty('--delay', `${(wave * waveDelay).toFixed(2)}s`);

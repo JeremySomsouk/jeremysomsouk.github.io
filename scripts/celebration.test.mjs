@@ -81,6 +81,10 @@ test('a celebration emits rectangles and stars from its origin and removes them 
   const originX = parseInt(overlay.style.properties.get('--origin-x'), 10);
   assert.ok(originX >= 139 && originX <= 261, `origin x ${originX} should stay within the randomized range`);
   assert.equal(overlay.style.properties.get('--origin-y'), '160px');
+  const drifts = overlay.children.map(particle => parseInt(particle.style.properties.get('--drift-x'), 10));
+  assert.equal(drifts.length, 60);
+  assert.ok(drifts.every(drift => drift >= -48 && drift <= 48), 'each drift stays within the horizontal random range');
+  assert.ok(new Set(drifts).size > 1, 'particles use more than one horizontal drift');
   for (const particle of overlay.children) {
     for (const property of ['--x', '--y', '--rotation', '--duration', '--delay', '--particle-color']) {
       assert.ok(particle.style.properties.has(property), `${particle.className} has ${property}`);
@@ -181,6 +185,7 @@ test('the shared stylesheet keeps the overlay fixed, inert and still under reduc
   assert.match(css, /\.cabane-celebration\s*\{[^}]*pointer-events:\s*none/s);
   assert.match(css, /\.cabane-celebration-rectangle\s*\{[^}]*border-radius/s);
   assert.match(css, /\.cabane-celebration-star\s*\{[^}]*clip-path:\s*polygon/s);
+  assert.match(css, /translateX\(var\(--drift-x\)\)/s);
   assert.match(css, /animation:\s*cabane-celebration-burst\s+var\(--duration\)[^;]*var\(--delay,\s*0s\)\s+both/s);
   assert.match(css, /@media\s*\(max-width:\s*480px\)[\s\S]*\.cabane-celebration-rectangle\s*\{[^}]*width:\s*14px[^}]*height:\s*18px/s);
   assert.match(css, /@media\s*\(max-width:\s*480px\)[\s\S]*\.cabane-celebration-star\s*\{[^}]*width:\s*20px[^}]*height:\s*20px/s);
