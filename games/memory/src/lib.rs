@@ -21,7 +21,7 @@ impl Game {
         };
         let mut symbols: Vec<u32> = (0..8).collect();
         shuffle(&mut symbols);
-        let mut cards: Vec<u32> = symbols[..pairs.clamp(3, 5) as usize]
+        let mut cards: Vec<u32> = symbols[..pairs.clamp(3, 8) as usize]
             .iter()
             .flat_map(|&symbol| [symbol, symbol])
             .collect();
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn decks_contain_pairs_and_vary_with_seed() {
-        for pairs in 3..=5 {
+        for pairs in 3..=8 {
             for seed in 0..100 {
                 let game = Game::new(pairs, seed);
                 assert_eq!(game.cards.len(), pairs as usize * 2);
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     fn completes_and_resets() {
-        start(5, 20);
+        start(8, 20);
         let cards = GAME.with(|g| g.borrow().cards.clone());
         let mut count = 0;
         for i in 0..cards.len() {
@@ -172,7 +172,7 @@ mod tests {
                 .unwrap();
             assert_eq!(flip(i as u32), 1);
             count += 1;
-            assert_eq!(flip(j as u32), if count == 5 { 4 } else { 3 });
+            assert_eq!(flip(j as u32), if count == 8 { 4 } else { 3 });
             assert_eq!(flip(i as u32), 0);
         }
         start(3, 21);

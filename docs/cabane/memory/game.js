@@ -17,6 +17,7 @@ const result = document.querySelector('#result');
 const next = document.querySelector('#next');
 const restart = document.querySelector('#restart');
 let engine;
+const roundCount = 6;
 let round = 0;
 let timer;
 
@@ -83,7 +84,7 @@ function reveal(index) {
     board.querySelector('button:not(:disabled)').focus({ preventScroll: true });
   }
   if (outcome === 4) {
-    const finished = round === 2;
+    const finished = round === roundCount - 1;
     status.textContent = 'Toutes les paires sont réunies !';
     document.querySelector('#result-title').textContent = finished ? 'Bravo, tu as tout retrouvé !' : 'Bien joué !';
     document.querySelector('#result-text').textContent = finished ? 'Une nouvelle partie ? Les cartes seront mélangées.' : `On continue avec ${round + 4} paires ?`;
@@ -96,10 +97,10 @@ function reveal(index) {
 }
 
 restart.addEventListener('click', () => { round = 0; startRound(true); });
-next.addEventListener('click', () => { round = (round + 1) % 3; startRound(true); });
+next.addEventListener('click', () => { round = (round + 1) % roundCount; startRound(true); });
 
 try {
-  const response = await fetch('./game.wasm');
+  const response = await fetch('./game.wasm?v=20260915-eight-pairs');
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const { instance } = await WebAssembly.instantiate(await response.arrayBuffer());
   engine = instance.exports;

@@ -66,6 +66,16 @@ export class RiverGame {
     this.level = level;
     this.terrain = createTerrain(level);
     this.open = this.terrain.initial.slice();
+    this.gates = (level.gates ?? []).map(gate => ({ ...gate, unlocked: false, cells: [] }));
+    this.gateAt = new Int16Array(this.open.length).fill(-1);
+    this.gates.forEach((gate, index) => {
+      for (let i = 0; i < this.open.length; i++) {
+        const x = (i % COLS + .5) * CELL, y = (Math.floor(i / COLS) + .5) * CELL;
+        if (this.terrain.land[i] && Math.abs(x - gate.x) <= gate.width / 2 && Math.abs(y - gate.y) <= gate.height / 2) {
+          gate.cells.push(i); this.gateAt[i] = index; this.open[i] = 0;
+        }
+      }
+    });
     this.openedAt = new Float64Array(this.open.length);
     this.arrival = new Float64Array(this.open.length).fill(Infinity);
     this.time = 0;
@@ -87,6 +97,7 @@ export class RiverGame {
     for (let row = minY; row <= maxY; row++) for (let col = minX; col <= maxX; col++) {
       const i = row * COLS + col;
       if (!this.terrain.land[i] || this.open[i]) continue;
+      if (this.gateAt[i] >= 0 && !this.gates[this.gateAt[i]].unlocked) continue;
       if (distanceToSegment((col + .5) * CELL, (row + .5) * CELL, from, to) > radius) continue;
       this.open[i] = 1;
       this.openedAt[i] = this.time;
@@ -123,6 +134,12 @@ export class RiverGame {
     if (this.dirty) this.propagate();
     this.fills = this.terrain.pondCells.map(cells => cells.length
       ? cells.reduce((sum, i) => sum + Math.max(0, Math.min(1, (this.time - this.arrival[i]) / .5)), 0) / cells.length : 0);
+    for (const gate of this.gates) {
+      if (gate.unlocked || this.fills[gate.pond] < .97) continue;
+      gate.unlocked = true;
+      for (const i of gate.cells) { this.open[i] = 1; this.openedAt[i] = this.time; }
+      this.revision++; this.dirty = true;
+    }
     this.solved = this.fills.length > 0 && this.fills.every(fill => fill >= .97);
   }
 

@@ -26,6 +26,10 @@ export function createRiverApp({ document, celebrate, window = globalThis.window
     if (count !== previousCount) {
       byId('progress').textContent = `${count} / ${game.fills.length} ${game.fills.length > 1 ? 'mares fleuries' : 'mare fleurie'}`;
       previousCount = count;
+      if (game.gates.length && !game.solved) {
+        const locked = game.gates.findIndex(gate => !gate.unlocked);
+        byId('instructions').textContent = locked < 0 ? 'Toutes les écluses sont ouvertes ! Termine les chemins vers les mares.' : `Arrose la mare ${locked + 1} pour ouvrir l’écluse ${locked + 1}.`;
+      }
     }
     if (game.solved && !celebrated) {
       celebrated = true;

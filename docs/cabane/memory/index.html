@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#f8f4eb">
   <title>Le Memory · La cabane à découvertes</title>
   <link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
-  <link rel="stylesheet" href="../style.css?v=20260908-mobile-2">
+  <link rel="stylesheet" href="../style.css?v=20260915-eight-pairs">
   <link rel="stylesheet" href="../celebration.css">
-  <script src="./game.js" type="module"></script>
+  <script src="./game.js?v=20260915-eight-pairs" type="module"></script>
   <script src="../share.mjs?v=20260908-mobile-2" type="module"></script>
 </head>
 <body>
@@ -16,7 +16,7 @@
     <nav class="toolbar" aria-label="Navigation du jeu"><a class="back" href="../">← Les activités</a><button id="restart" class="quiet" disabled>↻ Recommencer</button><button id="share" class="quiet">Partager</button></nav>
     <p id="share-status" role="status" hidden></p>
     <header class="game-header"><p class="eyebrow">Observe & retrouve</p><h1>Le <span>Memory.</span></h1><p class="intro">Touche deux cartes pour trouver une paire.</p></header>
-    <div class="progress"><ol aria-label="Grilles de la partie"><li aria-current="step">1</li><li>2</li><li>3</li></ol><p id="counter">3 paires à trouver</p></div>
+    <div class="progress"><ol aria-label="Grilles de la partie"><li aria-current="step">1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ol><p id="counter">3 paires à trouver</p></div>
     <p id="status" class="status" role="status">Les cartes arrivent…</p>
     <div id="board" class="board" role="group" aria-label="Cartes du Memory" aria-busy="true"></div>
     <section id="result" class="result" aria-labelledby="result-title" hidden><h2 id="result-title"></h2><p id="result-text"></p><button id="next" class="primary">Continuer →</button></section>

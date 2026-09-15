@@ -33,7 +33,7 @@ test('every landscape starts unsolved and is solvable with a finger-sized brush'
     for (const pond of level.ponds) dig(game, solution(game, pond));
     game.update(0);
     assert.equal(game.solved, false, 'water must travel, even after completing the excavation');
-    game.update(10);
+    for (let step = 0; step < 600; step++) game.update(.05);
     assert.equal(game.solved, true, level.id);
   }
 });
@@ -137,4 +137,56 @@ test('leaving the canvas or cancelling a touch never digs a connecting chord on 
   assert.deepEqual(scratches.at(-1), [[200, 300], [200, 300]]);
   send('pointercancel', 200, 300); send('pointermove', 200, 450);
   assert.equal(scratches.length, 2); input.destroy();
+});
+
+test('a locked sluice blocks scratching and water until its matching pond blooms', () => {
+  const level = levels.find(level => level.id === 'premiere-ecluse');
+  const game = new RiverGame(level);
+  dig(game, solution(game, level.ponds[1]));
+  game.update(30);
+  assert.equal(game.gates[0].unlocked, false);
+  assert.equal(game.fills[1], 0);
+  assert.equal(game.scratch([210, 350], [210, 350], 8), 0);
+  assert.equal(game.wetAt(210, 350), false);
+  dig(game, solution(game, level.ponds[0]));
+  game.update(10);
+  assert.equal(game.gates[0].unlocked, true);
+  assert.equal(game.wetAt(210, 350), false, 'opening does not teleport water');
+  game.update(10);
+  assert.equal(game.solved, true);
+  const restarted = new RiverGame(level);
+  assert.equal(restarted.gates[0].unlocked, false);
+  assert.ok(restarted.gates[0].cells.every(i => restarted.open[i] === 0));
+});
+
+test('cascaded sluices unlock in sequence even when every downstream route is pre-dug', () => {
+  const level = levels.find(level => level.id === 'ecluses-en-cascade');
+  const game = new RiverGame(level);
+  for (const pond of level.ponds) dig(game, solution(game, pond));
+  game.update(20);
+  assert.deepEqual(game.gates.map(g => g.unlocked), [true, false]);
+  assert.equal(game.fills[2], 0);
+  game.update(20);
+  assert.deepEqual(game.gates.map(g => g.unlocked), [true, true]);
+  assert.equal(game.solved, false);
+  game.update(20);
+  assert.equal(game.solved, true);
+});
+
+test('sluices span the whole channel and cannot be bypassed by digging along a bank', () => {
+  for (const level of levels.filter(level => level.gates?.length)) {
+    const game = new RiverGame(level);
+    for (let stage = 0; stage < game.gates.length; stage++) {
+      const reached = new Set(game.terrain.seeds), queue = [...reached];
+      for (let head = 0; head < queue.length; head++) {
+        for (const j of neighbors(queue[head])) {
+          if (!game.terrain.land[j] || reached.has(j) || game.gateAt[j] >= stage) continue;
+          reached.add(j); queue.push(j);
+        }
+      }
+      assert.ok(reached.has(at(level.ponds[stage].x, level.ponds[stage].y)), `${level.id}: key pond ${stage + 1} is reachable`);
+      const next = level.ponds[stage + 1];
+      assert.equal(reached.has(at(next.x, next.y)), false, `${level.id}: no bypass around sluice ${stage + 1}`);
+    }
+  }
 });

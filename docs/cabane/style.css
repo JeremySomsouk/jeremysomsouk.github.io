@@ -232,6 +232,7 @@ h2 {
 }
 .progress {
   display:flex;
+  flex-wrap:wrap;
   justify-content:space-between;
   align-items:center;
   gap:14px;
@@ -282,6 +283,9 @@ h2 {
   max-width:620px;
   margin:auto;
 }
+.board[data-pairs="6"],
+.board[data-pairs="7"],
+.board[data-pairs="8"],
 .board[data-pairs="4"] {
   grid-template-columns:repeat(4,minmax(0,1fr));
 }
@@ -363,7 +367,10 @@ h2 {
   .board[data-pairs="5"] {
     grid-template-columns:repeat(3,minmax(0,1fr));
   }
-  .board[data-pairs="4"] {
+  .board[data-pairs="6"],
+.board[data-pairs="7"],
+.board[data-pairs="8"],
+.board[data-pairs="4"] {
     grid-template-columns:repeat(4,minmax(0,1fr));
   }
   .card {

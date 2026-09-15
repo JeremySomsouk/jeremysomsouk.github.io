@@ -66,6 +66,29 @@ export function createBoard(canvas, game, { createCanvas = () => document.create
     ctx.strokeStyle = '#eaf0d6'; ctx.lineWidth = 2.4; ctx.stroke();
     for (let i = 0; i < 3; i++) ellipse(ctx, sx - 9 + i * 9, sy - 2 + i % 2 * 3, 2.5, 1.2, '#e8efd2');
     drawPlants(ctx, game, game.time, reducedMotion);
+    for (const [index, gate] of game.gates.entries()) {
+      const vertical = gate.height > gate.width;
+      ctx.save(); ctx.translate(gate.x, gate.y);
+      if (vertical) ctx.rotate(Math.PI / 2);
+      const length = vertical ? gate.height : gate.width;
+      ctx.fillStyle = '#735b43';
+      ctx.fillRect(-length / 2 - 3, -18, 8, 36); ctx.fillRect(length / 2 - 5, -18, 8, 36);
+      if (!gate.unlocked) {
+        ctx.fillStyle = '#bc9669'; ctx.fillRect(-length / 2, -11, length, 22);
+        ctx.strokeStyle = '#735b43'; ctx.lineWidth = 2;
+        ctx.strokeRect(-length / 2, -11, length, 22);
+        ctx.beginPath(); ctx.moveTo(-length / 2, 0); ctx.lineTo(length / 2, 0); ctx.stroke();
+      }
+      ctx.restore();
+      const badge = (x, y, label, open) => {
+        ellipse(ctx, x, y, 12, 12, open ? '#527661' : '#fff1cf');
+        ctx.fillStyle = open ? '#fff8e7' : '#624b38'; ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x, y + 1);
+      };
+      const pond = game.level.ponds[gate.pond];
+      badge(pond.x, pond.y - pond.r - 10, String(index + 1), gate.unlocked);
+      badge(gate.x + (vertical ? 25 : 0), gate.y + (vertical ? 0 : -25), gate.unlocked ? '✓' : String(index + 1), gate.unlocked);
+    }
     crumbs = crumbs.filter(p => game.time - p.born < .45);
     if (!reducedMotion) for (const p of crumbs) {
       const t = game.time - p.born;
