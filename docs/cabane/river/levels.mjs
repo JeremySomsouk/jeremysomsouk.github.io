@@ -84,4 +84,22 @@ export const levels = [
     ponds: [pond(225, 110, 'honey', 29), pond(340, 135, 'rose', 29), pond(160, 355, 'cream', 29), pond(90, 530, 'rose', 29)], rocks: [{ x: 327, y: 355, r: 15 }], exposed: exposed([90, 75], [90, 115]),
     gates: [{ x: 145, y: 225, width: 25, height: 110, pond: 0 }, { x: 325, y: 305, width: 110, height: 25, pond: 1 }, { x: 175, y: 487, width: 25, height: 110, pond: 2 }],
   },
+  {
+    id: 'gorge-des-ecluses', title: 'La gorge des écluses', hint: 'Contourne les rochers pour atteindre les mares qui ouvrent les passages.',
+    source: [210, 70], paths: [path([[210, 70], [210, 220], [210, 365], [210, 535]], 100), path([[210, 170], [120, 190], [75, 260]], 60), path([[210, 350], [300, 375], [345, 435]], 60)],
+    ponds: [pond(75, 260, 'honey', 30), pond(345, 435, 'rose', 30), pond(210, 535, 'cream', 30)], rocks: [{ x: 205, y: 170, r: 23 }, { x: 220, y: 350, r: 23 }, { x: 200, y: 490, r: 18 }], exposed: exposed([210, 70], [210, 110]),
+    gates: [{ x: 210, y: 285, width: 120, height: 25, pond: 0 }, { x: 210, y: 445, width: 120, height: 25, pond: 1 }],
+  },
+  {
+    id: 'sentier-des-saules', title: 'Le sentier des saules', hint: 'Suis les méandres et leurs branches pour ouvrir les trois écluses.',
+    source: [330, 70], paths: [path([[330, 70], [330, 195], [220, 255], [95, 300], [95, 420], [210, 480], [330, 535]], 70), path([[330, 160], [260, 130], [190, 100]], 60), path([[205, 260], [140, 200], [75, 150]], 60), path([[105, 415], [185, 365], [260, 350]], 60)],
+    ponds: [pond(190, 100, 'honey', 29), pond(75, 150, 'rose', 29), pond(260, 350, 'cream', 29), pond(330, 535, 'rose', 29)], rocks: [{ x: 98, y: 355, r: 15 }, { x: 260, y: 505, r: 12 }], exposed: exposed([330, 70], [330, 110]),
+    gates: [{ x: 270, y: 230, width: 25, height: 110, pond: 0 }, { x: 95, y: 310, width: 110, height: 25, pond: 1 }, { x: 175, y: 465, width: 25, height: 110, pond: 2 }],
+  },
+  {
+    id: 'quatre-clefs-du-verger', title: 'Les quatre clefs du verger', hint: 'Quatre mares, quatre écluses : prépare les branches pour réveiller la dernière mare.',
+    source: [210, 65], paths: [path([[210, 65], [210, 220], [210, 390], [210, 550]], 80), path([[210, 130], [135, 130], [75, 155]], 58), path([[210, 250], [285, 240], [345, 265]], 58), path([[210, 360], [135, 350], [75, 380]], 58), path([[210, 465], [280, 455], [345, 480]], 58)],
+    ponds: [pond(75, 155, 'honey', 28), pond(345, 265, 'rose', 28), pond(75, 380, 'cream', 28), pond(345, 480, 'honey', 28), pond(210, 550, 'rose', 28)], rocks: [{ x: 208, y: 250, r: 17 }, { x: 213, y: 360, r: 17 }], exposed: exposed([210, 65], [210, 95]),
+    gates: [{ x: 210, y: 195, width: 100, height: 25, pond: 0 }, { x: 210, y: 305, width: 100, height: 25, pond: 1 }, { x: 210, y: 415, width: 100, height: 25, pond: 2 }, { x: 210, y: 510, width: 100, height: 25, pond: 3 }],
+  },
 ];
