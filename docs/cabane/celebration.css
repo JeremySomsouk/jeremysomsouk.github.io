@@ -29,6 +29,22 @@
   clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
 }
 
+.cabane-celebration-burst .cabane-celebration-firefly {
+  width: 5px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff3b4;
+  box-shadow: 0 0 7px 2px #d5b95e66;
+  animation: cabane-firefly 1.1s ease-out var(--delay, 0s) both;
+}
+
+@keyframes cabane-firefly {
+  0% { opacity: 0; transform: translate(var(--x), var(--y)) scale(.5); }
+  20% { opacity: 1; }
+  60% { opacity: .8; }
+  100% { opacity: 0; transform: translate(calc(var(--x) + var(--drift-x)), calc(var(--y) - 100px)) scale(.7); }
+}
+
 @keyframes cabane-celebration-burst {
   0% {
     opacity: 0;

@@ -69,7 +69,7 @@ function createParticle(document, index, burstIndex, origin, viewportScale) {
   return particle;
 }
 
-export function celebrate(origin = document.body) {
+export function celebrate(origin = document.body, { variant = 'confetti' } = {}) {
   if (prefersReducedMotion()) return false;
 
   activeCleanup?.();
@@ -90,10 +90,12 @@ export function celebrate(origin = document.body) {
     overlay = document.createElement('div');
     overlay.className = 'cabane-celebration';
     overlay.setAttribute('aria-hidden', 'true');
-    for (let burstIndex = 0; burstIndex < burstCount; burstIndex += 1) {
+    const fireflies = variant === 'fireflies';
+    const count = fireflies ? 1 : burstCount;
+    for (let burstIndex = 0; burstIndex < count; burstIndex += 1) {
       const burstOrigin = document.createElement('div');
       burstOrigin.className = 'cabane-celebration-burst';
-      const point = originPoint(origin, burstIndex);
+      const point = originPoint(origin, fireflies ? 1 : burstIndex);
       burstOrigin.style.setProperty('--origin-x', point.x);
       burstOrigin.style.setProperty('--origin-y', point.y);
       overlay.append(burstOrigin);
@@ -102,14 +104,22 @@ export function celebrate(origin = document.body) {
     const viewportWidth = globalThis.innerWidth ?? Number.POSITIVE_INFINITY;
     const viewportHeight = globalThis.innerHeight ?? Number.POSITIVE_INFINITY;
     const viewportScale = Math.min(1, Math.max(0.8, Math.min(viewportWidth, viewportHeight) / 500));
-    for (let burstIndex = 0; burstIndex < burstCount; burstIndex += 1) {
+    for (let burstIndex = 0; burstIndex < count; burstIndex += 1) {
       const burstOrigin = overlay.children[burstIndex];
-      for (let index = 0; index < particlesPerBurst; index += 1) {
-        createParticle(document, index, burstIndex, burstOrigin, viewportScale);
+      for (let index = 0; index < (fireflies ? 14 : particlesPerBurst); index += 1) {
+        if (fireflies) {
+          const dot = document.createElement('span');
+          dot.className = 'cabane-celebration-firefly';
+          dot.style.setProperty('--x', `${Math.round((Math.random() - .5) * 220 * viewportScale)}px`);
+          dot.style.setProperty('--y', `${Math.round(20 + Math.random() * 80)}px`);
+          dot.style.setProperty('--drift-x', `${Math.round((Math.random() - .5) * 55)}px`);
+          dot.style.setProperty('--delay', `${(index * .018).toFixed(3)}s`);
+          burstOrigin.append(dot);
+        } else createParticle(document, index, burstIndex, burstOrigin, viewportScale);
       }
     }
     document.body.append(overlay);
-    timeout = setTimeout(cleanup, cleanupDelay);
+    timeout = setTimeout(cleanup, fireflies ? 1500 : cleanupDelay);
   });
   return true;
 }

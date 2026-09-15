@@ -38,9 +38,7 @@ jobs:
           rustup component add clippy --toolchain 1.96.0
           rustup target add wasm32-unknown-unknown --toolchain 1.96.0
           rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
-          rustup run 1.96.0 cargo test --manifest-path games/river/Cargo.toml
           rustup run 1.96.0 cargo clippy --manifest-path games/memory/Cargo.toml --all-targets -- -D warnings
-          rustup run 1.96.0 cargo clippy --manifest-path games/river/Cargo.toml --all-targets -- -D warnings
           bash scripts/build-games.sh
       - name: Production Jekyll build
         uses: actions/jekyll-build-pages@v1
@@ -52,8 +50,10 @@ jobs:
           for file in docs/cabane/lumiere/*; do
             cmp "$file" "_site/cabane/lumiere/$(basename "$file")"
           done
+          for file in docs/cabane/river/*; do
+            cmp "$file" "_site/cabane/river/$(basename "$file")"
+          done
           cmp docs/cabane/memory/game.wasm _site/cabane/memory/game.wasm
-          cmp docs/cabane/river/game.wasm _site/cabane/river/game.wasm
       - uses: actions/upload-artifact@v4
         with:
           name: cabane-site
