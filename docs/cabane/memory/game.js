@@ -100,7 +100,7 @@ restart.addEventListener('click', () => { round = 0; startRound(true); });
 next.addEventListener('click', () => { round = (round + 1) % roundCount; startRound(true); });
 
 try {
-  const response = await fetch('./game.wasm');
+  const response = await fetch('./game.wasm?v=20260915-eight-pairs');
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const { instance } = await WebAssembly.instantiate(await response.arrayBuffer());
   engine = instance.exports;

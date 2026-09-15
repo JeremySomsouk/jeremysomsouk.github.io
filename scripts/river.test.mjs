@@ -172,3 +172,21 @@ test('cascaded sluices unlock in sequence even when every downstream route is pr
   game.update(20);
   assert.equal(game.solved, true);
 });
+
+test('sluices span the whole channel and cannot be bypassed by digging along a bank', () => {
+  for (const level of levels.filter(level => level.gates?.length)) {
+    const game = new RiverGame(level);
+    for (let stage = 0; stage < game.gates.length; stage++) {
+      const reached = new Set(game.terrain.seeds), queue = [...reached];
+      for (let head = 0; head < queue.length; head++) {
+        for (const j of neighbors(queue[head])) {
+          if (!game.terrain.land[j] || reached.has(j) || game.gateAt[j] >= stage) continue;
+          reached.add(j); queue.push(j);
+        }
+      }
+      assert.ok(reached.has(at(level.ponds[stage].x, level.ponds[stage].y)), `${level.id}: key pond ${stage + 1} is reachable`);
+      const next = level.ponds[stage + 1];
+      assert.equal(reached.has(at(next.x, next.y)), false, `${level.id}: no bypass around sluice ${stage + 1}`);
+    }
+  }
+});
