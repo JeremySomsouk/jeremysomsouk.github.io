@@ -19,9 +19,10 @@ let moving = false;
 let input;
 let celebrated = false;
 
-const groups = [1, 2].map(tier => {
+const tierLabels = ['Niveau 1 · Les miroirs', 'Niveau 2 · Les prismes', 'Niveau 3 · Les grands défis'];
+const groups = [1, 2, 3].map(tier => {
   const group = document.createElement('optgroup');
-  group.label = tier === 1 ? 'Niveau 1 · Les miroirs' : 'Niveau 2 · Les prismes';
+  group.label = tierLabels[tier - 1];
   return group;
 });
 levels.forEach((level, i) => {
@@ -44,12 +45,12 @@ function render() {
   supply.hidden = game.level.availablePieces === 0;
   prismSupply.hidden = !game.level.availablePrisms;
   byId('reserve-help').hidden = !supply.hidden && !prismSupply.hidden;
-  byId('prism-help').hidden = game.level.tier !== 2;
+  byId('prism-help').hidden = !game.level.availablePrisms;
   byId('prisms-remaining').textContent = `× ${game.remainingPrisms}`;
   prismSupply.setAttribute('aria-label', `Prendre un prisme, ${game.remainingPrisms} disponible${game.remainingPrisms > 1 ? 's' : ''}`);
   prismSupply.setAttribute('aria-disabled', String(game.remainingPrisms === 0 || result.isSolved));
   prismSupply.setAttribute('aria-pressed', String(selected === 'prism-supply'));
-  document.querySelector('.eyebrow').textContent = game.level.tier === 2 ? 'Niveau 2 · Les prismes' : 'Niveau 1 · Les miroirs';
+  document.querySelector('.eyebrow').textContent = tierLabels[(game.level.tier ?? 1) - 1];
   byId('move').disabled = byId('remove').disabled = !game.pieces.some(piece => piece.id === selected) || result.isSolved;
   byId('move').setAttribute('aria-pressed', String(moving));
   byId('completion').hidden = !result.isSolved;
@@ -57,7 +58,7 @@ function render() {
     celebrated = true;
     celebrate(byId('completion'));
   }
-  byId('next').textContent = index === levels.length - 1 ? 'Rejouer les dix chambres ↺' : levels[index + 1].tier === 2 && game.level.tier !== 2 ? 'Découvrir le niveau 2 →' : 'Chambre suivante →';
+  byId('next').textContent = index === levels.length - 1 ? 'Rejouer les chambres ↺' : levels[index + 1].tier > (game.level.tier ?? 1) ? `Découvrir le niveau ${levels[index + 1].tier} →` : 'Chambre suivante →';
   let message = 'Éclaire tous les fantômes !';
   if (game.level.hint && game.pieces.length === 0) message = game.level.hintType === 'prism' ? 'Glisse le prisme sur le ＋ !' : 'Glisse le miroir sur le ＋ !';
   if (selected === 'supply') message = 'Touche une case pour poser le miroir.';

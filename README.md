@@ -24,7 +24,7 @@ Cabane is a small set of browser activities for reading and play:
 - **Le Chemin** asks you to connect every square on a grid without crossing your path.
 - **Les Petits Calculs** asks you to write arithmetic answers by hand.
 - **La Lumière** uses mirrors and prisms to wake sleeping ghosts.
-- **La Rivière** offers eight touch-first landscapes: scratch soft earth to release water and make ponds bloom.
+- **La Rivière** offers fifteen touch-first landscapes (including three sequential sluice puzzles): scratch soft earth to release water and make ponds bloom.
 
 All activities are static files and run without a server or third-party dependencies.
 
