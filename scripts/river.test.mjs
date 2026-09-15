@@ -1,274 +1,140 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRiverGame } from '../docs/cabane/river/state.mjs';
-import { createBoard } from '../docs/cabane/river/board.mjs';
-import { createRiverApp } from '../docs/cabane/river/app.mjs';
-import { loadEngine } from '../docs/cabane/river/engine.mjs';
-import { startRiverPage } from '../docs/cabane/river/game.mjs';
-import { readFileSync } from 'node:fs';
+import { RiverGame, COLS, CELL, neighbors } from '../docs/cabane/river/engine.mjs';
+import { levels } from '../docs/cabane/river/levels.mjs';
+import { landscapePoint, attachInput } from '../docs/cabane/river/input.mjs';
 
-function createEngine({ tapResult = true, undoResult = true } = {}) {
-  let tapCalls = [];
-  let undoCalls = 0;
-  let moves = 0;
-  let solved = false;
-  return {
-    level_count: () => 20,
-    start: level => {
-      if (level >= 20) return 0;
-      moves = 0;
-      solved = false;
-      return 1;
-    },
-    rows: () => 2,
-    cols: () => 3,
-    tile: (row, col) => (row === 0 && col === 0 ? 1 : row === 1 && col === 2 ? 5 : 3),
-    is_wet: (row, col) => row === 0 && col === 0 ? 1 : 0,
-    is_watered: (row, col) => solved && row === 1 && col === 2 ? 1 : 0,
-    tap: (row, col) => {
-      tapCalls.push([row, col]);
-      if (!tapResult) return 0;
-      moves += 1;
-      solved = true;
-      return 1;
-    },
-    undo: () => {
-      undoCalls += 1;
-      if (!undoResult) return 0;
-      if (moves > 0) moves -= 1;
-      solved = false;
-      return 1;
-    },
-    is_solved: () => solved ? 1 : 0,
-    move_count: () => moves,
-    getTapCalls: () => tapCalls,
-    getUndoCalls: () => undoCalls,
-  };
-}
-
-test('river state loads a level, renders progress, and tracks a successful turn', () => {
-  const engine = createEngine({ tapResult: true });
-  const game = createRiverGame(engine);
-
-  assert.equal(game.levelIndex, 0);
-  assert.equal(game.rows, 2);
-  assert.equal(game.cols, 3);
-  assert.equal(game.progress, '0 / 1 plantes arrosées');
-  assert.equal(game.moveCount, 0);
-  assert.equal(game.isSolved, false);
-
-  assert.equal(game.tap(0, 2), true);
-  assert.deepEqual(engine.getTapCalls(), [[0, 2]]);
-  assert.equal(game.moveCount, 1);
-  assert.equal(game.isSolved, true);
-  assert.equal(game.progress, '1 / 1 plantes arrosées');
-
-  assert.equal(game.undo(), true);
-  assert.equal(engine.getUndoCalls(), 1);
-  assert.equal(game.moveCount, 0);
-  assert.equal(game.isSolved, false);
-  assert.equal(game.progress, '0 / 1 plantes arrosées');
-});
-
-test('river state ignores rejected turns and refuses undo or invalid levels', () => {
-  const engine = createEngine({ tapResult: false, undoResult: false });
-  const game = createRiverGame(engine);
-
-  assert.equal(game.tap(9, 9), false);
-  assert.equal(game.moveCount, 0);
-  assert.equal(game.undo(), false);
-  assert.equal(game.start(20), false);
-  assert.equal(game.levelIndex, 0);
-});
-
-test('river state cycles through levels and celebrates completion once', () => {
-  const engine = createEngine();
-  const celebrations = [];
-  const game = createRiverGame(engine, { celebrate: origin => celebrations.push(origin) });
-
-  assert.equal(game.tap(0, 2), true);
-  assert.equal(game.celebrate(), 'result');
-  assert.equal(game.celebrate(), false);
-  assert.deepEqual(celebrations, ['result']);
-
-  assert.equal(game.next(), true);
-  assert.equal(game.levelIndex, 1);
-  assert.equal(game.celebrated, false);
-  assert.equal(game.celebrate(), false);
-  assert.deepEqual(celebrations, ['result']);
-});
-
-
-class TestElement {
-  constructor(tagName) {
-    this.tagName = tagName;
-    this.children = [];
-    this.dataset = {};
-    this.style = { properties: new Map(), setProperty(name, value) { this.properties.set(name, String(value)); } };
+const at = (x, y) => Math.floor(y / CELL) * COLS + Math.floor(x / CELL);
+const point = i => [(i % COLS + .5) * CELL, (Math.floor(i / COLS) + .5) * CELL];
+function solution(game, destination) {
+  const parent = new Int32Array(game.open.length).fill(-1);
+  const queue = [...game.terrain.seeds];
+  for (const i of queue) parent[i] = i;
+  const goal = at(destination.x, destination.y);
+  for (let head = 0; head < queue.length && parent[goal] < 0; head++) {
+    for (const j of neighbors(queue[head])) if (game.terrain.land[j] && parent[j] < 0) {
+      parent[j] = queue[head]; queue.push(j);
+    }
   }
-  append(node) { this.children.push(node); }
-  replaceChildren() { this.children = []; }
-  setAttribute(name, value) { this[`attr_${name}`] = String(value); }
-  getAttribute(name) { return this[`attr_${name}`] ?? null; }
-  addEventListener(type, listener) { this.listeners ??= new Map(); this.listeners.set(type, listener); }
-  click() { this.listeners.get('click')(); }
-  focus() { this.focusCount = (this.focusCount ?? 0) + 1; }
+  assert.ok(parent[goal] >= 0, 'destination has a real route through soft ground');
+  const route = [goal];
+  while (parent[route.at(-1)] !== route.at(-1)) route.push(parent[route.at(-1)]);
+  return route.reverse().map(point);
+}
+function dig(game, route, radius) {
+  route.forEach((p, i) => game.scratch(route[Math.max(0, i - 1)], p, radius));
 }
 
-test('the river board creates accessible cells and forwards channel taps', () => {
-  const engine = createEngine();
-  const game = createRiverGame(engine);
-  const board = new TestElement('div');
-  const taps = [];
-  const render = createBoard(board, game, (row, col) => taps.push([row, col]), { createElement: tag => new TestElement(tag) });
-
-  assert.equal(board.children.length, 6);
-  const spring = board.children[0];
-  const channel = board.children[1];
-  const plant = board.children[5];
-  assert.equal(spring.dataset.row, '0');
-  assert.equal(spring.dataset.col, '0');
-  assert.equal(spring.type, 'button');
-  render();
-  assert.equal(spring.getAttribute('aria-label'), 'Source, eau');
-  assert.equal(spring.className, 'cell spring wet');
-  assert.equal(channel.className, 'cell channel horizontal');
-  assert.equal(channel.disabled, false);
-  assert.equal(plant.className, 'cell plant');
-  assert.equal(plant.getAttribute('aria-label'), 'Plante assoiffée');
-  assert.equal(plant.disabled, true);
-
-  channel.click();
-  assert.deepEqual(taps, [[0, 1]]);
-});
-
-
-function createDocument() {
-  const ids = ['board', 'status', 'progress', 'moves', 'undo', 'restart', 'next', 'completion', 'result-text', 'engine-status', 'retry'];
-  const elements = Object.fromEntries(ids.map(id => {
-    const element = new TestElement(id);
-    element.id = id;
-    return [id, element];
-  }));
-  return {
-    _elements: elements,
-    getElementById: id => elements[id],
-    createElement: tag => new TestElement(tag),
-  };
-}
-
-test('the river controller renders turns, completion, undo, and level changes', () => {
-  const engine = createEngine();
-  const document = createDocument();
-  const celebrations = [];
-  const app = createRiverApp({ engine, document, celebrate: origin => celebrations.push(origin) });
-
-  assert.equal(document._elements.progress.textContent, '0 / 1 plantes arrosées');
-  assert.equal(document._elements.moves.textContent, '0 tour');
-  assert.equal(document._elements.completion.hidden, true);
-  assert.equal(document._elements.undo.disabled, true);
-  assert.equal(document._elements.next.disabled, true);
-
-  app.tap(0, 2);
-  assert.equal(document._elements.progress.textContent, '1 / 1 plantes arrosées');
-  assert.equal(document._elements.moves.textContent, '1 tour');
-  assert.equal(document._elements.completion.hidden, false);
-  assert.equal(document._elements.undo.disabled, false);
-  assert.equal(document._elements.next.disabled, false);
-  assert.equal(document._elements.next.focusCount, 1);
-  assert.equal(celebrations.length, 1);
-
-  app.undo();
-  assert.equal(document._elements.completion.hidden, true);
-  assert.equal(document._elements.moves.textContent, '0 tour');
-  assert.equal(document._elements.undo.disabled, true);
-
-  app.tap(0, 2);
-  app.next();
-  assert.equal(app.game.levelIndex, 1);
-  assert.equal(document._elements.progress.textContent, '0 / 1 plantes arrosées');
-  assert.equal(document._elements.next.disabled, true);
-  assert.deepEqual(celebrations.length, 1);
-
-  app.restart();
-  assert.equal(app.game.levelIndex, 1);
-  assert.equal(document._elements.moves.textContent, '0 tour');
-});
-
-
-test('the river Wasm loader returns exports and rejects failed responses', async () => {
-  const bytes = new Uint8Array([1, 2, 3]);
-  const exports = { start: () => 1 };
-  const instantiateCalls = [];
-  const engine = await loadEngine({
-    url: './game.wasm',
-    fetch: async url => {
-      assert.equal(url, './game.wasm');
-      return { ok: true, arrayBuffer: async () => bytes };
-    },
-    instantiate: async receivedBytes => {
-      instantiateCalls.push(receivedBytes);
-      return { instance: { exports } };
-    },
-  });
-
-  assert.equal(engine, exports);
-  assert.equal(instantiateCalls.length, 1);
-  assert.equal(instantiateCalls[0], bytes);
-
-  await assert.rejects(
-    loadEngine({ url: './game.wasm', fetch: async () => ({ ok: false, status: 500 }), instantiate: async () => ({}) }),
-    /HTTP 500/,
-  );
-});
-
-
-test('the river page starts after loading Wasm and reports load failures', async () => {
-  const successDocument = createDocument();
-  const engine = createEngine();
-  const apps = [];
-  await startRiverPage({
-    document: successDocument,
-    loadEngine: async () => engine,
-    createApp: options => {
-      assert.equal(options.engine, engine);
-      apps.push(options);
-      return { render() {} };
-    },
-    celebrate: () => {},
-  });
-  assert.equal(apps.length, 1);
-  assert.equal(successDocument._elements['engine-status'].hidden, true);
-  assert.equal(successDocument._elements.retry.hidden, true);
-  assert.equal(successDocument._elements.board.getAttribute('aria-busy'), 'false');
-
-  const failureDocument = createDocument();
-  const errors = [];
-  const error = new Error('HTTP 500');
-  await startRiverPage({
-    document: failureDocument,
-    loadEngine: async () => { throw error; },
-    createApp: () => { throw new Error('app should not start'); },
-    celebrate: () => {},
-    console: { error: value => errors.push(value) },
-  });
-  assert.equal(failureDocument._elements['engine-status'].hidden, false);
-  assert.equal(failureDocument._elements['engine-status'].textContent, 'Le jeu n’a pas pu se charger. Recharge la page pour réessayer.');
-  assert.equal(failureDocument._elements.retry.hidden, false);
-  assert.deepEqual(errors, [`Failed to load La Rivière: ${error.message}`]);
-  assert.equal(failureDocument._elements.board.getAttribute('aria-busy'), 'false');
-});
-
-
-test('the published river page contains the tested controls and styles', () => {
-  const page = readFileSync(new URL('../docs/cabane/river/index.html', import.meta.url), 'utf8');
-  const css = readFileSync(new URL('../docs/cabane/river/style.css', import.meta.url), 'utf8');
-  for (const id of ['board', 'status', 'progress', 'moves', 'undo', 'restart', 'next', 'completion', 'result-text', 'engine-status', 'retry']) {
-    assert.match(page, new RegExp(`id="${id}"`), `${id} is missing from the page`);
+test('every landscape starts unsolved and is solvable with a finger-sized brush', () => {
+  for (const level of levels) {
+    const game = new RiverGame(level); game.update(20);
+    assert.equal(game.solved, false, level.id);
+    assert.ok(game.fills.every(fill => fill === 0), 'all destination ponds begin dry');
+    for (const pond of level.ponds) dig(game, solution(game, pond));
+    game.update(0);
+    assert.equal(game.solved, false, 'water must travel, even after completing the excavation');
+    game.update(10);
+    assert.equal(game.solved, true, level.id);
   }
-  assert.match(page, /<script type="module" src="\.\/game\.mjs"><\/script>/);
-  assert.match(page, /href="\.\/style\.css"/);
-  assert.match(css, /\.river-board\s*\{/);
-  assert.match(css, /\.cell\.channel::after\s*\{/);
-  assert.match(css, /\.cell\.plant\.watered\s*\{/);
+});
+
+test('scratching is local and an isolated excavation remains dry indefinitely', () => {
+  const game = new RiverGame(levels[1]); game.update(10);
+  const before = game.open.reduce((a, b) => a + b, 0);
+  assert.ok(game.scratch([260, 380]) > 0);
+  const after = game.open.reduce((a, b) => a + b, 0);
+  assert.ok(after - before < 140, 'one tap does not erase a whole obstacle');
+  game.update(100);
+  assert.equal(game.wetAt(260, 380), false);
+  assert.equal(game.fills[0], 0);
+});
+
+test('water follows the opening progressively and never enters unexcavated ground', () => {
+  const game = new RiverGame(levels[1]); game.update(10);
+  dig(game, solution(game, levels[1].ponds[0]), 12);
+  game.update(0);
+  assert.equal(game.wetAt(175, 490), false, 'downstream is not instantly blue');
+  game.update(.5);
+  assert.ok(game.arrival.some(t => t <= game.time && t > 10));
+  assert.equal(game.fills[0], 0);
+  game.update(10);
+  assert.ok(game.fills[0] > .97);
+  for (let i = 0; i < game.open.length; i++) if (!game.open[i]) assert.equal(game.arrival[i], Infinity);
+});
+
+test('fixed rocks and banks cannot be scratched away', () => {
+  const game = new RiverGame(levels[2]);
+  game.scratch([210, 100], [210, 490], 80);
+  game.update(10);
+  assert.equal(game.open[at(210, 283)], 0);
+  assert.equal(game.wetAt(210, 283), false);
+  assert.equal(game.scratch([5, 5]), 0);
+});
+
+test('opening one branch does not water the other branch', () => {
+  const game = new RiverGame(levels[3]);
+  dig(game, solution(game, levels[3].ponds[0])); game.update(10);
+  assert.ok(game.fills[0] > .97);
+  assert.equal(game.fills[1], 0);
+  assert.equal(game.solved, false);
+});
+
+test('widening the same passage wets a larger area without removing distant earth', () => {
+  const other = new RiverGame(levels[3]);
+  const branch = solution(other, levels[3].ponds[0]);
+  dig(other, branch, 8); other.update(10);
+  const before = other.arrival.filter(t => t <= other.time).length;
+  dig(other, branch, 27); other.update(10);
+  assert.ok(other.arrival.filter(t => t <= other.time).length > before + 100);
+});
+
+test('restarting reconstructs the original earth and water state', () => {
+  const first = new RiverGame(levels[0]); first.scratch([199, 210], [224, 312]); first.update(10);
+  assert.equal(first.solved, true);
+  const restarted = new RiverGame(levels[0]);
+  assert.equal(restarted.scratched, false);
+  assert.equal(restarted.solved, false);
+  assert.deepEqual(restarted.open, restarted.terrain.initial);
+});
+
+test('pointer coordinates scale to a narrow mobile canvas and reject outside positions', () => {
+  const rect = { left: 12, top: 180, right: 306, bottom: 600, width: 294, height: 420 };
+  assert.deepEqual(landscapePoint({ clientX: 159, clientY: 390 }, rect), [210, 300]);
+  assert.equal(landscapePoint({ clientX: 5, clientY: 390 }, rect), null);
+});
+
+class Surface extends EventTarget {
+  captured = null;
+  getBoundingClientRect() { return { left: 0, top: 0, right: 420, bottom: 600, width: 420, height: 600 }; }
+  focus() {}
+  setPointerCapture(id) { this.captured = id; }
+  hasPointerCapture(id) { return this.captured === id; }
+  releasePointerCapture() { this.captured = null; }
+}
+function gestureSetup() {
+  globalThis.window = new EventTarget();
+  const canvas = new Surface(), scratches = [];
+  const input = attachInput(canvas, { scratch: (a, b) => scratches.push([a, b]), cursor() {} });
+  const send = (name, x, y, extra = {}) => {
+    const event = new Event(name, { cancelable: true });
+    Object.assign(event, { pointerId: 1, isPrimary: true, button: 0, clientX: x, clientY: y, ...extra });
+    canvas.dispatchEvent(event);
+  };
+  return { canvas, scratches, input, send };
+}
+
+test('fast drags include their release point; a second finger does not interrupt the stroke', () => {
+  const { scratches, send, input, canvas } = gestureSetup();
+  send('pointerdown', 100, 100); send('pointerdown', 300, 400, { pointerId: 2, isPrimary: false });
+  send('pointerup', 100, 300);
+  assert.deepEqual(scratches, [[[100, 100], [100, 100]], [[100, 100], [100, 300]]]);
+  assert.equal(canvas.captured, null); input.destroy();
+});
+
+test('leaving the canvas or cancelling a touch never digs a connecting chord on return', () => {
+  const { scratches, send, input } = gestureSetup();
+  send('pointerdown', 100, 100); send('pointermove', -5, 200); send('pointermove', 200, 300);
+  assert.deepEqual(scratches.at(-1), [[200, 300], [200, 300]]);
+  send('pointercancel', 200, 300); send('pointermove', 200, 450);
+  assert.equal(scratches.length, 2); input.destroy();
 });

@@ -227,11 +227,21 @@ test('the five direct games each wire one celebration at the requested completio
   }
 });
 
-test('La Rivière wires one shared celebration through its controller', () => {
-  const bootstrap = readFileSync(new URL('../docs/cabane/river/game.mjs', import.meta.url), 'utf8');
+test('La Rivière uses the shared fireflies once after the ponds fill', () => {
   const controller = readFileSync(new URL('../docs/cabane/river/app.mjs', import.meta.url), 'utf8');
-  assert.match(bootstrap, /import \{ celebrate \} from '\.\.\/celebration\.mjs';/);
-  assert.match(bootstrap, /celebrate: effect = celebrate/);
-  assert.equal((bootstrap.match(/\bcreateApp\(/g) ?? []).length, 1);
-  assert.match(controller, /game\.celebrate\(completion\)/);
+  assert.match(controller, /game\.solved && !celebrated/);
+  assert.match(controller, /celebrate\(canvas, \{ variant: 'fireflies' \}\)/);
+  assert.equal((controller.match(/\bcelebrate\(/g) ?? []).length, 1);
+});
+
+test('fireflies are a short shared variant and clean up without stacking overlays', () => {
+  const { body, origin, frames } = setupDocument();
+  mock.timers.enable({ apis: ['setTimeout'] });
+  celebrate(origin, { variant: 'fireflies' }); flushFrames(frames);
+  const particles = body.children[0].children.flatMap(burst => burst.children);
+  assert.equal(particles.length, 14);
+  assert.ok(particles.every(p => p.className === 'cabane-celebration-firefly'));
+  mock.timers.tick(1500);
+  assert.equal(body.children.length, 0);
+  mock.timers.reset();
 });
