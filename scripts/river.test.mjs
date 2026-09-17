@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { RiverGame, COLS, CELL, neighbors } from '../docs/cabane/river/engine.mjs';
+import { squirrelPosition } from '../docs/cabane/river/art.mjs';
 import { levels } from '../docs/cabane/river/levels.mjs';
 import { landscapePoint, attachInput } from '../docs/cabane/river/input.mjs';
 
@@ -12,7 +13,10 @@ function solution(game, destination) {
   for (const i of queue) parent[i] = i;
   const goal = at(destination.x, destination.y);
   for (let head = 0; head < queue.length && parent[goal] < 0; head++) {
-    for (const j of neighbors(queue[head])) if (game.terrain.land[j] && parent[j] < 0) {
+    const i = queue[head];
+    const adjacent = neighbors(i);
+    if (game.tunnelLinks.has(i)) adjacent.push(game.tunnelLinks.get(i));
+    for (const j of adjacent) if (game.terrain.land[j] && parent[j] < 0) {
       parent[j] = queue[head]; queue.push(j);
     }
   }
@@ -179,7 +183,10 @@ test('sluices span the whole channel and cannot be bypassed by digging along a b
     for (let stage = 0; stage < game.gates.length; stage++) {
       const reached = new Set(game.terrain.seeds), queue = [...reached];
       for (let head = 0; head < queue.length; head++) {
-        for (const j of neighbors(queue[head])) {
+        const i = queue[head];
+        const adjacent = neighbors(i);
+        if (game.tunnelLinks.has(i)) adjacent.push(game.tunnelLinks.get(i));
+        for (const j of adjacent) {
           if (!game.terrain.land[j] || reached.has(j) || game.gateAt[j] >= stage) continue;
           reached.add(j); queue.push(j);
         }
@@ -188,5 +195,74 @@ test('sluices span the whole channel and cannot be bypassed by digging along a b
       const next = level.ponds[stage + 1];
       assert.equal(reached.has(at(next.x, next.y)), false, `${level.id}: no bypass around sluice ${stage + 1}`);
     }
+  }
+});
+
+
+const tunnelLevel = {
+  source: [70, 60],
+  paths: [{ points: [[70, 60], [70, 180]], width: 60 }, { points: [[300, 320], [300, 490]], width: 60 }],
+  ponds: [{ x: 300, y: 490, r: 25 }], rocks: [], exposed: [],
+  tunnels: [{ from: [70, 180], to: [300, 320], label: 'A' }],
+};
+
+test('tunnels need both mouths uncovered and carry water with a travel delay', () => {
+  const game = new RiverGame(tunnelLevel);
+  game.scratch([70, 60], [70, 180]);
+  game.update(10);
+  assert.equal(game.wetAt(70, 180), true);
+  assert.equal(game.wetAt(300, 320), false);
+  assert.equal(game.fills[0], 0);
+  game.scratch([300, 320], [300, 490]);
+  game.update(0);
+  assert.equal(game.wetAt(300, 320), false);
+  game.update(.34);
+  assert.equal(game.wetAt(300, 320), false);
+  game.update(.02);
+  assert.equal(game.wetAt(300, 320), true);
+  assert.equal(game.fills[0], 0);
+  game.update(10);
+  assert.equal(game.solved, true);
+  assert.equal(game.wetAt(180, 250), false, 'the underground link does not flood the bank');
+  const restarted = new RiverGame(tunnelLevel);
+  assert.equal(restarted.wetAt(300, 320), false);
+  assert.equal(restarted.open[at(70, 180)], 0);
+  assert.equal(restarted.open[at(300, 320)], 0);
+});
+
+test('an uncovered tunnel exit remains dry until the entrance is connected to the source', () => {
+  const game = new RiverGame(tunnelLevel);
+  game.scratch([70, 180]);
+  game.scratch([300, 320], [300, 490]);
+  game.update(100);
+  assert.equal(game.wetAt(300, 320), false);
+  game.scratch([70, 60], [70, 180]);
+  game.update(10);
+  assert.equal(game.solved, true);
+});
+
+test('tunnel pairs conduct in either direction without recursion through cycles', () => {
+  const reversed = { ...tunnelLevel, tunnels: [{ from: [300, 320], to: [70, 180], label: 'A' }] };
+  const game = new RiverGame(reversed);
+  game.scratch([70, 60], [70, 180]);
+  game.scratch([300, 320], [300, 490]);
+  game.update(10);
+  assert.equal(game.solved, true);
+  assert.ok(game.arrival.every(value => value >= 0));
+});
+
+
+test('the squirrel stays entirely on firm ground in every landscape', () => {
+  for (const level of levels) {
+    const game = new RiverGame(level);
+    const spot = squirrelPosition(game);
+    assert.ok(spot, `${level.id}: room for the squirrel`);
+    const [x, y] = spot;
+    for (let py = y - 45; py <= y + 25; py += CELL) {
+      for (let px = x - 40; px <= x + 30; px += CELL) {
+        assert.equal(game.terrain.land[at(px, py)], 0, `${level.id}: squirrel overlaps diggable ground`);
+      }
+    }
+    if (level.id === 'jardin-des-galets') assert.notDeepEqual(spot, [62, 259]);
   }
 });

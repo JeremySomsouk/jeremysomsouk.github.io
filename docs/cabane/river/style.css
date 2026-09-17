@@ -26,3 +26,13 @@
 @media(max-width:360px) { .river { padding-inline:10px; } .river-meta output { font-size:.63rem; } }
 @media(max-height:680px) { .river .game-header .eyebrow { display:none; } .river .game-header h1 { font-size:1.9rem; } .river .game-header .intro { font-size:.77rem; margin:5px 0; } .landscape,.river-meta { width:min(100%,calc((100svh - 214px)*.7)); } }
 @media(prefers-reduced-motion:reduce) { #completion { animation:none; } }
+.tunnel-help {
+  margin:0 0 14px;
+  padding:10px 14px;
+  border:1px solid #a8b496;
+  border-radius:12px;
+  background:#fff5d8;
+  color:#344f3e;
+  font-size:.85rem;
+  line-height:1.45;
+}

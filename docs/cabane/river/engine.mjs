@@ -41,8 +41,9 @@ export function createTerrain(level) {
     const pond = level.ponds.findIndex(p => Math.hypot((x - p.x) / 1.18, y - p.y) < p.r);
     const inPath = paths.some(p => p.samples.some((a, j) => j > 0
       && distanceToSegment(x, y, p.samples[j - 1], a) <= p.width / 2));
+    const tunnel = (level.tunnels ?? []).some(t => [t.from, t.to].some(p => Math.hypot(x - p[0], y - p[1]) <= 22));
     const rock = level.rocks.some(r => Math.hypot(x - r.x, y - r.y) <= r.r);
-    land[i] = Number(!rock && (spring || pond >= 0 || inPath));
+    land[i] = Number(!rock && (spring || pond >= 0 || inPath || tunnel));
     if (!land[i]) continue;
     initial[i] = Number(spring || pond >= 0 || level.exposed.some(p =>
       distanceToSegment(x, y, p[0], p[1]) <= p[2]));
@@ -76,6 +77,13 @@ export class RiverGame {
         }
       }
     });
+    this.tunnels = level.tunnels ?? [];
+    this.tunnelLinks = new Map();
+    for (const tunnel of this.tunnels) {
+      const [a, b] = [tunnel.from, tunnel.to].map(([x, y]) => Math.floor(y / CELL) * COLS + Math.floor(x / CELL));
+      this.tunnelLinks.set(a, b);
+      this.tunnelLinks.set(b, a);
+    }
     this.openedAt = new Float64Array(this.open.length);
     this.arrival = new Float64Array(this.open.length).fill(Infinity);
     this.time = 0;
@@ -117,9 +125,12 @@ export class RiverGame {
     for (let head = 0; head < queue.length; head++) {
       const i = queue[head];
       queued[i] = 0;
-      for (const j of neighbors(i)) {
+      const exit = this.tunnelLinks.get(i);
+      const adjacent = neighbors(i);
+      if (exit !== undefined) adjacent.push(exit);
+      for (const j of adjacent) {
         if (!this.open[j]) continue;
-        const arrival = Math.max(this.arrival[i], this.openedAt[j]) + .019;
+        const arrival = Math.max(this.arrival[i], this.openedAt[j]) + (j === exit ? .35 : .019);
         if (arrival >= this.arrival[j] - 1e-9) continue;
         this.arrival[j] = arrival;
         if (!queued[j]) { queued[j] = 1; queue.push(j); }

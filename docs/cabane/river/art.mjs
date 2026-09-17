@@ -55,6 +55,21 @@ export function flower(ctx, x, y, bloom, color = 'cream', scale = 1, phase = 0) 
   ellipse(ctx, 0, 0, 3.6, 3.4, '#cba354');
   ctx.restore();
 }
+export function squirrelPosition(game) {
+  const candidates = [[62, 259]];
+  for (let y = 100; y <= 540; y += 20) {
+    for (let x = 60; x <= 360; x += 20) candidates.push([x, y]);
+  }
+  return candidates.find(([x, y]) => {
+    for (let row = Math.floor((y - 53) / CELL); row <= Math.floor((y + 33) / CELL); row++) {
+      for (let col = Math.floor((x - 48) / CELL); col <= Math.floor((x + 38) / CELL); col++) {
+        if (game.terrain.land[row * COLS + col]) return false;
+      }
+    }
+    return !game.level.rocks.some(rock => Math.abs(rock.x - x) < rock.r + 48 && Math.abs(rock.y - y) < rock.r + 53);
+  });
+}
+
 function squirrel(ctx, x, y) {
   ctx.save(); ctx.translate(x, y); ctx.rotate(-.12);
   ellipse(ctx, -17, -11, 15, 24, '#b47852', -.35);
@@ -105,7 +120,8 @@ export function drawScenery(ctx, game) {
   bush(ctx, 28, 510, 1.15); bush(ctx, 380, 554, 1.15, -1);
   bush(ctx, 61, 591, .85); bush(ctx, 335, 586, .75, -1);
   rock(ctx, 36, 370, 17); rock(ctx, 380, 365, 13);
-  squirrel(ctx, 62, 259);
+  const squirrelSpot = squirrelPosition(game);
+  if (squirrelSpot) squirrel(ctx, ...squirrelSpot);
   // A few leaves frame the source without covering its water.
   const [sx, sy] = game.level.source;
   rock(ctx, sx - 30, sy - 25, 22); rock(ctx, sx + 25, sy - 30, 25); rock(ctx, sx - 2, sy - 43, 26);
@@ -138,6 +154,32 @@ export function drawPlants(ctx, game, time, still) {
     }
   });
   for (const r of game.level.rocks) rock(ctx, r.x, r.y, r.r + 1);
+}
+
+export function drawTunnels(ctx, game) {
+  for (const tunnel of game.tunnels ?? []) {
+    for (const [x, y] of [tunnel.from, tunnel.to]) {
+      const wet = game.wetAt(x, y);
+      ctx.save();
+      ellipse(ctx, x, y + 4, 25, 20, '#4e594b40');
+      ellipse(ctx, x, y, 23, 20, '#fff5d8');
+      ellipse(ctx, x, y, 20, 17, '#8c9688');
+      ellipse(ctx, x, y, 13, 11, wet ? '#579daa' : '#514b40');
+      for (const angle of [-2.4, -1.55, -.7, .3, 1.5, 2.8]) {
+        stroke(ctx, [[x + Math.cos(angle) * 15, y + Math.sin(angle) * 12],
+          [x + Math.cos(angle) * 20, y + Math.sin(angle) * 17]], 1.5, '#5c6e61');
+      }
+      if (wet) {
+        stroke(ctx, [[x - 8, y - 2], [x - 3, y], [x + 3, y - 2], [x + 8, y]], 2, '#eaf5e5');
+        stroke(ctx, [[x - 6, y + 5], [x, y + 6], [x + 6, y + 4]], 1.5, '#eaf5e5');
+      }
+      ellipse(ctx, x, y - 27, 13, 13, '#fff5d8');
+      ctx.strokeStyle = '#536a56'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#344f3e'; ctx.font = 'bold 17px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(tunnel.label, x, y - 26);
+      ctx.restore();
+    }
+  }
 }
 
 export function makeSurface(factory, width = WIDTH, height = HEIGHT) {

@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, COLS, ROWS, CELL, BRUSH, neighbors } from './engine.mjs';
-import { drawScenery, drawEarth, drawPlants, makeSurface, ellipse } from './art.mjs';
+import { drawScenery, drawEarth, drawPlants, drawTunnels, makeSurface, ellipse } from './art.mjs';
 
 export function createBoard(canvas, game, { createCanvas = () => document.createElement('canvas'), reducedMotion = false } = {}) {
   const ctx = canvas.getContext('2d');
@@ -89,6 +89,7 @@ export function createBoard(canvas, game, { createCanvas = () => document.create
       badge(pond.x, pond.y - pond.r - 10, String(index + 1), gate.unlocked);
       badge(gate.x + (vertical ? 25 : 0), gate.y + (vertical ? 0 : -25), gate.unlocked ? '✓' : String(index + 1), gate.unlocked);
     }
+    drawTunnels(ctx, game);
     crumbs = crumbs.filter(p => game.time - p.born < .45);
     if (!reducedMotion) for (const p of crumbs) {
       const t = game.time - p.born;

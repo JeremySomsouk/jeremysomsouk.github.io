@@ -61,7 +61,10 @@ export function createRiverApp({ document, celebrate, window = globalThis.window
     board = createBoard(canvas, game, { reducedMotion: media.matches });
     picker.value = String(index); completion.hidden = true;
     byId('instructions').textContent = levels[index].hint;
-    canvas.setAttribute('aria-label', `${levels[index].title}. Gratte la terre pour arroser ${game.fills.length} ${game.fills.length > 1 ? 'mares' : 'mare'}.`);
+    const hasTunnels = game.tunnels.length > 0;
+    byId('tunnel-help').hidden = !hasTunnels;
+    canvas.setAttribute('aria-describedby', hasTunnels ? 'instructions tunnel-help keyboard-help' : 'instructions keyboard-help');
+    canvas.setAttribute('aria-label', `${levels[index].title}. Gratte la terre pour arroser ${game.fills.length} ${game.fills.length > 1 ? 'mares' : 'mare'}.${hasTunnels ? ' Les ouvertures portant la même lettre sont reliées sous terre. Creuse jusqu’à une ouverture, puis reprends à l’autre.' : ''}`);
     input = attachInput(canvas, {
       keyboardStart: levels[index].source,
       scratch(from, to) { const count = game.scratch(from, to); board.scratch(to, count); },
