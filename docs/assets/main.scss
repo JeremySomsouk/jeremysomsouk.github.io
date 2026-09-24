@@ -99,3 +99,99 @@ $js-muted: #c9c2df;
     color: #222;
   }
 }
+
+.projects-jump {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.4rem;
+  margin: 2rem 0 4rem;
+  scroll-margin-top: 2rem;
+}
+
+.project-card {
+  --project-accent: #653859;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #d8ced7;
+  border-top: 4px solid var(--project-accent);
+  border-radius: 1.6rem;
+  background: #fff;
+  text-align: left;
+}
+
+.project-card-cabane { --project-accent: #986020; }
+
+.project-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  background: #201923;
+}
+
+.project-card-cabane .project-preview {
+  object-fit: cover;
+  background: #f4eadb;
+}
+
+.project-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2.4rem;
+}
+
+.project-body h4 { margin: 0 0 1.2rem; font-size: 2.4rem; font-weight: 700; }
+.project-tagline { font-weight: 600; }
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  padding: 0;
+  margin: 1rem 0 1.6rem;
+  list-style: none;
+}
+.project-tags li {
+  padding: .3rem .8rem;
+  border: 1px solid #d8ced7;
+  border-radius: .6rem;
+  font-size: 1.3rem;
+}
+.project-note { font-size: 1.3rem; }
+a.project-link {
+  display: inline-block;
+  margin-top: auto;
+  padding: 1rem 1.4rem;
+  border-radius: .8rem;
+  background: var(--project-accent);
+  color: #fff;
+  font-weight: 600;
+}
+a.project-link:hover { color: #fff; text-decoration: underline; }
+.project-link:focus-visible, .projects-jump:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+.dark {
+  .project-card { --project-accent: #e3abd3; background: #19132b; border-color: #53405f; border-top-color: var(--project-accent); }
+  .project-card-cabane { --project-accent: #efc185; }
+  .project-body h4 { color: var(--project-accent); }
+  .project-tags li { border-color: #53405f; }
+  a.project-link { background: var(--project-accent); color: #19132b; }
+}
+@media (max-width: 767px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .project-card { break-inside: avoid; }
+  .project-preview { max-height: 16rem; }
+}
