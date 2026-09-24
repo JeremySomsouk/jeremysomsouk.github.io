@@ -52,8 +52,36 @@ about_content: |
 
   And I am still learning how to be a <mark>great dad</mark> and that kind of leave me sleepless sometimes, but that is worth all the riches of the world.
 
+  <a class="projects-jump" href="#personal-projects">Discover my projects ↓</a>
+
 # Main content section
 content:
+  - title: Things I’m building
+    layout: text
+    content: |
+      <div id="personal-projects" class="project-grid">
+        <article class="project-card project-card-melimo" aria-labelledby="melimo-title">
+          <img class="project-preview" src="/images/melimo-player.png" alt="Mélimo terminal player showing a music queue and synchronized lyrics with fictional demo tracks" width="1024" height="654" loading="lazy">
+          <div class="project-body">
+            <h4 id="melimo-title">Mélimo</h4>
+            <p class="project-tagline">Your music, at your fingertips. In your terminal.</p>
+            <p>A keyboard-driven music player I’m building in Rust. Search Deezer, explore playlists, queue your favorites, and follow synchronized lyrics from your terminal.</p>
+            <ul class="project-tags" aria-label="Mélimo technologies and platforms"><li>Rust</li><li>Terminal UI</li><li>macOS &amp; Linux</li></ul>
+            <p class="project-note">Unofficial Deezer client.</p>
+            <a class="project-link" href="https://github.com/JeremySomsouk/Melimo">Explore on GitHub →</a>
+          </div>
+        </article>
+        <article class="project-card project-card-cabane" aria-labelledby="cabane-title">
+          <img class="project-preview" src="/cabane/images/welcome.webp" alt="Illustrated welcome to La cabane à découvertes" width="800" height="800" loading="lazy">
+          <div class="project-body">
+            <h4 id="cabane-title">La cabane à découvertes</h4>
+            <p class="project-tagline">A little place to learn, play, and explore.</p>
+            <p>A collection of playful browser activities for curious minds. Practice reading, match illustrated cards, solve puzzles, and experiment with light and water.</p>
+            <ul class="project-tags" aria-label="Cabane features and technologies"><li>Learning through play</li><li>Browser games</li><li>Rust &amp; WebAssembly</li></ul>
+            <a class="project-link" href="/cabane/">Enter the cabane →</a>
+          </div>
+        </article>
+      </div>
   - title: Experience
     layout: list
     content:
