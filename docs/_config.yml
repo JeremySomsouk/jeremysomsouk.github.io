@@ -64,10 +64,10 @@ content:
           <img class="project-preview" src="/images/melimo-player.png" alt="Mélimo terminal player showing a music queue and synchronized lyrics with fictional demo tracks" width="1024" height="654" loading="lazy">
           <div class="project-body">
             <h4 id="melimo-title">Mélimo</h4>
-            <p class="project-tagline">Your music, at your fingertips. In your terminal.</p>
-            <p>A keyboard-driven music player I’m building in Rust. Search Deezer, explore playlists, queue your favorites, and follow synchronized lyrics from your terminal.</p>
+            <p class="project-tagline">Your music, in your terminal.</p>
+            <p>A lightweight music player built in Rust. Search and stream audio with Deezer or Invidious, build one queue, and control playback from your keyboard. Explore your Deezer playlists and follow synchronized lyrics when available.</p>
             <ul class="project-tags" aria-label="Mélimo technologies and platforms"><li>Rust</li><li>Terminal UI</li><li>macOS &amp; Linux</li></ul>
-            <p class="project-note">Unofficial Deezer client.</p>
+            <p class="project-note">Invidious instances are selected automatically for audio streaming. An unofficial client for both providers.</p>
             <a class="project-link" href="https://github.com/JeremySomsouk/Melimo">Explore on GitHub →</a>
           </div>
         </article>
