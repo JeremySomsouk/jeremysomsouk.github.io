@@ -102,6 +102,7 @@ cargo fmt --check
 cargo check --locked
 cargo clippy --locked --all-targets --all-features -- -D warnings
 cargo test --locked
+python3 scripts/verify-site-preview.py # After generating the preview
 ```
 
 `crates/content` contains plain Rust content types; `crates/site` renders them with
@@ -109,4 +110,15 @@ Leptos and provides the native generator. Memory remains an independent Cargo
 project with its own lockfile/profile and existing build commands.
 
 Read [migration TODO](docs/todo.md), [progress](docs/progress.md) and
-[architecture](docs/architecture.md) before continuing. Preview CI is the next step.
+[architecture](docs/architecture.md) before continuing. The `Leptos preview` workflow runs on every branch push and pull request, and
+supports manual dispatch once available on the default branch. It uses the pinned
+Rust toolchain, runs the workspace checks and release generator, then validates
+the exact artifact file set, unchanged Cabane bytes, static proof, page routes and
+local HTML resource URLs. Successful runs upload `leptos-preview` for seven days.
+The artifact is downloadable from the workflow run; it is not a hosted deployment.
+The existing Cabane/Jekyll workflow remains independent and unchanged.
+
+There are deliberately no path filters during migration, so new build inputs
+cannot silently miss validation. Push and PR runs may both occur; newer runs of
+the same event/ref cancel older ones. The workflow has read-only repository
+permissions and does not request Pages or deployment access.

@@ -12,10 +12,10 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 ## Milestone 2 — Leptos foundation (depends on M1)
 - [x] **2.1:** bootstrap minimal stable Rust workspace (`site`, `content`), exclude independent Memory crate, pin compatible Leptos/lockfile, render one complete HTML proof page to separate output without JS/Wasm; run fmt/check/Clippy/tests/production generator and document command. Leave existing deployment untouched.
 - [x] **2.2:** Introduce typed route/output manifest; test collisions, path safety, direct static access and allowlisted unchanged Cabane asset copying.
-- [ ] **2.3 Next:** Add nondeploying CI checks for Rust/static artifact while retaining all existing game/Jekyll checks; exclude planning Markdown from output.
+- [x] **2.3:** Add nondeploying CI checks for Rust/static artifact while retaining all existing game/Jekyll checks; exclude planning Markdown from output.
 
 ## Milestone 3 — Shared shell and homepage (depends on M2)
-- [ ] 3.1 Capture fresh homepage/Cabane desktop (1440px), mobile (390px), narrow (320px) and print baselines; resolve remote CSS/fonts/icons and licensing; inspect actual Pages settings and 404 response body.
+- [ ] **3.1 Next:** Capture fresh homepage/Cabane desktop (1440px), mobile (390px), narrow (320px) and print baselines; resolve remote CSS/fonts/icons and licensing; inspect actual Pages settings and 404 response body.
 - [ ] 3.2 Port plain CSS tokens, PageLayout/Header/Footer/Section and resume-entry pattern; compare to baseline, including focus/print behavior.
 - [ ] 3.3 Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
 - [ ] 3.4 Render homepage with shared ProjectCard, existing links/assets and no Wasm; verify content/SEO and responsive parity.

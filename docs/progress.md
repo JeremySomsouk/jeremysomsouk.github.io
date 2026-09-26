@@ -87,3 +87,31 @@
 
 ### Recommended next step
 - With consent, implement 2.3: nondeploying CI for the Rust workspace/static preview, retaining existing Jekyll/game checks and checking that planning files stay out of output. Scope: one workflow (or job), an artifact verification script if useful, and planning docs. Main risk: CI path filters must include root Cargo and crate changes.
+
+## 2026-09-26 — Nondeploying Leptos CI (2.3)
+
+### Completed
+- Added a dedicated Leptos workflow for branch pushes, pull requests and manual dispatch, with read-only repository permissions.
+- Added a standard-library Python verifier for the exact artifact set, unchanged Cabane files, static proof without client resources, directory/index routes, local HTML resources and Wasm MIME type.
+- Added seven-day downloadable preview artifacts and documented local verification and workflow behavior.
+- Kept existing Jekyll/Cabane checks, deployment configuration and application sources unchanged.
+
+### Decisions
+- Use no path filters during migration, ensuring root Cargo files, crates and future inputs cannot silently skip checks.
+- Use the checked-in Rust toolchain and locked dependency resolution, two build jobs, a job timeout and cancellation of superseded runs of the same event/ref.
+- Upload only a successfully verified preview with the normal artifact action; no Pages/deployment permissions or publishing steps.
+
+### Validation
+- Python verifier passed on the existing release artifact: 65 identical Cabane files and 18 directory/index URLs, plus HTML resource and Wasm MIME checks.
+- Negative checks rejected an extra planning document, a modified Wasm asset and a script added to the proof page; fixtures were restored.
+- Workflow YAML parsed and trigger/permission/artifact-path checks passed. Existing Node suites: 89 passed.
+- Workspace format/check/strict all-target all-feature Clippy and all six Rust tests passed. Fresh release generation and the committed artifact verifier passed.
+- Git whitespace and documentation links passed; existing runtime and Cabane CI files are unchanged.
+
+### Remaining concerns
+- GitHub-hosted workflow execution is separate from local validation; no hosted run is claimed here.
+- Push and PR events may produce two runs. Manual dispatch becomes available when the workflow is on the default branch.
+- The partial preview still has no migrated homepage; this milestone does not assert browser layout/gameplay parity.
+
+### Recommended next step
+- With consent, implement 3.1 only: capture desktop/mobile/narrow/print baselines for homepage and Cabane, resolve theme CSS/fonts/icons and licensing, inspect Pages configuration and rendered 404 behavior. Scope: baseline artifacts and discovery/architecture/progress notes; no visual redesign or page migration yet.
