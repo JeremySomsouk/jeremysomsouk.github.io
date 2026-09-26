@@ -65,3 +65,39 @@ node --test scripts/*.test.mjs
 - `scripts/`: Build and test helpers
 - `docs/cabane/`: Cabane activity pages and assets
 - `docs/cabane/images/`: Illustrations used by the activities
+
+## Leptos migration preview
+
+The existing Jekyll site remains the production source. The new Rust workspace
+currently generates only an isolated, unstyled proof page; it is not a replacement
+homepage and is not deployed.
+
+Install Rust through rustup, then run from the repository root (the checked-in
+`rust-toolchain.toml` selects Rust 1.96.0, rustfmt and Clippy):
+
+```sh
+cargo run --locked --release -p site
+python3 -m http.server 8766 --directory target/site-preview
+```
+
+Open `http://localhost:8766/leptos-proof/`. The generated `index.html` contains the
+whole document; no JavaScript, Wasm, hydration, external assets or runtime server
+is required. The generator always writes beneath `target/site-preview/`, regardless
+of the working directory, and does not copy or change production files.
+
+Workspace checks:
+
+```sh
+cargo fmt --check
+cargo check --locked
+cargo clippy --locked --all-targets --all-features -- -D warnings
+cargo test --locked
+```
+
+`crates/content` contains plain Rust content types; `crates/site` renders them with
+Leptos and provides the native generator. Memory remains an independent Cargo
+project with its own lockfile/profile and existing build commands.
+
+Read [migration TODO](docs/todo.md), [progress](docs/progress.md) and
+[architecture](docs/architecture.md) before continuing. Route manifests, legacy
+asset copying and preview CI are separate next steps.

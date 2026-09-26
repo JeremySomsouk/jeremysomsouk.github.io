@@ -1,6 +1,6 @@
 # Leptos migration architecture
 
-Status: proposed direction approved for planning, implementation unstarted (2026-09-26). See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
+Status: static foundation implemented; later architecture remains planned (2026-09-26). See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
 
 ## Rendering and deployment
 
@@ -41,3 +41,20 @@ Render language, title, description, HTTPS canonical, OG/Twitter metadata and ap
 Every implementation step updates TODO and appends progress, validates its risk, and gets a coherent commit. Required eventual checks: cargo fmt --check; cargo check; cargo clippy --all-targets --all-features -- -D warnings; cargo test; static production build; existing game tests and Memory build; complete route/asset/metadata checks; responsive browser comparison. Add target-specific Wasm checks only for actual browser crates. Keep feature combinations compatible or document/test an explicit matrix before adding mutually exclusive rendering features.
 
 No deployment switch or legacy removal before complete parity and rollback validation. For “what is next”, read TODO, progress and repository state, propose one task with files/impact/risks and wait for consent. For approval, implement that task only and stop again. Do not squash intermediate history automatically.
+
+## Foundation implementation — 2026-09-26
+
+Rust 1.96.0 is pinned to match the existing Memory build. Leptos 0.8.20 is
+pinned with default features disabled and only `ssr` enabled. Here `ssr` means
+native HTML rendering at build time, not a deployed request server. The rendering
+API is `RenderHtml::to_html()` via `leptos::prelude`, with an explicit HTML5 doctype.
+The root Cargo.lock fixes transitive versions. There are no other direct external
+crate dependencies; serialization/Markdown libraries wait for actual content loading.
+
+The content crate currently contains only `PageMetadata` (title/description),
+without speculative loaders. The site library accepts that model; only its binary
+writes files. The proof is deliberately unstyled and marked noindex. Its fixed
+output is `target/site-preview/leptos-proof/index.html`; production docs and assets
+are not read or copied yet. No frontend bundles are emitted even though Leptos has
+transitive browser-related Rust dependencies. No shared UI extraction is justified
+by this single proof. `games/memory` is explicitly excluded from the root workspace.

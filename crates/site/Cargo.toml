@@ -1,0 +1,10 @@
+[package]
+name = "site"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+leptos.workspace = true
+site-content.workspace = true

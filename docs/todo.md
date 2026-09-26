@@ -10,8 +10,8 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] Establish TODO/progress and record baseline tests/security scan.
 
 ## Milestone 2 — Leptos foundation (depends on M1)
-- [ ] **2.1 Next:** bootstrap minimal stable Rust workspace (`site`, `content`), exclude independent Memory crate, pin compatible Leptos/lockfile, render one complete HTML proof page to separate output without JS/Wasm; run fmt/check/Clippy/tests/production generator and document command. Leave existing deployment untouched.
-- [ ] 2.2 Introduce typed route/output manifest; test collisions, path safety, direct static access and allowlisted unchanged Cabane asset copying.
+- [x] **2.1:** bootstrap minimal stable Rust workspace (`site`, `content`), exclude independent Memory crate, pin compatible Leptos/lockfile, render one complete HTML proof page to separate output without JS/Wasm; run fmt/check/Clippy/tests/production generator and document command. Leave existing deployment untouched.
+- [ ] **2.2 Next:** Introduce typed route/output manifest; test collisions, path safety, direct static access and allowlisted unchanged Cabane asset copying.
 - [ ] 2.3 Add nondeploying CI checks for Rust/static artifact while retaining all existing game/Jekyll checks; exclude planning Markdown from output.
 
 ## Milestone 3 — Shared shell and homepage (depends on M2)
