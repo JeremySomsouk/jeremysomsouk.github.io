@@ -1,5 +1,7 @@
 //! Native static rendering. No client router or hydration entry point.
 
+pub mod output;
+
 use leptos::prelude::*;
 use site_content::PageMetadata;
 

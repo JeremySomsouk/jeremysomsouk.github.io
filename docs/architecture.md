@@ -58,3 +58,25 @@ output is `target/site-preview/leptos-proof/index.html`; production docs and ass
 are not read or copied yet. No frontend bundles are emitted even though Leptos has
 transitive browser-related Rust dependencies. No shared UI extraction is justified
 by this single proof. `games/memory` is explicitly excluded from the root workspace.
+
+## Route/output manifest (2.2)
+
+`site::output::Route` converts a validated trailing-slash URL into an
+`OutputPath` directory index. Output paths accept portable ASCII filename
+characters only and reject dot segments, empty segments, URL escapes, query
+strings, backslashes and absolute paths. `Manifest` owns a sorted map of output
+paths to bytes; duplicate destinations and file/directory prefix conflicts
+fail before writing. Generated and legacy pages use the same collision checks.
+
+The only legacy source is `docs/cabane/`, recursively enumerated with an explicit
+runtime-extension allowlist; Markdown is excluded and other extensions fail
+closed. No generic docs copy occurs. Symlinks and nonregular files are rejected.
+Source bytes, URLs, query strings and import layout remain unchanged.
+
+Publication writes a fresh fixed `target/site-preview/` directory and refuses
+existing output, including symlink ancestors. This avoids stale output and
+overwriting another build. Remove only that disposable directory to rebuild.
+An I/O failure can leave an incomplete preview: the command fails and the next
+build refuses it until removed. This is a local generator for a trusted checkout,
+not a concurrent hostile-filesystem sandbox or atomic production deployment.
+The partial artifact intentionally has no homepage yet; no deployment changed.

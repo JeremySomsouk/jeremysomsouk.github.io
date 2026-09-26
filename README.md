@@ -69,21 +69,31 @@ node --test scripts/*.test.mjs
 ## Leptos migration preview
 
 The existing Jekyll site remains the production source. The new Rust workspace
-currently generates only an isolated, unstyled proof page; it is not a replacement
-homepage and is not deployed.
+generates an isolated, unstyled proof page and an unchanged copy of Cabane.
+It is not a replacement homepage and is not deployed.
 
 Install Rust through rustup, then run from the repository root (the checked-in
 `rust-toolchain.toml` selects Rust 1.96.0, rustfmt and Clippy):
 
 ```sh
+rm -rf target/site-preview # Only the disposable generated preview
 cargo run --locked --release -p site
 python3 -m http.server 8766 --directory target/site-preview
 ```
 
 Open `http://localhost:8766/leptos-proof/`. The generated `index.html` contains the
 whole document; no JavaScript, Wasm, hydration, external assets or runtime server
-is required. The generator always writes beneath `target/site-preview/`, regardless
-of the working directory, and does not copy or change production files.
+is required for the proof page. `/cabane/` retains its existing JS/Wasm runtime.
+The generator writes only to `target/site-preview/`, regardless of the working
+directory, and never changes production sources. It refuses an existing preview
+directory: remove the disposable preview before rebuilding, including after a
+failed write. The manifest is validated before any output is written.
+
+Only `docs/cabane/` runtime extensions (HTML, CSS, JS/MJS, JSON, Wasm, PNG, SVG,
+WebP and ICO) are copied, byte for byte. Markdown is excluded; unknown extensions,
+symlinks, unsafe paths and duplicate/file-directory destinations fail the build.
+Jekyll configuration and migration notes are never copied. The homepage is not
+yet migrated, so Cabane’s back-to-site link has no homepage in this partial preview.
 
 Workspace checks:
 
@@ -99,5 +109,4 @@ Leptos and provides the native generator. Memory remains an independent Cargo
 project with its own lockfile/profile and existing build commands.
 
 Read [migration TODO](docs/todo.md), [progress](docs/progress.md) and
-[architecture](docs/architecture.md) before continuing. Route manifests, legacy
-asset copying and preview CI are separate next steps.
+[architecture](docs/architecture.md) before continuing. Preview CI is the next step.

@@ -58,3 +58,32 @@
 
 ### Recommended next step
 - With consent, implement 2.2: typed route/output manifest and safe allowlisted legacy asset copying, including collision/path-safety tests and direct static route checks. Expected changes: site routing/output modules and tests, planning docs; no deployment cutover or game rewrite.
+
+## 2026-09-26 — Typed routes and isolated legacy output (2.2)
+
+### Completed
+- Added `Route`, `OutputPath` and a deterministic output manifest shared by generated pages and legacy files.
+- Added collision/path validation and Cabane-only runtime copying; Markdown, Jekyll config and planning documents are excluded.
+- Refused symlink inputs/output ancestors, nonregular files, unknown extensions and existing preview directories.
+- Added five integration tests and updated preview commands/architecture. No dependencies, game sources or deployment changes.
+
+### Decisions
+- Preserve every legacy Cabane runtime byte and public path; register the proof route through the same manifest.
+- Validate inputs and collisions before writing. Require a fresh disposable preview to prevent stale output; an interrupted write requires removing that directory before retrying.
+- Keep this a partial preview: the homepage and global site shell remain later tasks.
+
+### Validation
+- `cargo fmt --check`, `cargo check --locked`, strict all-target/all-feature Clippy and `cargo test --locked`: passed (six Rust tests).
+- Existing Node suites: 89 passed, zero failed.
+- Release generation passed after the dependency rebuild. All 65 legacy runtime files are byte-identical; the artifact contains only those files and the static proof.
+- Local HTTP checks passed for all 18 directory/index page URLs and their HTML resource references; Memory Wasm has application/wasm MIME type. Proof has no script/Wasm loader. Rebuilding into existing output correctly fails.
+- Documentation links and git whitespace checks passed.
+- Initial release dependency archive failure in syn; cleaned the affected release dependency and the retry passed.
+
+### Remaining concerns
+- No visual migration occurred; Cabane's back-to-home link has no migrated homepage in the partial preview.
+- No atomic deployment or hostile concurrent-filesystem guarantee is implied by this local generator.
+- Production Jekyll and Memory sources/build scripts remain unchanged; no deployment was attempted.
+
+### Recommended next step
+- With consent, implement 2.3: nondeploying CI for the Rust workspace/static preview, retaining existing Jekyll/game checks and checking that planning files stay out of output. Scope: one workflow (or job), an artifact verification script if useful, and planning docs. Main risk: CI path filters must include root Cargo and crate changes.
