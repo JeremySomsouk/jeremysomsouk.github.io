@@ -137,3 +137,24 @@ remain open. Roboto is a preferred family, but font delivery is not yet added;
 fallback metrics differ from the current site's downloaded Roboto. Resolve this
 before claiming homepage visual parity. The homepage→Cabane animation remains
 planned for landing-page integration and is not implemented by this shell step.
+
+## Typed homepage extraction (3.3)
+
+`site-content::HOMEPAGE` now supplies explicit Profile, ResumeSection/ResumeKind,
+ResumeEntry, ProjectMetadata, Link and Image records. Homepage prose lives in
+`content/home/*.md`, embedded with `include_str!`. Static borrowed strings avoid
+runtime parsing and allocation for this fixed dataset; PageMetadata remains
+owned for generated document heads. Article deserialization remains a separate
+future boundary, not a reason to add a YAML parser for legacy extraction.
+
+The one-time YAML/HTML extraction preserved copy and ordering, converting card
+HTML into fields and employer domains into HTTPS links. Markdown retains trusted
+author HTML. Renderers must distinguish it from escaped plain-text metadata.
+No parser, sanitizer, theme/font dependency, routes or frontend code was added.
+The profile image remains a source path until its dimensions are measured.
+
+The legacy YAML remains production source during coexistence; update both copies
+until cutover. Preservation tests reference that source and must become durable
+fixtures before deleting it. Homepage rendering and Markdown parser selection
+belong to 3.4. Existing project anchor IDs remain explicit; verify all theme-derived
+section anchors against rendered baseline during composition.

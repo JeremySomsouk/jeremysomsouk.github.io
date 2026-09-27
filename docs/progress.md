@@ -170,3 +170,31 @@
 
 ### Recommended next step
 - With consent, implement 3.3: extract current profile/resume/project content into explicit Rust models and Markdown fixtures with content-preservation tests. Expected scope: content crate, content files, tests and planning docs. Full homepage composition is still the following step.
+
+## 2026-09-27 — Typed homepage content (3.3)
+
+### Completed
+- Extracted seven Markdown prose files and explicit profile, resume-section/entry, project, link and image records into the content crate.
+- Preserved public identity, prose, project copy/order, tags, notes, image paths/alt text/dimensions, project IDs and navigation destinations.
+- Added three preservation tests and documented editing/coexistence in content/home/README.md; marked 3.3 complete and 3.4 next.
+
+### Decisions
+- Use compile-time records and include_str! for the fixed homepage dataset; add no runtime YAML/HTML parser or new dependency.
+- Keep author Markdown, including intentional inline HTML, separate from plain-text card metadata. Rendering and Markdown parser selection remain in 3.4.
+- Make employer domains explicit HTTPS URLs. Keep profile image dimensions unspecified until measured.
+- Production still reads legacy YAML; synchronize both sources until cutover. Retain development commits off master for one final migration squash commit.
+
+### Validation
+- Rust formatting, locked compilation, strict all-target/all-feature Clippy and all nine Rust tests passed.
+- Independent one-time YAML comparison confirmed all seven Markdown bodies match exactly, including whitespace; existing trailing whitespace is retained intentionally.
+- Release generation and artifact verification passed: 65 unchanged Cabane files, 18 page URLs, local resources and static proof.
+- Release dependency archives hit zero-length object errors (syn, rstml, leptos_hot_reload); targeted dependency cleaning and a serial retry completed successfully.
+- No homepage rendering, CSS, game controller, dependency lockfile or deployment changes. No new visual comparison is claimed.
+
+### Remaining concerns
+- Preserve migration parity fixtures before deleting legacy YAML; current tests intentionally reference it.
+- Verify Markdown rendering and theme-derived section anchors in 3.4; mobile/print/font and hosting release gates remain open.
+- The homepage-to-Cabane transition remains planned for landing-page integration.
+
+### Recommended next step
+- Implement 3.4: compose the real static homepage from these records with shared ProjectCard, Markdown rendering and existing assets; validate content, links and visual behavior before cutover.
