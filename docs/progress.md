@@ -115,3 +115,30 @@
 
 ### Recommended next step
 - With consent, implement 3.1 only: capture desktop/mobile/narrow/print baselines for homepage and Cabane, resolve theme CSS/fonts/icons and licensing, inspect Pages configuration and rendered 404 behavior. Scope: baseline artifacts and discovery/architecture/progress notes; no visual redesign or page migration yet.
+
+## 2026-09-27 — Desktop baseline and single-commit release policy
+
+### Completed
+- Captured loaded homepage/Cabane desktop viewport references at 1363×936 and recorded HTTP/CSS hashes.
+- Confirmed live missing routes show resume content instead of an error message; documented the replacement requirement.
+- Inspected upstream theme MIT notice and existing GPL site license; retained both unchanged.
+- Verified hosted Leptos preview run 36229809216 succeeded.
+- Recorded the user's single final migration commit, production trial authorization and homepage-to-Cabane transition requirement.
+
+### Decisions
+- Land the entire migration as one squash commit on master when ready, with source and deployment-settings rollback instructions; preserve intermediate development history off master.
+- Plan a brief progressive navigation animation with cream/green destination identity, normal links and reduced-motion fallback; no SPA/Wasm solely for animation.
+
+### Validation
+- Live homepage/Cabane HTTP 200; explicit /404.html HTTP 200 and missing route HTTP 404 share the erroneous resume body.
+- Both project images and all seven Cabane images loaded; desktop scroll width stays within viewport.
+- GitHub hosted CI success confirmed for the previous implementation commit.
+- This session changes documentation/evidence only; no Rust/game/production changes.
+
+### Remaining concerns
+- Supported browser API lacks resize/print emulation; requested exact desktop/mobile/narrow/print captures remain incomplete. Full-page capture timed out, viewport capture worked.
+- Pages settings endpoint is unsupported by the connector; actual source/build settings remain unverified.
+- Font/icon licenses must be checked before vendoring. Do not claim task 3.1 or visual parity complete.
+
+### Recommended next step
+- Finish 3.1b with a supported viewport/print capture surface and authorized Pages settings access; then propose shared shell step 3.2. Production trial is authorized when ready, not performed now.

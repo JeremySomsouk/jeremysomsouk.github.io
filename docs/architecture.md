@@ -40,7 +40,7 @@ Render language, title, description, HTTPS canonical, OG/Twitter metadata and ap
 
 Every implementation step updates TODO and appends progress, validates its risk, and gets a coherent commit. Required eventual checks: cargo fmt --check; cargo check; cargo clippy --all-targets --all-features -- -D warnings; cargo test; static production build; existing game tests and Memory build; complete route/asset/metadata checks; responsive browser comparison. Add target-specific Wasm checks only for actual browser crates. Keep feature combinations compatible or document/test an explicit matrix before adding mutually exclusive rendering features.
 
-No deployment switch or legacy removal before complete parity and rollback validation. For “what is next”, read TODO, progress and repository state, propose one task with files/impact/risks and wait for consent. For approval, implement that task only and stop again. Do not squash intermediate history automatically.
+No deployment switch or legacy removal before complete parity and rollback validation. For “what is next”, read TODO, progress and repository state, propose one task with files/impact/risks and wait for consent. For approval, implement that task only and stop again. The 2026-09-27 user instruction supersedes the original no-squash default: keep development history off master and land the entire migration as one final squash commit.
 
 ## Foundation implementation — 2026-09-26
 
@@ -80,3 +80,38 @@ An I/O failure can leave an incomplete preview: the command fails and the next
 build refuses it until removed. This is a local generator for a trusted checkout,
 not a concurrent hostile-filesystem sandbox or atomic production deployment.
 The partial artifact intentionally has no homepage yet; no deployment changed.
+
+## Release and rollback policy — user instruction, 2026-09-27
+
+The user requests one commit for the whole migration on production and authorizes
+a production trial once ready. Intermediate branches/commits may remain for
+resumability, but must not be individually merged into master. Prepare one final
+squash commit against the then-current master, containing the complete migration.
+Do not force-push or rewrite unrelated history. Record the pre-cutover revision
+and final migration SHA. Roll back source with `git revert <migration-sha>`, then
+redeploy the known-good artifact. Validate this plan before changing production.
+
+Git revert does not revert account-level Pages settings: record those settings
+and their restoration procedure separately before cutover. Prefer a deployment
+arrangement where reverting the migration also restores the old build path.
+Production trial authorization does not waive route/content/build checks or
+allow a partial proof artifact to replace the website. Keep the one-task-per-
+session workflow unless the user expands scope.
+
+## Homepage to Cabane transition — user instruction, 2026-09-27
+
+Aim for a short, gentle transition from the violet homepage to Cabane's warm
+cream/green palette. Keep the welcome illustration as a visual connection between
+the project card and landing page. Plan a CSS cross-document View Transition as
+progressive enhancement after verifying current browser support: brief fade with
+a subtle vertical movement, roughly 180–250ms, no full-screen loader or delay.
+An optional shared-image transition must not distort the differently sized
+illustration or shift layout. Avoid adding Wasm or a client router just for this.
+
+Keep real anchors, destination URLs, opening in a new tab and back/forward
+behavior. Disable animation with prefers-reduced-motion. Unsupported browsers
+get immediate normal navigation. Scope to the homepage/Cabane landing pair;
+do not animate game boards or interfere with reading timers. Test mobile and
+desktop entry/return, reduced motion, keyboard focus and fallback before release.
+Implementation belongs with the shared shell and Cabane landing integration;
+this session records the requirement, not a completed animation.
