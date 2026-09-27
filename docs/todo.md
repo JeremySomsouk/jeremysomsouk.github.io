@@ -57,3 +57,9 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [ ] Compare responsive/print/accessibility behavior; confirm ordinary pages render fully without JS/Wasm and no unrelated app bundles load.
 - [ ] Review dependency/asset size, external requests and tracked source for accidental secrets/private values; preserve intentional public identity.
 - [ ] Document adding projects/articles and session continuation; record remaining limits and close only verified tasks.
+
+## Milestone 8 — Public documentation cleanup (final release step; depends on completed migration and validation)
+- [ ] Replace migration-specific architectural/exploration documentation with a concise README describing what the site is, the broad static Leptos architecture, and essential build/content-maintenance instructions. Keep required licenses and attribution.
+- [ ] Remove exploration and implementation records created during this migration: `docs/migration-discovery.md`, `docs/architecture.md`, `docs/migration-baseline/`, and any other migration-only notes/artifacts. Transfer only useful high-level information first; do not remove project content or unrelated documentation.
+- [ ] Once no migration tasks remain, remove `docs/progress.md` and this migration `docs/todo.md`; update links and verification references so the final published tree contains no migration logs or detailed implementation diary. These files remain the continuation record until that final cleanup (user instruction 2026-09-28).
+- [ ] Review the final squash diff and generated site for leftover exploration documents and broken documentation links. File removal cleans the final tree; it does not erase already published development history. Do not rewrite history as part of this task.

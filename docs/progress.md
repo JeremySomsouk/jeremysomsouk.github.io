@@ -303,3 +303,22 @@
 
 ### Recommended next step
 - Review the consolidated PR and continue the outstanding migration tasks there; keep it draft until release gates and deployment preparation are complete.
+
+## 2026-09-28 — Plan final public documentation cleanup
+
+### Completed
+- Added milestone 8 for removing migration exploration, architectural detail, baseline artifacts and implementation logs at the end of the migration.
+
+### Decisions
+- Keep only concise public product documentation, the big-picture architecture, essential maintenance instructions and required licenses/attribution.
+- Retain TODO/progress while work continues; remove both during final cleanup after transferring durable information. This supersedes permanent retention of migration logs.
+- Preserve unrelated documentation and published history; cleanup concerns the final repository tree.
+
+### Validation
+- Documentation-only change; checked diff formatting and explicit cleanup scope. No application code changed.
+
+### Remaining concerns
+- Cleanup must happen after remaining work and validation, so future sessions retain their continuation context.
+
+### Recommended next step
+- Continue project presentation pages (4.1) on the consolidated branch; perform milestone 8 at release completion.
