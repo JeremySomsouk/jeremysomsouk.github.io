@@ -16,12 +16,13 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 
 ## Milestone 3 — Shared shell and homepage (depends on M2)
 - [x] 3.1a Capture available desktop viewport references, inspect resolved CSS/theme license and confirm live 404 body; record successful hosted Leptos CI.
-- [ ] 3.1b (release gate): Complete exact 1440px/390px/320px and print baselines using a supported capture surface; verify font/icon licenses before vendoring and account-level Pages settings. See migration-baseline/2026-09-27/README.md for current limitations.
+- [ ] 3.1b (release gate): Complete exact 1440px/390px/320px and print baselines using a supported capture surface; verify account-level Pages settings (vendored font/icon licenses verified in 3.4b). See migration-baseline/2026-09-27/README.md for current limitations.
 - [x] 3.2a Implement scoped plain CSS tokens, PageLayout/Header/Footer/Section and resume-entry pattern in the static proof.
 - [ ] 3.2b (release gate) Compare rendered shared shell/homepage to baseline, including keyboard focus, mobile widths and print. Local preview browser navigation is currently blocked; do not claim visual parity.
 - [x] **3.3:** Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
 - [x] 3.4a Render static homepage with shared ProjectCard, trusted Markdown, existing links/assets/anchors and no client runtime; verify content, baseline metadata and exact asset copying.
-- [ ] **3.4b Next** (release gate): Restore licensed local Roboto/social icon presentation and compare the homepage at desktop/mobile/print widths (with 3.1b/3.2b). Current text navigation and fallback font are explicitly provisional.
+- [x] 3.4b: Deliver licensed local Inter variable fonts and Tabler SVG profile icons, with typed link kinds, accessible labels and asset verification. User authorized a restrained font/icon refresh.
+- [ ] **3.4c Next** (release gate; depends on 3.1b/3.2b): Compare Inter/icon candidate against the legacy homepage at 1440px/390px/320px and print on a supported preview; check wrapping, focus, font loading and accessible navigation. Visual approval is still outstanding.
 - [x] **3.5:** Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
 
 ## Milestone 4 — Content and project pages (depends on M3)

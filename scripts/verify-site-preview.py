@@ -2,6 +2,7 @@
 
 import json
 import re
+import xml.etree.ElementTree as ET
 from functools import partial
 from html.parser import HTMLParser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -94,12 +95,30 @@ def verify():
         legacy.add(Path("cabane") / path)
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
-    expected = legacy | home_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
+    public_assets = files_under(ROOT / "public")
+    expected = legacy | home_assets | public_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
 
     require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
+
+    for path in public_assets:
+        require((PREVIEW / path).read_bytes() == (ROOT / "public" / path).read_bytes(), f"Changed public asset: {path}")
+    css = (PREVIEW / "assets/main.css").read_text()
+    require("@import" not in css, "Unexpected external stylesheet import")
+    font_urls = re.findall(r"url\(([^)]+)\)", css)
+    require(len(font_urls) == 4 and len(set(font_urls)) == 4, "Expected four local font subsets")
+    for url in font_urls:
+        require(url.startswith("/fonts/inter/"), f"Unexpected font source: {url}")
+        require((PREVIEW / url[1:]).read_bytes().startswith(b"wOF2"), f"Invalid WOFF2: {url}")
+    require(sum((PREVIEW / url[1:]).stat().st_size for url in font_urls) < 125_000, "Font budget exceeded")
+    for path in public_assets:
+        if path.suffix == ".svg":
+            svg = ET.fromstring((PREVIEW / path).read_text())
+            require(svg.attrib.get("viewBox") == "0 0 24 24", "Unexpected icon dimensions")
+            require(all(element.tag.rsplit("}", 1)[-1] in {"svg", "path"} for element in svg.iter()), "Unexpected SVG element")
+            require(all(not key.startswith("on") and "href" not in key for element in svg.iter() for key in element.attrib), "Active SVG content")
 
     proof = Document()
     proof_html = (PREVIEW / "leptos-proof/index.html").read_text()
@@ -113,6 +132,8 @@ def verify():
     home_html = (PREVIEW / "index.html").read_text()
     home.feed(home_html)
     require(not home.runtime and ".wasm" not in home_html, "Homepage must render without a client runtime")
+    require(home_html.count('class="profile-icon-link"') == 4, "Missing profile icon links")
+    require(home_html.count('class="profile-icon-label"') == 4, "Missing accessible icon labels")
     require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
     require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
              "experience", "doctolib", "blablacar", "streamroot-lumen", "happn", "education", "epita",
@@ -177,6 +198,8 @@ def verify():
                 require(urlsplit(address).netloc == urlsplit(base).netloc, f"Unexpected external resource: {address}")
                 fetch(address)
         fetch(base + "/cabane/memory/game.wasm", "application/wasm")
+        for url in font_urls:
+            fetch(base + url, "font/woff2")
         for missing in ["/__missing_migration_page__", "/missing/deep/path/"]:
             try:
                 urlopen(base + missing, timeout=10)

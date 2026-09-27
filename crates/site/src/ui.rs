@@ -97,7 +97,10 @@ pub fn WebsiteLayout(children: Children) -> impl IntoView {
                 logo="/images/js-icon.webp">
                 <div class="profile-links">
                     {home.profile.links.iter().map(|link| view! {
-                        <a href=link.url>{link.label}</a>
+                        <a class="profile-icon-link" href=link.url title=link.label>
+                            <img src=profile_icon(link.kind) alt="" width="24" height="24"/>
+                            <span class="profile-icon-label">{link.label}</span>
+                        </a>
                     }).collect_view()}
                 </div>
                 <p class="profile-contact">"Email: "<a href=format!("mailto:{}", home.profile.email)>{home.profile.email}</a></p>
@@ -108,4 +111,14 @@ pub fn WebsiteLayout(children: Children) -> impl IntoView {
         }.into_any())
     >
         {children()}</PageLayout> }
+}
+
+fn profile_icon(kind: site_content::ProfileLinkKind) -> &'static str {
+    use site_content::ProfileLinkKind;
+    match kind {
+        ProfileLinkKind::GitHub => "/icons/tabler/brand-github.svg",
+        ProfileLinkKind::LinkedIn => "/icons/tabler/brand-linkedin.svg",
+        ProfileLinkKind::Home => "/icons/tabler/home.svg",
+        ProfileLinkKind::Website => "/icons/tabler/world.svg",
+    }
 }

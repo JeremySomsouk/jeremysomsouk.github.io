@@ -233,3 +233,29 @@ install that fallback. Verify actual Pages missing-route behavior at cutover.
 Visual approval, font/icon parity, full publication artifacts and Cabane gameplay
 integration remain separate gates. This step changes neither hosting nor the
 legacy Jekyll 404 source; production still uses its old document until cutover.
+
+
+## Local typography and icons (2026-09-27)
+
+The user authorized new fonts/icons. Ordinary Leptos pages now use Inter Variable
+instead of the provisional Roboto/fallback stack. Keep the violet palette, existing
+logo, portrait, circular social navigation and content. This is a limited visual
+change requiring desktop/mobile/print review before release, not a parity claim.
+Cabane's independent styles and controllers remain untouched.
+
+- Source: `@fontsource-variable/inter` 5.3.0, published npm tarball verified against
+  its registry SHA-512 integrity. Unmodified Latin and Vietnamese `wght` WOFF2
+  subsets, normal and italic, total 120,936 bytes. Vietnamese covers the existing
+  “phở”; unsupported glyphs use the system fallback. Weight range 100–900,
+  `font-display: swap`, no preload of unused subsets or external requests.
+- Four unmodified Tabler Icons v3.48.0 outline SVGs: brand-github, brand-linkedin,
+  home, world. Typed `ProfileLinkKind` selects the presentation without URL guessing.
+  Images are decorative inside named links, with visible tooltips, 48px targets,
+  keyboard focus and a forced-colors text fallback. No icon font or client runtime.
+- New shared assets live at `public/fonts/inter/` and `public/icons/tabler/`.
+  `public/licenses/` includes original OFL/MIT licenses and upstream version URLs.
+  The generator explicitly registers assets; it does not publish arbitrary public
+  files. Existing images remain selected from docs until the asset migration step.
+- The verifier checks exact public bytes, WOFF2 signatures/size budget, local font
+  URLs and HTTP MIME, passive SVG content and profile labels. It does not replace
+  browser accessibility, responsive or visual checks. No new Rust/npm dependency.

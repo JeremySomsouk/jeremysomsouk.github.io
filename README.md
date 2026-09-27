@@ -128,9 +128,10 @@ permissions and does not request Pages or deployment access.
 The shared layout lives in `crates/site/src/ui.rs`; site-only tokens and responsive
 rules live in `styles/site.css`. The proof uses example content; `crates/site/src/homepage.rs` composes the real
 homepage from the typed records and trusted Markdown. Cabane continues to use its own styles and controllers.
-Roboto is named in the font stack with local fallbacks. Social navigation uses
-readable labels until local font/icon delivery is verified. Font/icon parity and
-desktop/mobile/print comparison remain release requirements; this candidate is
+Inter variable fonts and four Tabler SVG navigation icons are self-hosted from
+`public/`, with licenses in `public/licenses/`. Navigation retains accessible
+labels; ordinary pages require no JavaScript. Desktop/mobile/print comparison
+remains a release requirement; this candidate is
 not visually approved for cutover.
 
 The preview includes `/404.html`. The homepage, proof and error page share

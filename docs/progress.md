@@ -254,3 +254,28 @@
 
 ### Recommended next step
 - Restore licensed local Roboto and the social icons (remaining 3.4b), then complete the visual gate on a supported preview before production. Project presentation pages follow in 4.1.
+
+## 2026-09-27 — Local typography and navigation icons
+
+### Completed
+- Added self-hosted Inter variable normal/italic Latin and Vietnamese fonts and four Tabler SVG profile icons, with original licenses and provenance.
+- Added typed profile link kinds, accessible labels, 48px circular links, keyboard focus and forced-colors text fallback.
+- Generalized explicit asset registration and extended artifact validation for local fonts, passive SVGs, labels and licensing files.
+
+### Decisions
+- User authorized a restrained font/icon refresh: Inter replaces provisional Roboto; Tabler outlines reuse the existing circular navigation motif. Violet branding, public links and Cabane runtime stay unchanged.
+- Four font subsets total 120,936 bytes; no JavaScript, external font request, icon font, new package dependency or production deployment.
+- Development remains on a branch for the final single migration squash commit.
+
+### Validation
+- cargo fmt --check, locked cargo check, strict all-target/all-feature Clippy and all 18 Rust tests passed.
+- Optimized production generation and artifact verifier passed: 65 byte-identical Cabane files, 21 page URLs, local resources/fonts and two simulated missing-route 404 responses.
+- A corrupt cached release object was resolved with cargo clean -p site --release; no build configuration workaround was committed.
+- Fontsource tarball integrity matched published SHA-512; licenses and exact public asset bytes are retained.
+
+### Remaining concerns
+- The existing browser-preview restriction still prevents visual approval. Wrapping, actual font rendering, desktop/mobile/print and browser accessibility checks remain release gates; code checks do not prove visual parity.
+- Hosted CI for this commit and production Pages settings still need verification.
+
+### Recommended next step
+- Complete visual review in 3.4c on a supported preview, adjusting typography or spacing if needed. Then begin project presentation pages (4.1), followed by the planned Cabane landing/transition boundary.

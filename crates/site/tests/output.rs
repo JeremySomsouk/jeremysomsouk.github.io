@@ -140,20 +140,20 @@ fn explicitly_selected_asset_is_copied_and_rejects_invalid_sources() -> io::Resu
     fs::create_dir(fixture.0.join("images"))?;
     fs::write(fixture.0.join("images/test.webp"), [0, 1, 255])?;
     let mut manifest = Manifest::default();
-    manifest.add_legacy_asset(&fixture.0, OutputPath::new("images/test.webp")?)?;
+    manifest.add_static_asset(&fixture.0, OutputPath::new("images/test.webp")?)?;
     assert!(
         manifest
-            .add_legacy_asset(&fixture.0, OutputPath::new("images/test.webp")?)
+            .add_static_asset(&fixture.0, OutputPath::new("images/test.webp")?)
             .is_err()
     );
     assert!(
         manifest
-            .add_legacy_asset(&fixture.0, OutputPath::new("images/missing.webp")?)
+            .add_static_asset(&fixture.0, OutputPath::new("images/missing.webp")?)
             .is_err()
     );
     assert!(
         manifest
-            .add_legacy_asset(&fixture.0, OutputPath::new("images")?)
+            .add_static_asset(&fixture.0, OutputPath::new("images")?)
             .is_err()
     );
     #[cfg(unix)]
@@ -164,7 +164,7 @@ fn explicitly_selected_asset_is_copied_and_rejects_invalid_sources() -> io::Resu
         )?;
         assert!(
             manifest
-                .add_legacy_asset(&fixture.0, OutputPath::new("images/link.webp")?)
+                .add_static_asset(&fixture.0, OutputPath::new("images/link.webp")?)
                 .is_err()
         );
     }

@@ -77,9 +77,9 @@ impl Manifest {
         Ok(())
     }
 
-    /// Register one explicitly selected legacy asset; never copy the docs tree.
-    pub fn add_legacy_asset(&mut self, docs: &Path, path: OutputPath) -> io::Result<()> {
-        let source = docs.join(path.as_str());
+    /// Register one explicitly selected static asset; never copy an entire source tree.
+    pub fn add_static_asset(&mut self, source_root: &Path, path: OutputPath) -> io::Result<()> {
+        let source = source_root.join(path.as_str());
         reject_symlinks(&source)?;
         if !fs::metadata(&source)?.is_file() {
             return Err(invalid(format!(

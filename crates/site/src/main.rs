@@ -23,7 +23,22 @@ fn main() -> Result<(), Box<dyn Error>> {
         "images/melimo-player.png",
         "images/favicon.ico",
     ] {
-        manifest.add_legacy_asset(&root.join("docs"), OutputPath::new(asset)?)?;
+        manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;
+    }
+    for asset in [
+        "fonts/inter/inter-latin-wght-italic.woff2",
+        "fonts/inter/inter-latin-wght-normal.woff2",
+        "fonts/inter/inter-vietnamese-wght-italic.woff2",
+        "fonts/inter/inter-vietnamese-wght-normal.woff2",
+        "icons/tabler/brand-github.svg",
+        "icons/tabler/brand-linkedin.svg",
+        "icons/tabler/home.svg",
+        "icons/tabler/world.svg",
+        "licenses/Inter-OFL.txt",
+        "licenses/THIRD-PARTY.txt",
+        "licenses/Tabler-MIT.txt",
+    ] {
+        manifest.add_static_asset(&root.join("public"), OutputPath::new(asset)?)?;
     }
     let route = Route::new("/leptos-proof/")?;
     let html = site::render_proof_page(PageMetadata {

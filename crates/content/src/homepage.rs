@@ -1,7 +1,7 @@
 //! Homepage records explicitly extracted from the legacy config; no runtime YAML dependency.
 use crate::{
-    Homepage, Image, Link, Markdown, Profile, ProjectMetadata, ResumeEntry, ResumeKind,
-    ResumeSection,
+    Homepage, Image, Link, Markdown, Profile, ProfileLink, ProfileLinkKind, ProjectMetadata,
+    ResumeEntry, ResumeKind, ResumeSection,
 };
 
 pub const HOMEPAGE: Homepage = Homepage {
@@ -17,19 +17,23 @@ pub const HOMEPAGE: Homepage = Homepage {
         },
         about: Markdown(include_str!("../../../content/home/about.md")),
         links: &[
-            Link {
+            ProfileLink {
+                kind: ProfileLinkKind::GitHub,
                 label: "GitHub",
                 url: "https://github.com/JeremySomsouk",
             },
-            Link {
+            ProfileLink {
+                kind: ProfileLinkKind::LinkedIn,
                 label: "LinkedIn",
                 url: "https://www.linkedin.com/in/jeremy-somsouk-dev",
             },
-            Link {
+            ProfileLink {
+                kind: ProfileLinkKind::Home,
                 label: "La cabane à découvertes",
                 url: "https://www.somsouk.fr/cabane/",
             },
-            Link {
+            ProfileLink {
+                kind: ProfileLinkKind::Website,
                 label: "You're never gonna believe me",
                 url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             },

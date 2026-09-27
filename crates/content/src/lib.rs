@@ -18,6 +18,21 @@ pub struct Link {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProfileLinkKind {
+    GitHub,
+    LinkedIn,
+    Home,
+    Website,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ProfileLink {
+    pub kind: ProfileLinkKind,
+    pub label: &'static str,
+    pub url: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Image {
     pub src: &'static str,
     pub alt: &'static str,
@@ -32,7 +47,7 @@ pub struct Profile {
     pub email: &'static str,
     pub image: Image,
     pub about: Markdown,
-    pub links: &'static [Link],
+    pub links: &'static [ProfileLink],
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
