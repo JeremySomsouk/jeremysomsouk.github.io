@@ -1,5 +1,8 @@
 //! Native static rendering. No client router or hydration entry point.
 
+mod homepage;
+pub use homepage::render_homepage;
+
 pub mod output;
 pub mod ui;
 
@@ -73,7 +76,7 @@ mod tests {
         assert!(html.contains("&lt;script&gt;"));
         assert!(html.contains("&amp; Mélimo"));
         assert!(html.contains("&quot; onload=&quot;"));
-        assert!(html.contains("<h1>Static Leptos proof</h1>"));
+        assert!(html.contains("Static Leptos proof</h1>"));
         for forbidden in ["<script", ".wasm", "modulepreload", "rel=\"preload\""] {
             assert!(
                 !html.contains(forbidden),

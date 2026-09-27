@@ -198,3 +198,32 @@
 
 ### Recommended next step
 - Implement 3.4: compose the real static homepage from these records with shared ProjectCard, Markdown rendering and existing assets; validate content, links and visual behavior before cutover.
+
+## 2026-09-27 — Static homepage candidate (3.4 implementation)
+
+### Completed
+- Added real homepage composition from the typed profile/resume/project records, trusted Markdown and shared shell/ProjectCard.
+- Preserved every live section/project/resume anchor, existing title/description/social metadata, visible employer domains, contact details, images and project actions. Canonical, OG and structured URLs use HTTPS.
+- Added typed portrait dimensions (measured 1024×1024), four explicit legacy asset registrations, and scoped homepage CSS based on existing cards/palette/layout.
+- Expanded artifact validation for homepage anchors, unique IDs, metadata/JSON-LD, local links, unchanged asset bytes and absent executable runtime. Documented the preview and remaining visual gates.
+
+### Decisions
+- Add only pulldown-cmark 0.13.4 with default features disabled and HTML output enabled; smart punctuation matches legacy prose. Raw author HTML is trusted repository input, not sanitized user submissions.
+- Preserve JSON-LD as inert data. Share typed document metadata in the next task rather than introducing a second generic head system here.
+- Keep real same-tab navigation; employer links retain new tabs with noopener. Text social labels/fallback fonts are provisional until licensed font/icon delivery and visual review.
+- Keep production, Cabane code and deployment unchanged. This development commit remains off master for the single final migration squash commit.
+
+### Validation
+- Fresh live HTML inspection established the exact page title, metadata, contact/employer links and all 13 legacy IDs. Existing desktop screenshot and custom Sass were used as implementation references, not proof of rendered parity.
+- Formatting, locked compilation, strict all-target/all-feature Clippy and 13 Rust tests passed, including Markdown, escaping and selected-asset safety checks.
+- Artifact checks caught incorrect JSON-LD serialization during development; corrected the script's content rendering.
+- Optimized generation and artifact verification passed: 20 page URLs, 65 unchanged Cabane files and four unchanged homepage assets. All 49 live paragraph/list text items were found in the generated page; homepage HTML is 9,442 bytes.
+- Negative artifact checks rejected a missing anchor, executable event handler, incorrect JSON-LD URL and modified image, then passed after restoration.
+- Default release builds repeatedly encountered zero-length object archives in this workspace; targeted cleanup did not resolve it. A temporary CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 build succeeded. No repository build profile was changed; verify the default command in clean hosted CI before release.
+
+### Remaining concerns
+- Local preview browser restriction remains unresolved. Font/icon presentation, exact desktop/mobile/print behavior and visual parity remain open under 3.4b; no screenshots of the new homepage were claimed.
+- Hosting settings, shared typed head/404, full publication output and the Cabane transition are still pending. No cutover is attempted with this partial candidate.
+
+### Recommended next step
+- Implement 3.5: shared typed metadata/head generation and a real static 404 document, with escaping/optional-field tests. Finish the documented visual gates before production landing.

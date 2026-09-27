@@ -9,7 +9,12 @@ pub const HOMEPAGE: Homepage = Homepage {
         name: "Jeremy Somsouk",
         role: "Software engineer",
         email: "jeremy@somsouk.fr",
-        image_src: "/images/profile.webp",
+        image: Image {
+            src: "/images/profile.webp",
+            alt: "Jeremy Somsouk",
+            width: 1024,
+            height: 1024,
+        },
         about: Markdown(include_str!("../../../content/home/about.md")),
         links: &[
             Link {
@@ -85,6 +90,7 @@ pub const HOMEPAGE: Homepage = Homepage {
             kind: ResumeKind::Experience,
             entries: &[
                 ResumeEntry {
+                    heading_id: "doctolib",
                     title: "Doctolib",
                     subtitle: "Software engineer",
                     period: "2026 - Present",
@@ -92,6 +98,7 @@ pub const HOMEPAGE: Homepage = Homepage {
                     description: Markdown(include_str!("../../../content/home/doctolib.md")),
                 },
                 ResumeEntry {
+                    heading_id: "blablacar",
                     title: "BlaBlaCar",
                     subtitle: "Software engineer",
                     period: "2020 - 2025",
@@ -99,6 +106,7 @@ pub const HOMEPAGE: Homepage = Homepage {
                     description: Markdown(include_str!("../../../content/home/blablacar.md")),
                 },
                 ResumeEntry {
+                    heading_id: "streamroot-lumen",
                     title: "Streamroot Lumen",
                     subtitle: "Software engineer",
                     period: "2022",
@@ -108,6 +116,7 @@ pub const HOMEPAGE: Homepage = Homepage {
                     )),
                 },
                 ResumeEntry {
+                    heading_id: "happn",
                     title: "Happn",
                     subtitle: "Software engineer",
                     period: "2017 - 2020",
@@ -119,6 +128,7 @@ pub const HOMEPAGE: Homepage = Homepage {
         ResumeSection {
             kind: ResumeKind::Education,
             entries: &[ResumeEntry {
+                heading_id: "epita",
                 title: "EPITA",
                 subtitle: "Systems, Networks and Security Engineer diploma",
                 period: "2012 - 2017",

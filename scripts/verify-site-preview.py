@@ -1,5 +1,7 @@
 """Validate the partial Leptos artifact using only Python's standard library."""
 
+import json
+import re
 from functools import partial
 from html.parser import HTMLParser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -39,19 +41,28 @@ class Document(HTMLParser):
         self.runtime = False
         self.ids = set()
         self.fragments = []
+        self.links = []
+        self.metadata = {}
 
     def handle_starttag(self, tag, attrs):
         self.tags.add(tag)
         attrs = dict(attrs)
+        if tag == "meta":
+            self.metadata[attrs.get("name", attrs.get("property", ""))] = attrs.get("content")
+        if tag == "a" and "href" in attrs:
+            self.links.append(attrs["href"])
         if "id" in attrs:
+            require(attrs["id"] not in self.ids, f"Duplicate id: {attrs['id']}")
             self.ids.add(attrs["id"])
         if tag == "a" and attrs.get("href", "").startswith("#"):
             self.fragments.append(attrs["href"][1:])
         if "src" in attrs:
             self.resources.append(attrs["src"])
-        if tag == "link" and "href" in attrs:
+        if tag == "link" and "href" in attrs and attrs.get("rel") != "canonical":
             self.resources.append(attrs["href"])
-        if tag in {"script", "iframe", "object", "embed"}:
+        if tag in {"iframe", "object", "embed"} or (tag == "script" and attrs.get("type") != "application/ld+json"):
+            self.runtime = True
+        if (tag == "script" and "src" in attrs) or any(name.startswith("on") for name in attrs):
             self.runtime = True
 
 
@@ -69,9 +80,10 @@ def verify():
         require(path.suffix in RUNTIME_EXTENSIONS, f"Unregistered asset: {path}")
         legacy.add(Path("cabane") / path)
     actual = files_under(PREVIEW)
-    expected = legacy | {Path("leptos-proof/index.html"), Path("assets/main.css")}
+    home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
+    expected = legacy | home_assets | {Path("index.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
-    for path in legacy:
+    for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
 
     require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
@@ -83,6 +95,32 @@ def verify():
     require({"html", "head", "title", "body", "header", "footer", "nav", "main", "h1"} <= proof.tags, "Incomplete proof document")
     require(all(fragment in proof.ids for fragment in proof.fragments), "Broken proof anchor or skip link")
     require(not proof.runtime and proof.resources == ["../assets/main.css"] and ".wasm" not in proof_html, "Unexpected proof client resources")
+
+    home = Document()
+    home_html = (PREVIEW / "index.html").read_text()
+    home.feed(home_html)
+    require(not home.runtime and ".wasm" not in home_html, "Homepage must render without a client runtime")
+    require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
+    require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
+             "experience", "doctolib", "blablacar", "streamroot-lumen", "happn", "education", "epita",
+             "a-little-more-about-me"} <= home.ids, "Missing legacy homepage anchor")
+    require(all(fragment in home.ids for fragment in home.fragments), "Broken homepage anchor")
+    require('href="https://www.somsouk.fr/"' in home_html, "Missing HTTPS canonical")
+
+    for name, value in {"description": "Just a simple playground", "og:title": "Software engineer",
+                        "og:url": "https://www.somsouk.fr/", "twitter:card": "summary"}.items():
+        require(home.metadata.get(name) == value, f"Wrong homepage metadata: {name}")
+    structured = re.findall(r'<script type="application/ld\+json">(.*?)</script>', home_html, re.S)
+    require(len(structured) == 1, "Missing or duplicated structured metadata")
+    require(json.loads(structured[0])["url"] == "https://www.somsouk.fr/", "Wrong structured canonical")
+    for href in home.links:
+        address = urlsplit(href)
+        if address.scheme or address.netloc or not address.path:
+            continue
+        destination = address.path.lstrip("/")
+        if address.path.endswith("/"):
+            destination += "index.html"
+        require(Path(destination) in actual, f"Broken local homepage link: {href}")
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(PREVIEW)))
     worker = Thread(target=server.serve_forever, daemon=True)
@@ -118,7 +156,7 @@ def verify():
         server.shutdown()
         server.server_close()
         worker.join()
-    print(f"Verified {len(legacy)} unchanged Cabane files, {page_count} page URLs, local resources and static proof.")
+    print(f"Verified {len(legacy)} unchanged Cabane files, {page_count} page URLs, local resources and static homepage/proof.")
 
 
 if __name__ == "__main__":

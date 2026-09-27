@@ -14,13 +14,13 @@ Edit prose here and metadata in the Rust records. No front matter or parser is
 needed for these compile-time homepage records. Future article loading is a
 separate task with typed TOML front matter. The `Markdown` wrapper denotes
 trusted repository content, including intentional `<mark>` and project-jump
-HTML; it is not sanitized user input. The next rendering step must test Markdown
-lists, paragraphs, inline HTML and escaping of plain-text metadata.
+HTML; it is not sanitized user input. The site renderer tests Markdown lists, paragraphs, inline HTML and escaping
+of plain-text metadata.
 
 Existing project image URLs, alt text, dimensions, heading IDs, tags, action
 labels and destinations are retained. Employer domains are made explicit HTTPS
-URLs. Profile image dimensions are deliberately unspecified until measured;
-do not invent dimensions or responsive image variants. Keep the existing public
+URLs. The profile image was measured at 1024×1024 and now uses the same typed Image
+record as projects; do not invent responsive image variants. Keep the existing public
 name, email and social links, and preserve theme/license notices at cutover.
 
 Run `cargo test -p site-content` for extraction checks. This directory is authoring

@@ -133,3 +133,43 @@ fn rejects_source_and_destination_symlinks_without_writing_outside() -> io::Resu
     assert!(!outside.join("preview").exists());
     Ok(())
 }
+
+#[test]
+fn explicitly_selected_asset_is_copied_and_rejects_invalid_sources() -> io::Result<()> {
+    let fixture = Fixture::new()?;
+    fs::create_dir(fixture.0.join("images"))?;
+    fs::write(fixture.0.join("images/test.webp"), [0, 1, 255])?;
+    let mut manifest = Manifest::default();
+    manifest.add_legacy_asset(&fixture.0, OutputPath::new("images/test.webp")?)?;
+    assert!(
+        manifest
+            .add_legacy_asset(&fixture.0, OutputPath::new("images/test.webp")?)
+            .is_err()
+    );
+    assert!(
+        manifest
+            .add_legacy_asset(&fixture.0, OutputPath::new("images/missing.webp")?)
+            .is_err()
+    );
+    assert!(
+        manifest
+            .add_legacy_asset(&fixture.0, OutputPath::new("images")?)
+            .is_err()
+    );
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(
+            fixture.0.join("images/test.webp"),
+            fixture.0.join("images/link.webp"),
+        )?;
+        assert!(
+            manifest
+                .add_legacy_asset(&fixture.0, OutputPath::new("images/link.webp")?)
+                .is_err()
+        );
+    }
+    let output = fixture.0.join("preview");
+    manifest.write_new(&output)?;
+    assert_eq!(fs::read(output.join("images/test.webp"))?, [0, 1, 255]);
+    Ok(())
+}

@@ -20,8 +20,9 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] 3.2a Implement scoped plain CSS tokens, PageLayout/Header/Footer/Section and resume-entry pattern in the static proof.
 - [ ] 3.2b (release gate) Compare rendered shared shell/homepage to baseline, including keyboard focus, mobile widths and print. Local preview browser navigation is currently blocked; do not claim visual parity.
 - [x] **3.3:** Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
-- [ ] **3.4 Next:** Render homepage with shared ProjectCard, existing links/assets and no Wasm; verify content/SEO and responsive parity.
-- [ ] 3.5 Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
+- [x] 3.4a Render static homepage with shared ProjectCard, trusted Markdown, existing links/assets/anchors and no client runtime; verify content, baseline metadata and exact asset copying.
+- [ ] 3.4b (release gate): Restore licensed local Roboto/social icon presentation and compare the homepage at desktop/mobile/print widths (with 3.1b/3.2b). Current text navigation and fallback font are explicitly provisional.
+- [ ] **3.5 Next:** Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
 
 ## Milestone 4 — Content and project pages (depends on M3)
 - [ ] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations.
@@ -45,6 +46,7 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 
 ## Milestone 7 — Final validation (gates apply throughout)
 - [ ] Run Rust fmt/check/all-target all-feature Clippy/tests and production static build.
+- [ ] Confirm the homepage branch default release build in clean hosted CI; local optimized validation required temporary single-codegen-unit settings after object-archive corruption.
 - [ ] Run Node game suites and pinned Memory native/Wasm builds; validate Wasm response MIME type.
 - [ ] Check all route indexes, unknown-path 404, local links/assets, sitemap/robots and social metadata.
 - [ ] Compare responsive/print/accessibility behavior; confirm ordinary pages render fully without JS/Wasm and no unrelated app bundles load.

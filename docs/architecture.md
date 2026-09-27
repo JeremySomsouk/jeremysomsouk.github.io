@@ -158,3 +158,40 @@ until cutover. Preservation tests reference that source and must become durable
 fixtures before deleting it. Homepage rendering and Markdown parser selection
 belong to 3.4. Existing project anchor IDs remain explicit; verify all theme-derived
 section anchors against rendered baseline during composition.
+
+## Homepage candidate (3.4)
+
+The native generator now owns `/` in the preview manifest. Page composition in
+`site::homepage` consumes the content records and shared UI; ProjectCard is reusable
+outside the homepage. Resume heading IDs are explicit content fields, preserving
+live Jekyll anchors as well as section/project anchors. Existing employer domains
+remain visible links, with explicit HTTPS and noopener for their new tabs.
+
+Markdown rendering uses pulldown-cmark 0.13.4 (CommonMark, default features off,
+HTML output only). This mature parser handles real paragraphs/lists/inline HTML;
+a custom parser would be unnecessary maintenance. Smart punctuation matches the
+legacy prose. API/feature reference: https://docs.rs/crate/pulldown-cmark/0.13.4 .
+The only raw HTML boundaries are repository-authored Markdown and fixed JSON-LD;
+plain project/title/alt text is escaped by Leptos. This is not an untrusted-content
+sanitization pipeline. No browser bundle or Markdown runtime is emitted.
+
+Live title, description, OG/Twitter values and WebSite JSON-LD were checked against
+https://www.somsouk.fr/ on 2026-09-27; canonical/OG/JSON-LD URLs are now HTTPS.
+The homepage head is deliberately local to its composition for now; task 3.5
+extracts shared typed metadata and adds the error document. JSON-LD is inert data,
+not JavaScript execution. Artifact verification distinguishes the two.
+
+Four explicit docs/images assets are registered individually and copied unchanged:
+profile.webp, js-icon.webp, melimo-player.png and favicon.ico. Cabane's existing
+welcome image is reused from the unchanged Cabane copy. The profile is measured
+1024×1024; CSS renders it at 200px while reserving its intrinsic ratio. Project
+cards preserve contain-fit artwork and colors. Existing custom Sass geometry is
+converted from the old theme's 10px rem basis into the new 16px basis.
+
+No font/icon package is introduced without provenance review. Navigation currently
+uses accessible text labels and the font stack falls back when Roboto is absent;
+these are known presentation differences, not an approved redesign. Navigation
+uses real same-tab anchors (users can still explicitly open new tabs). Exact
+rendered/mobile/print comparison remains blocked by the previously recorded browser
+preview limitation. Keep 3.4b open before cutover. The planned Cabane transition,
+all gameplay code and production deployment remain unchanged by this step.

@@ -77,6 +77,19 @@ impl Manifest {
         Ok(())
     }
 
+    /// Register one explicitly selected legacy asset; never copy the docs tree.
+    pub fn add_legacy_asset(&mut self, docs: &Path, path: OutputPath) -> io::Result<()> {
+        let source = docs.join(path.as_str());
+        reject_symlinks(&source)?;
+        if !fs::metadata(&source)?.is_file() {
+            return Err(invalid(format!(
+                "Not a regular asset: {}",
+                source.display()
+            )));
+        }
+        self.insert(path, fs::read(source)?)
+    }
+
     /// Copies Cabane runtime files only. Planning Markdown and Jekyll sources
     /// are never publication inputs. Unknown extensions fail closed.
     pub fn add_legacy_cabane(&mut self, docs: &Path) -> io::Result<()> {

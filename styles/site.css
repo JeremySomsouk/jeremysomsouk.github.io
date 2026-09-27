@@ -61,3 +61,42 @@ body.site-page { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .site-shell *, .site-shell *::before, .site-shell *::after { scroll-behavior: auto; animation: none; transition: none; }
 }
+
+/* Homepage: legacy geometry converted from Bootstrap's 10px rem to 16px rem. */
+.site-shell .identity-logo { display: inline-block; width: 1.25em; height: 1.25em; margin-right: .25em; vertical-align: middle; border-radius: 25%; }
+.site-shell .profile-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem 1rem; }
+.site-shell .profile-contact { flex-basis: 100%; text-align: right; margin: 0; }
+.site-shell .profile-contact a { min-height: 0; }
+.site-shell .about-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 2rem; }
+.site-shell .profile-image { display: block; width: min(100%, 12.5rem); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; justify-self: center; box-shadow: 0 0 0 2px rgba(152, 100, 250, .65), 0 0 28px rgba(86, 36, 242, .28); }
+.site-shell .prose { min-width: 0; overflow-wrap: anywhere; }
+.site-shell mark { color: var(--site-ink); background: linear-gradient(135deg, var(--site-lilac), var(--site-violet)); border-radius: .15625rem; padding: .05em .3em; }
+.site-shell .projects-jump { display: inline-block; margin-top: .625rem; font-weight: 600; }
+.site-shell .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin: 1.25rem 0 2.5rem; scroll-margin-top: 1.25rem; }
+.site-shell .project-card { --project-accent: #e3abd3; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #53405f; border-top: 4px solid var(--project-accent); border-radius: 1rem; background: #19132b; text-align: left; }
+.site-shell .project-card[data-project="cabane"] { --project-accent: #efc185; }
+.site-shell .project-preview { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; background: #201923; }
+.site-shell .project-card[data-project="cabane"] .project-preview { background: #f4eadb; }
+.site-shell .project-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1.5rem; overflow-wrap: anywhere; }
+.site-shell .project-body h3 { margin: 0 0 .75rem; font-size: 1.5rem; font-weight: 700; color: var(--project-accent); }
+.site-shell .project-tagline { font-weight: 600; }
+.site-shell .project-tags { display: flex; flex-wrap: wrap; gap: .375rem; padding: 0; margin: .625rem 0 1rem; list-style: none; }
+.site-shell .project-tags li { padding: .1875rem .5rem; border: 1px solid #53405f; border-radius: .375rem; font-size: .8125rem; }
+.site-shell .project-note { font-size: .8125rem; }
+.site-shell a.project-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: auto; padding: .625rem .875rem; border-radius: .5rem; background: var(--project-accent); color: #19132b; font-weight: 600; }
+.site-shell a.project-link:hover { text-decoration: underline; }
+@media (max-width: 767px) {
+  .site-shell .about-layout, .site-shell .project-grid { grid-template-columns: minmax(0, 1fr); }
+  .site-shell .profile-links { justify-content: center; }
+  .site-shell .profile-contact { text-align: center; }
+}
+@media print {
+  .site-shell .identity-logo { display: none; }
+  .site-shell .project-card { background: #fff; break-inside: avoid; }
+  .site-shell .project-body h3 { color: #222; }
+  .site-shell .project-preview { max-height: 10rem; }
+  .site-shell .profile-image { box-shadow: none; }
+}
+@media (min-width: 768px) {
+  .site-header > .site-identity, .site-header > .site-navigation { flex: 1; min-width: 0; }
+}

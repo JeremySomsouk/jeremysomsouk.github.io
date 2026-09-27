@@ -34,7 +34,7 @@ pub struct Profile {
     pub name: &'static str,
     pub role: &'static str,
     pub email: &'static str,
-    pub image_src: &'static str,
+    pub image: Image,
     pub about: Markdown,
     pub links: &'static [Link],
 }
@@ -63,6 +63,7 @@ impl ResumeKind {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResumeEntry {
+    pub heading_id: &'static str,
     pub title: &'static str,
     pub subtitle: &'static str,
     pub period: &'static str,
@@ -143,7 +144,7 @@ mod tests {
             profile.name,
             profile.role,
             profile.email,
-            &profile.image_src[1..],
+            &profile.image.src[1..],
             HOMEPAGE.projects_title,
             HOMEPAGE.hobbies_title,
         ] {
