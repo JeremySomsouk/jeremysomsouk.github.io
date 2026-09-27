@@ -227,3 +227,30 @@
 
 ### Recommended next step
 - Implement 3.5: shared typed metadata/head generation and a real static 404 document, with escaping/optional-field tests. Finish the documented visual gates before production landing.
+
+## 2026-09-28 — Shared SEO and static 404 (3.5)
+
+### Completed
+- Centralized document/head rendering for homepage, proof and error page; added typed language, indexing, canonical, social-image and structured-data metadata.
+- Reused homepage identity through WebsiteLayout and generated a real /404.html with recovery links, noindex/follow and no misleading canonical/social metadata.
+- Added safe typed JSON-LD serialization and tests for optional fields, French locale, canonical path validation, malicious metadata and closing-script payloads.
+- Confirmed normal hosted homepage CI succeeded: run 36348020144 for 2355393. The previous local compiler workaround was not needed there.
+
+### Decisions
+- Canonical/social image URLs stay on the existing HTTPS origin and reject ambiguous paths; current homepage metadata remains unchanged except the shared renderer also supplies Twitter description.
+- Use Serde/serde_json directly for typed serialization, reusing already locked versions without new transitive packages. Escape HTML-sensitive characters after JSON serialization and propagate errors.
+- Shared static HTML does not determine response status. The verifier simulates custom-404 hosting; production missing-path behavior still requires cutover verification.
+- Keep the existing deployment and Cabane files unchanged. Development remains off master for the final single migration commit.
+
+### Validation
+- Formatting, locked compilation, strict all-target/all-feature Clippy and all 18 Rust tests passed.
+- Default optimized generation passed after cleaning a corrupt rstml build artifact; no compiler/profile workaround was committed.
+- Artifact validation passed: 65 unchanged Cabane files, 21 page URLs, existing resources, homepage metadata and two simulated missing-route 404 responses with the correct body/status.
+- Negative checks rejected an indexable 404, relative error-page stylesheet and misleading canonical, then passed after restoring the artifact.
+
+### Remaining concerns
+- Font/icon restoration and desktop/mobile/print visual review remain open; the prior browser-preview restriction is unchanged. No visual parity or production deployment is claimed.
+- The 404 host configuration must be verified on Pages; the test server is only a simulation and the README preview command does not install its fallback.
+
+### Recommended next step
+- Restore licensed local Roboto and the social icons (remaining 3.4b), then complete the visual gate on a supported preview before production. Project presentation pages follow in 4.1.

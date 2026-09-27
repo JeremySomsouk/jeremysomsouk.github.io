@@ -1356,6 +1356,8 @@ version = "0.1.0"
 dependencies = [
  "leptos",
  "pulldown-cmark",
+ "serde",
+ "serde_json",
  "site-content",
 ]
 

@@ -11,7 +11,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut manifest = Manifest::default();
     manifest.insert(
         Route::new("/")?.output().clone(),
-        site::render_homepage().into_bytes(),
+        site::render_homepage()?.into_bytes(),
+    )?;
+    manifest.insert(
+        OutputPath::new("404.html")?,
+        site::render_not_found()?.into_bytes(),
     )?;
     for asset in [
         "images/profile.webp",
@@ -23,9 +27,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     let route = Route::new("/leptos-proof/")?;
     let html = site::render_proof_page(PageMetadata {
-        title: "Static Leptos proof".into(),
-        description: "An isolated build-time rendering proof for the website migration.".into(),
-    });
+        description: Some(
+            "An isolated build-time rendering proof for the website migration.".into(),
+        ),
+        ..PageMetadata::new("Static Leptos proof")
+    })?;
     manifest.insert(route.output().clone(), html.into_bytes())?;
     manifest.insert(
         OutputPath::new("assets/main.css")?,

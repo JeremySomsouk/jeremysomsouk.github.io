@@ -9,6 +9,7 @@ from pathlib import Path
 from threading import Thread
 from urllib.parse import urljoin, urlsplit
 from urllib.request import urlopen
+from urllib.error import HTTPError
 
 ROOT = Path(__file__).resolve().parents[1]
 PREVIEW = ROOT / "target/site-preview"
@@ -67,6 +68,18 @@ class Document(HTMLParser):
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
+    # Test-only approximation of Pages custom-404 serving; deployment still needs verification.
+    def send_error(self, code, message=None, explain=None):
+        if code != 404:
+            return super().send_error(code, message, explain)
+        body = (PREVIEW / "404.html").read_bytes()
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(body)
+
     def log_message(self, *_args):
         pass
 
@@ -81,7 +94,7 @@ def verify():
         legacy.add(Path("cabane") / path)
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
-    expected = legacy | home_assets | {Path("index.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
+    expected = legacy | home_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -94,7 +107,7 @@ def verify():
     require(proof_html.lower().startswith("<!doctype html>"), "Missing document doctype")
     require({"html", "head", "title", "body", "header", "footer", "nav", "main", "h1"} <= proof.tags, "Incomplete proof document")
     require(all(fragment in proof.ids for fragment in proof.fragments), "Broken proof anchor or skip link")
-    require(not proof.runtime and proof.resources == ["../assets/main.css"] and ".wasm" not in proof_html, "Unexpected proof client resources")
+    require(not proof.runtime and proof.resources == ["/assets/main.css", "/images/favicon.ico"] and ".wasm" not in proof_html, "Unexpected proof client resources")
 
     home = Document()
     home_html = (PREVIEW / "index.html").read_text()
@@ -121,6 +134,18 @@ def verify():
         if address.path.endswith("/"):
             destination += "index.html"
         require(Path(destination) in actual, f"Broken local homepage link: {href}")
+
+    error_html = (PREVIEW / "404.html").read_text()
+    error = Document()
+    error.feed(error_html)
+    require("404 — Page not found" in error_html and "Doctolib" not in error_html, "404 must be an error page, not the resume")
+    require(error.metadata.get("robots") == "noindex, follow", "404 must not be indexed")
+    require(not error.runtime and all(fragment in error.ids for fragment in error.fragments), "Invalid 404 runtime or anchors")
+    require('rel="canonical"' not in error_html and "application/ld+json" not in error_html, "Unexpected 404 SEO metadata")
+    require(not any(key.startswith(("og:", "twitter:")) for key in error.metadata), "Unexpected error social metadata")
+    require("/" in error.links and "/cabane/" in error.links, "Missing recovery links")
+    require(all(resource.startswith("/") for resource in error.resources), "404 assets must work at nested missing URLs")
+    require(proof.metadata.get("robots") == "noindex, nofollow", "Proof must not be indexed")
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(PREVIEW)))
     worker = Thread(target=server.serve_forever, daemon=True)
@@ -152,11 +177,23 @@ def verify():
                 require(urlsplit(address).netloc == urlsplit(base).netloc, f"Unexpected external resource: {address}")
                 fetch(address)
         fetch(base + "/cabane/memory/game.wasm", "application/wasm")
+        for missing in ["/__missing_migration_page__", "/missing/deep/path/"]:
+            try:
+                urlopen(base + missing, timeout=10)
+            except HTTPError as response:
+                with response:
+                    require(response.code == 404, "Wrong missing-route status")
+                    require(response.headers.get_content_type() == "text/html", "Wrong 404 MIME")
+                    require(response.read() == (PREVIEW / "404.html").read_bytes(), "Wrong 404 body")
+            else:
+                raise ValueError("Missing route did not return 404")
+            for resource in error.resources:
+                fetch(urljoin(base + missing, resource))
     finally:
         server.shutdown()
         server.server_close()
         worker.join()
-    print(f"Verified {len(legacy)} unchanged Cabane files, {page_count} page URLs, local resources and static homepage/proof.")
+    print(f"Verified {len(legacy)} unchanged Cabane files, {page_count} page URLs, local resources and static pages; two missing-route 404 responses.")
 
 
 if __name__ == "__main__":

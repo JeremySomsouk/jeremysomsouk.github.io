@@ -86,3 +86,26 @@ pub fn ProjectCard(project: site_content::ProjectMetadata) -> impl IntoView {
         </article>
     }
 }
+
+/// Public-site identity shared by ordinary pages, independent of Cabane controllers.
+#[component]
+pub fn WebsiteLayout(children: Children) -> impl IntoView {
+    let home = &site_content::HOMEPAGE;
+    view! { <PageLayout
+        header=Box::new(move || view! {
+            <Header title=home.profile.name.to_owned() subtitle=home.profile.role.to_owned()
+                logo="/images/js-icon.webp">
+                <div class="profile-links">
+                    {home.profile.links.iter().map(|link| view! {
+                        <a href=link.url>{link.label}</a>
+                    }).collect_view()}
+                </div>
+                <p class="profile-contact">"Email: "<a href=format!("mailto:{}", home.profile.email)>{home.profile.email}</a></p>
+            </Header>
+        }.into_any())
+        footer=Box::new(move || view! {
+            <Footer><p>{home.profile.name}" - "<a href=format!("mailto:{}", home.profile.email)>{home.profile.email}</a></p></Footer>
+        }.into_any())
+    >
+        {children()}</PageLayout> }
+}

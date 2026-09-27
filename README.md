@@ -132,3 +132,10 @@ Roboto is named in the font stack with local fallbacks. Social navigation uses
 readable labels until local font/icon delivery is verified. Font/icon parity and
 desktop/mobile/print comparison remain release requirements; this candidate is
 not visually approved for cutover.
+
+The preview includes `/404.html`. The homepage, proof and error page share
+`site::document::render_document` and typed `site_content::PageMetadata`. Unknown
+paths must be served with HTTP 404 by the eventual host; `python3 -m http.server`
+lets you inspect `/404.html` directly but does not use it as a custom fallback.
+The verifier separately simulates missing-path responses and checks their status,
+body, root-relative resources, indexing policy and recovery links.

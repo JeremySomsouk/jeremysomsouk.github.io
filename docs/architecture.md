@@ -1,6 +1,6 @@
 # Leptos migration architecture
 
-Status: static foundation implemented; later architecture remains planned (2026-09-26). See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
+Status: static homepage, shared document metadata and 404 implemented; deployment and visual gates remain open (2026-09-28). Earlier implementation sections describe their original stages. See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
 
 ## Rendering and deployment
 
@@ -195,3 +195,41 @@ uses real same-tab anchors (users can still explicitly open new tabs). Exact
 rendered/mobile/print comparison remains blocked by the previously recorded browser
 preview limitation. Keep 3.4b open before cutover. The planned Cabane transition,
 all gameplay code and production deployment remain unchanged by this step.
+
+## Shared metadata and 404 (3.5)
+
+`site-content::PageMetadata` now owns typed language, indexing policy, optional
+description/canonical/social metadata and a structured-data kind. CanonicalUrl
+accepts validated site-root paths and produces HTTPS URLs on the single public
+origin; it rejects external hosts, queries/fragments, URL escapes and dot segments.
+Social image URLs use the same policy. English/French locale values come from the
+same Language value as the document's lang attribute.
+
+`site::document::render_document` is the single document/head renderer for the
+homepage, proof and 404. Optional values are omitted rather than rendered as
+empty tags. Social cards use summary_large_image only when an image is supplied;
+no new social image is invented for the existing homepage. Open Graph currently
+uses website type; introduce article metadata when article rendering is added.
+WebsiteLayout shares the public header/footer across homepage and error page;
+the generic PageLayout remains usable by independent application shells.
+
+Serde and serde_json are now direct site dependencies, reusing versions already
+in Cargo.lock. A typed serializable WebSite schema avoids manual JSON assembly.
+After JSON serialization, HTML-sensitive characters and Unicode line separators
+are escaped before rendering into the script raw-text context. Tests exercise
+closing-script payloads, quotes, ampersands and round-trip decoding. Serialization
+errors propagate through native rendering to the generator. No executable script,
+Wasm, hydration, runtime server or request-specific state is introduced.
+
+The preview owns `/404.html` as a real error document with recovery links,
+noindex/follow and no canonical, Open Graph, Twitter or JSON-LD. Root-relative
+assets work when the document is served for deeply nested unknown paths. Static
+HTML cannot choose an HTTP status: the deployment host must serve this document
+with status 404 for missing URLs. The artifact verifier simulates that host
+behavior for two unknown paths; this is not evidence of production configuration.
+The basic README http.server command serves the document directly but does not
+install that fallback. Verify actual Pages missing-route behavior at cutover.
+
+Visual approval, font/icon parity, full publication artifacts and Cabane gameplay
+integration remain separate gates. This step changes neither hosting nor the
+legacy Jekyll 404 source; production still uses its old document until cutover.
