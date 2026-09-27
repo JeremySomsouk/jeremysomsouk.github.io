@@ -1,6 +1,6 @@
 use std::{error::Error, path::Path};
 
-use site::output::{Manifest, Route};
+use site::output::{Manifest, OutputPath, Route};
 use site_content::PageMetadata;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -15,6 +15,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         description: "An isolated build-time rendering proof for the website migration.".into(),
     });
     manifest.insert(route.output().clone(), html.into_bytes())?;
+    manifest.insert(
+        OutputPath::new("assets/main.css")?,
+        site::SITE_CSS.as_bytes().to_vec(),
+    )?;
     manifest.add_legacy_cabane(&root.join("docs"))?;
     let output = root.join("target/site-preview");
     manifest.write_new(&output)?;

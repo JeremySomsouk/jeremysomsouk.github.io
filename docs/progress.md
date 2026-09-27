@@ -142,3 +142,31 @@
 
 ### Recommended next step
 - Finish 3.1b with a supported viewport/print capture surface and authorized Pages settings access; then propose shared shell step 3.2. Production trial is authorized when ready, not performed now.
+
+## 2026-09-27 — Shared site shell (3.2 implementation)
+
+### Completed
+- Added reusable PageLayout, Header, Footer, Section and ResumeEntry components with header/body/footer slots and semantic headings/landmarks.
+- Added a site-only plain CSS stylesheet with the existing violet palette, desktop container, stacked small-screen resume layout, focus/skip-link behavior, print and reduced-motion rules.
+- Updated the static proof to exercise components with explicit example content; emitted one local stylesheet through the validated manifest.
+- Updated artifact checks for exact CSS bytes, required landmarks and valid in-page navigation/skip-link targets.
+
+### Decisions
+- Proceed with implementation while keeping unavailable capture/Pages checks as explicit release gates. No screenshot requirement was silently marked complete.
+- Keep all Cabane styles/controllers byte-identical; no game concepts in generic shell components.
+- Do not introduce fonts/framework dependencies before license/delivery work. Roboto remains a preferred font with fallback; no visual parity claim.
+
+### Validation
+- cargo fmt --check, cargo check --locked, strict all-target/all-feature Clippy, six Rust tests and release generation passed.
+- Cached icu_properties rlib was missing; cleaning only that dependency and rebuilding fixed the test environment.
+- Artifact verifier passed: 65 unchanged Cabane files, 18 page URLs, local resources, Wasm MIME, shared CSS bytes and proof anchors.
+- Cloud browser rejected the file-protocol preview URL under its URL security policy. No alternate browser workaround attempted; rendered visual comparison remains unverified.
+- No existing homepage, game, deployment or dependency-lockfile changes.
+
+### Remaining concerns
+- Complete mobile/print and shared-shell visual review before release; resolve font metrics/delivery when migrating real content.
+- The new shell is a fixture only. The public homepage remains Jekyll and the requested Cabane transition remains planned.
+- All work stays off master, to be included in the single final migration squash commit.
+
+### Recommended next step
+- With consent, implement 3.3: extract current profile/resume/project content into explicit Rust models and Markdown fixtures with content-preservation tests. Expected scope: content crate, content files, tests and planning docs. Full homepage composition is still the following step.

@@ -1,0 +1,63 @@
+/* Site-only rules: Cabane keeps its existing independent stylesheet. */
+.site-shell {
+  --site-ink: #0b0826;
+  --site-violet: #9864fa;
+  --site-lilac: #d0a9fa;
+  --site-text: #f3efff;
+  --site-muted: #c9c2df;
+  --site-rule: rgba(152, 100, 250, .32);
+  min-height: 100dvh;
+  color: var(--site-text);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(86, 36, 242, .16), transparent 34rem),
+    radial-gradient(circle at 88% 18%, rgba(152, 100, 250, .10), transparent 28rem),
+    var(--site-ink);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+body.site-page { margin: 0; }
+.site-shell *, .site-shell *::before, .site-shell *::after { box-sizing: border-box; }
+.site-container { width: min(100% - 2rem, 71.25rem); margin-inline: auto; }
+.site-shell a { color: var(--site-violet); text-underline-offset: .2em; }
+.site-shell a:hover { color: var(--site-lilac); }
+.site-shell a:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
+.site-shell p, .site-shell ul { margin: 0 0 1rem; color: var(--site-muted); }
+.site-shell h1, .site-shell h2, .site-shell h3 { line-height: 1.15; overflow-wrap: anywhere; }
+.site-header { display: flex; align-items: start; justify-content: space-between; gap: 2rem; padding-block: 3rem 1.5rem; }
+.site-identity { min-width: 0; }
+.site-identity h1 { font-size: 2.5rem; font-weight: 500; margin: 0; }
+.site-identity p { font-size: 1.25rem; font-weight: 300; margin: 0; }
+.site-navigation { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem 1.5rem; }
+.site-navigation a { display: inline-flex; align-items: center; min-height: 44px; }
+.site-section { margin-block: 1rem 3rem; }
+.site-section > h2 { font-size: 1.875rem; font-weight: 300; color: var(--site-lilac); text-align: center; padding-bottom: .75rem; border-bottom: 2px dashed var(--site-rule); margin: 0 0 2rem; scroll-margin-top: 1rem; }
+.site-section-content { min-width: 0; }
+.resume-entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 2rem; margin-block: 2rem; }
+.resume-details { text-align: right; }
+.resume-details h3 { color: var(--site-violet); font-size: 1.5rem; font-weight: 500; margin: 0 0 .5rem; }
+.resume-details .resume-subtitle { font-weight: 600; margin-bottom: .25rem; }
+.resume-details .resume-period { font-style: italic; font-size: .875rem; }
+.resume-description { min-width: 0; overflow-wrap: anywhere; }
+.site-footer { text-align: center; padding-block: 1.5rem 2rem; font-size: .875rem; }
+.skip-link { position: absolute; left: 1rem; top: 0; transform: translateY(-150%); padding: .75rem 1rem; background: var(--site-ink); z-index: 10; }
+.skip-link:focus { transform: translateY(0); }
+@media (max-width: 767px) {
+  .site-header { flex-direction: column; align-items: center; text-align: center; gap: .75rem; padding-top: 2rem; }
+  .site-navigation { justify-content: center; }
+  .resume-entry { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+  .resume-details { text-align: left; }
+  .site-identity h1 { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+}
+@media print {
+  .site-shell { color: #222; background: #fff; min-height: auto; font-size: 10pt; }
+  .site-container { width: 100%; }
+  .site-header { padding-block: 0 1rem; }
+  .site-shell p, .site-shell ul, .site-shell a, .site-shell h2, .site-shell h3 { color: #222; }
+  .site-section > h2 { border-color: #777; }
+  .resume-entry { break-inside: avoid; }
+  .site-navigation, .skip-link { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell *, .site-shell *::before, .site-shell *::after { scroll-behavior: auto; animation: none; transition: none; }
+}

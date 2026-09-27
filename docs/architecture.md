@@ -115,3 +115,25 @@ do not animate game boards or interfere with reading timers. Test mobile and
 desktop entry/return, reduced motion, keyboard focus and fallback before release.
 Implementation belongs with the shared shell and Cabane landing integration;
 this session records the requirement, not a completed animation.
+
+## Shared shell implementation (3.2)
+
+`site::ui` provides PageLayout, Header, Footer, Section and ResumeEntry. Layout
+slots accept child views, so the generic shell has no Cabane gameplay or profile
+data dependency. The only identity used by the proof is explicit example content.
+Normal links and semantic landmarks include a keyboard skip link to the main
+content. The document head stays in page composition until metadata work (3.5).
+
+`styles/site.css` is compiled into the generator and emitted at `/assets/main.css`.
+Rules and tokens are scoped to `.site-shell`/site component classes, with an
+explicit body class for page margins. Cabane documents do not load this file.
+No framework, font package, client script or Wasm was added. The proof references
+the CSS relatively so the same static artifact can also be inspected from disk.
+
+This is a layout fixture, not a migrated homepage. The 1140px desktop container,
+violet palette, resume columns and below-768px stacking follow existing patterns.
+Print/focus/reduced-motion rules are authored; exact mobile/print browser checks
+remain open. Roboto is a preferred family, but font delivery is not yet added;
+fallback metrics differ from the current site's downloaded Roboto. Resolve this
+before claiming homepage visual parity. The homepage→Cabane animation remains
+planned for landing-page integration and is not implemented by this shell step.

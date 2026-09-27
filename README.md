@@ -69,7 +69,7 @@ node --test scripts/*.test.mjs
 ## Leptos migration preview
 
 The existing Jekyll site remains the production source. The new Rust workspace
-generates an isolated, unstyled proof page and an unchanged copy of Cabane.
+generates an isolated shared-layout proof page and an unchanged copy of Cabane.
 It is not a replacement homepage and is not deployed.
 
 Install Rust through rustup, then run from the repository root (the checked-in
@@ -82,7 +82,7 @@ python3 -m http.server 8766 --directory target/site-preview
 ```
 
 Open `http://localhost:8766/leptos-proof/`. The generated `index.html` contains the
-whole document; no JavaScript, Wasm, hydration, external assets or runtime server
+whole document with one local stylesheet; no JavaScript, Wasm, hydration, external assets or runtime server
 is required for the proof page. `/cabane/` retains its existing JS/Wasm runtime.
 The generator writes only to `target/site-preview/`, regardless of the working
 directory, and never changes production sources. It refuses an existing preview
@@ -122,3 +122,9 @@ There are deliberately no path filters during migration, so new build inputs
 cannot silently miss validation. Push and PR runs may both occur; newer runs of
 the same event/ref cancel older ones. The workflow has read-only repository
 permissions and does not request Pages or deployment access.
+
+The shared layout lives in `crates/site/src/ui.rs`; site-only tokens and responsive
+rules live in `styles/site.css`. The proof uses example content and does not yet
+replace the homepage. Cabane continues to use its own styles and controllers.
+Roboto is named in the font stack with local fallbacks; font delivery and the
+full visual comparison remain release requirements.

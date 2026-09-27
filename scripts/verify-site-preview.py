@@ -37,10 +37,16 @@ class Document(HTMLParser):
         self.tags = set()
         self.resources = []
         self.runtime = False
+        self.ids = set()
+        self.fragments = []
 
     def handle_starttag(self, tag, attrs):
         self.tags.add(tag)
         attrs = dict(attrs)
+        if "id" in attrs:
+            self.ids.add(attrs["id"])
+        if tag == "a" and attrs.get("href", "").startswith("#"):
+            self.fragments.append(attrs["href"][1:])
         if "src" in attrs:
             self.resources.append(attrs["src"])
         if tag == "link" and "href" in attrs:
@@ -63,17 +69,20 @@ def verify():
         require(path.suffix in RUNTIME_EXTENSIONS, f"Unregistered asset: {path}")
         legacy.add(Path("cabane") / path)
     actual = files_under(PREVIEW)
-    expected = legacy | {Path("leptos-proof/index.html")}
+    expected = legacy | {Path("leptos-proof/index.html"), Path("assets/main.css")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
+
+    require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
 
     proof = Document()
     proof_html = (PREVIEW / "leptos-proof/index.html").read_text()
     proof.feed(proof_html)
     require(proof_html.lower().startswith("<!doctype html>"), "Missing document doctype")
-    require({"html", "head", "title", "body", "main", "h1"} <= proof.tags, "Incomplete proof document")
-    require(not proof.runtime and not proof.resources and ".wasm" not in proof_html, "Proof requires client resources")
+    require({"html", "head", "title", "body", "header", "footer", "nav", "main", "h1"} <= proof.tags, "Incomplete proof document")
+    require(all(fragment in proof.ids for fragment in proof.fragments), "Broken proof anchor or skip link")
+    require(not proof.runtime and proof.resources == ["../assets/main.css"] and ".wasm" not in proof_html, "Unexpected proof client resources")
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(PREVIEW)))
     worker = Thread(target=server.serve_forever, daemon=True)

@@ -16,9 +16,10 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 
 ## Milestone 3 — Shared shell and homepage (depends on M2)
 - [x] 3.1a Capture available desktop viewport references, inspect resolved CSS/theme license and confirm live 404 body; record successful hosted Leptos CI.
-- [ ] **3.1b Next:** Complete exact 1440px/390px/320px and print baselines using a supported capture surface; verify font/icon licenses before vendoring and account-level Pages settings. See migration-baseline/2026-09-27/README.md for current limitations.
-- [ ] 3.2 Port plain CSS tokens, PageLayout/Header/Footer/Section and resume-entry pattern; compare to baseline, including focus/print behavior.
-- [ ] 3.3 Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
+- [ ] 3.1b (release gate): Complete exact 1440px/390px/320px and print baselines using a supported capture surface; verify font/icon licenses before vendoring and account-level Pages settings. See migration-baseline/2026-09-27/README.md for current limitations.
+- [x] 3.2a Implement scoped plain CSS tokens, PageLayout/Header/Footer/Section and resume-entry pattern in the static proof.
+- [ ] 3.2b (release gate) Compare rendered shared shell/homepage to baseline, including keyboard focus, mobile widths and print. Local preview browser navigation is currently blocked; do not claim visual parity.
+- [ ] **3.3 Next:** Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
 - [ ] 3.4 Render homepage with shared ProjectCard, existing links/assets and no Wasm; verify content/SEO and responsive parity.
 - [ ] 3.5 Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
 
