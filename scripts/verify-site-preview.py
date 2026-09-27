@@ -1,0 +1,223 @@
+"""Validate the partial Leptos artifact using only Python's standard library."""
+
+import json
+import re
+import xml.etree.ElementTree as ET
+from functools import partial
+from html.parser import HTMLParser
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from threading import Thread
+from urllib.parse import urljoin, urlsplit
+from urllib.request import urlopen
+from urllib.error import HTTPError
+
+ROOT = Path(__file__).resolve().parents[1]
+PREVIEW = ROOT / "target/site-preview"
+RUNTIME_EXTENSIONS = {".html", ".css", ".js", ".mjs", ".json", ".wasm", ".png", ".svg", ".webp", ".ico"}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def files_under(directory):
+    require(directory.is_dir(), f"Missing directory: {directory}")
+    require(not directory.is_symlink(), f"Symlink directory: {directory}")
+    files = set()
+    for path in directory.rglob("*"):
+        require(not path.is_symlink(), f"Symlink in artifact/source: {path}")
+        if path.is_file():
+            files.add(path.relative_to(directory))
+        else:
+            require(path.is_dir(), f"Nonregular file: {path}")
+    return files
+
+
+class Document(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.tags = set()
+        self.resources = []
+        self.runtime = False
+        self.ids = set()
+        self.fragments = []
+        self.links = []
+        self.metadata = {}
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.add(tag)
+        attrs = dict(attrs)
+        if tag == "meta":
+            self.metadata[attrs.get("name", attrs.get("property", ""))] = attrs.get("content")
+        if tag == "a" and "href" in attrs:
+            self.links.append(attrs["href"])
+        if "id" in attrs:
+            require(attrs["id"] not in self.ids, f"Duplicate id: {attrs['id']}")
+            self.ids.add(attrs["id"])
+        if tag == "a" and attrs.get("href", "").startswith("#"):
+            self.fragments.append(attrs["href"][1:])
+        if "src" in attrs:
+            self.resources.append(attrs["src"])
+        if tag == "link" and "href" in attrs and attrs.get("rel") != "canonical":
+            self.resources.append(attrs["href"])
+        if tag in {"iframe", "object", "embed"} or (tag == "script" and attrs.get("type") != "application/ld+json"):
+            self.runtime = True
+        if (tag == "script" and "src" in attrs) or any(name.startswith("on") for name in attrs):
+            self.runtime = True
+
+
+class QuietHandler(SimpleHTTPRequestHandler):
+    # Test-only approximation of Pages custom-404 serving; deployment still needs verification.
+    def send_error(self, code, message=None, explain=None):
+        if code != 404:
+            return super().send_error(code, message, explain)
+        body = (PREVIEW / "404.html").read_bytes()
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(body)
+
+    def log_message(self, *_args):
+        pass
+
+
+def verify():
+    source = ROOT / "docs/cabane"
+    legacy = set()
+    for path in files_under(source):
+        if path.suffix == ".md":
+            continue
+        require(path.suffix in RUNTIME_EXTENSIONS, f"Unregistered asset: {path}")
+        legacy.add(Path("cabane") / path)
+    actual = files_under(PREVIEW)
+    home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
+    public_assets = files_under(ROOT / "public")
+    expected = legacy | home_assets | public_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
+    require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
+    for path in legacy | home_assets:
+        require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
+
+    require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
+
+    for path in public_assets:
+        require((PREVIEW / path).read_bytes() == (ROOT / "public" / path).read_bytes(), f"Changed public asset: {path}")
+    css = (PREVIEW / "assets/main.css").read_text()
+    require("@import" not in css, "Unexpected external stylesheet import")
+    font_urls = re.findall(r"url\(([^)]+)\)", css)
+    require(len(font_urls) == 4 and len(set(font_urls)) == 4, "Expected four local font subsets")
+    for url in font_urls:
+        require(url.startswith("/fonts/inter/"), f"Unexpected font source: {url}")
+        require((PREVIEW / url[1:]).read_bytes().startswith(b"wOF2"), f"Invalid WOFF2: {url}")
+    require(sum((PREVIEW / url[1:]).stat().st_size for url in font_urls) < 125_000, "Font budget exceeded")
+    for path in public_assets:
+        if path.suffix == ".svg":
+            svg = ET.fromstring((PREVIEW / path).read_text())
+            require(svg.attrib.get("viewBox") == "0 0 24 24", "Unexpected icon dimensions")
+            require(all(element.tag.rsplit("}", 1)[-1] in {"svg", "path"} for element in svg.iter()), "Unexpected SVG element")
+            require(all(not key.startswith("on") and "href" not in key for element in svg.iter() for key in element.attrib), "Active SVG content")
+
+    proof = Document()
+    proof_html = (PREVIEW / "leptos-proof/index.html").read_text()
+    proof.feed(proof_html)
+    require(proof_html.lower().startswith("<!doctype html>"), "Missing document doctype")
+    require({"html", "head", "title", "body", "header", "footer", "nav", "main", "h1"} <= proof.tags, "Incomplete proof document")
+    require(all(fragment in proof.ids for fragment in proof.fragments), "Broken proof anchor or skip link")
+    require(not proof.runtime and proof.resources == ["/assets/main.css", "/images/favicon.ico"] and ".wasm" not in proof_html, "Unexpected proof client resources")
+
+    home = Document()
+    home_html = (PREVIEW / "index.html").read_text()
+    home.feed(home_html)
+    require(not home.runtime and ".wasm" not in home_html, "Homepage must render without a client runtime")
+    require(home_html.count('class="profile-icon-link"') == 4, "Missing profile icon links")
+    require(home_html.count('class="profile-icon-label"') == 4, "Missing accessible icon labels")
+    require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
+    require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
+             "experience", "doctolib", "blablacar", "streamroot-lumen", "happn", "education", "epita",
+             "a-little-more-about-me"} <= home.ids, "Missing legacy homepage anchor")
+    require(all(fragment in home.ids for fragment in home.fragments), "Broken homepage anchor")
+    require('href="https://www.somsouk.fr/"' in home_html, "Missing HTTPS canonical")
+
+    for name, value in {"description": "Just a simple playground", "og:title": "Software engineer",
+                        "og:url": "https://www.somsouk.fr/", "twitter:card": "summary"}.items():
+        require(home.metadata.get(name) == value, f"Wrong homepage metadata: {name}")
+    structured = re.findall(r'<script type="application/ld\+json">(.*?)</script>', home_html, re.S)
+    require(len(structured) == 1, "Missing or duplicated structured metadata")
+    require(json.loads(structured[0])["url"] == "https://www.somsouk.fr/", "Wrong structured canonical")
+    for href in home.links:
+        address = urlsplit(href)
+        if address.scheme or address.netloc or not address.path:
+            continue
+        destination = address.path.lstrip("/")
+        if address.path.endswith("/"):
+            destination += "index.html"
+        require(Path(destination) in actual, f"Broken local homepage link: {href}")
+
+    error_html = (PREVIEW / "404.html").read_text()
+    error = Document()
+    error.feed(error_html)
+    require("404 — Page not found" in error_html and "Doctolib" not in error_html, "404 must be an error page, not the resume")
+    require(error.metadata.get("robots") == "noindex, follow", "404 must not be indexed")
+    require(not error.runtime and all(fragment in error.ids for fragment in error.fragments), "Invalid 404 runtime or anchors")
+    require('rel="canonical"' not in error_html and "application/ld+json" not in error_html, "Unexpected 404 SEO metadata")
+    require(not any(key.startswith(("og:", "twitter:")) for key in error.metadata), "Unexpected error social metadata")
+    require("/" in error.links and "/cabane/" in error.links, "Missing recovery links")
+    require(all(resource.startswith("/") for resource in error.resources), "404 assets must work at nested missing URLs")
+    require(proof.metadata.get("robots") == "noindex, nofollow", "Proof must not be indexed")
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(PREVIEW)))
+    worker = Thread(target=server.serve_forever, daemon=True)
+    worker.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+
+    def fetch(address, mime=None):
+        with urlopen(address, timeout=10) as response:
+            require(response.status == 200, f"Failed route: {address}")
+            if mime:
+                require(response.headers.get_content_type() == mime, f"Wrong MIME: {address}")
+            response.read()
+
+    page_count = 0
+    try:
+        for path in sorted(actual):
+            if path.suffix != ".html":
+                continue
+            direct = base + "/" + path.as_posix()
+            fetch(direct, "text/html")
+            page_count += 1
+            if path.name == "index.html":
+                fetch(direct.removesuffix("index.html"), "text/html")
+                page_count += 1
+            document = Document()
+            document.feed((PREVIEW / path).read_text())
+            for resource in document.resources:
+                address = urljoin(direct, resource)
+                require(urlsplit(address).netloc == urlsplit(base).netloc, f"Unexpected external resource: {address}")
+                fetch(address)
+        fetch(base + "/cabane/memory/game.wasm", "application/wasm")
+        for url in font_urls:
+            fetch(base + url, "font/woff2")
+        for missing in ["/__missing_migration_page__", "/missing/deep/path/"]:
+            try:
+                urlopen(base + missing, timeout=10)
+            except HTTPError as response:
+                with response:
+                    require(response.code == 404, "Wrong missing-route status")
+                    require(response.headers.get_content_type() == "text/html", "Wrong 404 MIME")
+                    require(response.read() == (PREVIEW / "404.html").read_bytes(), "Wrong 404 body")
+            else:
+                raise ValueError("Missing route did not return 404")
+            for resource in error.resources:
+                fetch(urljoin(base + missing, resource))
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join()
+    print(f"Verified {len(legacy)} unchanged Cabane files, {page_count} page URLs, local resources and static pages; two missing-route 404 responses.")
+
+
+if __name__ == "__main__":
+    verify()

@@ -1,0 +1,6 @@
+Inter variable font: Fontsource 5.3.0, SIL Open Font License 1.1.
+https://www.npmjs.com/package/@fontsource-variable/inter/v/5.3.0
+Unmodified Latin and Vietnamese normal/italic wght subsets. See Inter-OFL.txt.
+
+Tabler Icons 3.48.0: MIT. Four unmodified outline SVGs. See Tabler-MIT.txt.
+https://github.com/tabler/tabler-icons/tree/v3.48.0

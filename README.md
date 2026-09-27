@@ -65,3 +65,78 @@ node --test scripts/*.test.mjs
 - `scripts/`: Build and test helpers
 - `docs/cabane/`: Cabane activity pages and assets
 - `docs/cabane/images/`: Illustrations used by the activities
+
+## Leptos migration preview
+
+The existing Jekyll site remains the production source. The new Rust workspace
+generates a static homepage candidate, a shared-layout proof and an unchanged copy
+of Cabane. This migration preview is not deployed.
+
+Install Rust through rustup, then run from the repository root (the checked-in
+`rust-toolchain.toml` selects Rust 1.96.0, rustfmt and Clippy):
+
+```sh
+rm -rf target/site-preview # Only the disposable generated preview
+cargo run --locked --release -p site
+python3 -m http.server 8766 --directory target/site-preview
+```
+
+Open `http://localhost:8766/` for the homepage or `/leptos-proof/` for the fixture.
+Both contain complete HTML with local CSS and no executable JavaScript, Wasm or
+hydration. The homepage includes non-executable JSON-LD metadata. `/cabane/` retains its existing JS/Wasm runtime.
+The generator writes only to `target/site-preview/`, regardless of the working
+directory, and never changes production sources. It refuses an existing preview
+directory: remove the disposable preview before rebuilding, including after a
+failed write. The manifest is validated before any output is written.
+
+Only `docs/cabane/` runtime extensions (HTML, CSS, JS/MJS, JSON, Wasm, PNG, SVG,
+WebP and ICO) are copied, byte for byte. Markdown is excluded; unknown extensions,
+symlinks, unsafe paths and duplicate/file-directory destinations fail the build.
+Four explicitly registered homepage assets from `docs/images/` are also copied
+byte for byte. Jekyll configuration, authoring Markdown and migration notes are
+never copied. The staged root now renders the homepage; existing absolute links
+to the public domain still lead to production.
+
+Workspace checks:
+
+```sh
+cargo fmt --check
+cargo check --locked
+cargo clippy --locked --all-targets --all-features -- -D warnings
+cargo test --locked
+python3 scripts/verify-site-preview.py # After generating the preview
+```
+
+`crates/content` contains plain Rust content types; `crates/site` renders them with
+Leptos and provides the native generator. Memory remains an independent Cargo
+project with its own lockfile/profile and existing build commands.
+
+Read [migration TODO](docs/todo.md), [progress](docs/progress.md) and
+[architecture](docs/architecture.md) before continuing. The `Leptos preview` workflow runs on every branch push and pull request, and
+supports manual dispatch once available on the default branch. It uses the pinned
+Rust toolchain, runs the workspace checks and release generator, then validates
+the exact artifact file set, unchanged Cabane bytes, static proof, page routes and
+local HTML resource URLs. Successful runs upload `leptos-preview` for seven days.
+The artifact is downloadable from the workflow run; it is not a hosted deployment.
+The existing Cabane/Jekyll workflow remains independent and unchanged.
+
+There are deliberately no path filters during migration, so new build inputs
+cannot silently miss validation. Push and PR runs may both occur; newer runs of
+the same event/ref cancel older ones. The workflow has read-only repository
+permissions and does not request Pages or deployment access.
+
+The shared layout lives in `crates/site/src/ui.rs`; site-only tokens and responsive
+rules live in `styles/site.css`. The proof uses example content; `crates/site/src/homepage.rs` composes the real
+homepage from the typed records and trusted Markdown. Cabane continues to use its own styles and controllers.
+Inter variable fonts and four Tabler SVG navigation icons are self-hosted from
+`public/`, with licenses in `public/licenses/`. Navigation retains accessible
+labels; ordinary pages require no JavaScript. Desktop/mobile/print comparison
+remains a release requirement; this candidate is
+not visually approved for cutover.
+
+The preview includes `/404.html`. The homepage, proof and error page share
+`site::document::render_document` and typed `site_content::PageMetadata`. Unknown
+paths must be served with HTTP 404 by the eventual host; `python3 -m http.server`
+lets you inspect `/404.html` directly but does not use it as a custom fallback.
+The verifier separately simulates missing-path responses and checks their status,
+body, root-relative resources, indexing policy and recovery links.

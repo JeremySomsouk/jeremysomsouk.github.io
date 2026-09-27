@@ -1,0 +1,44 @@
+name: Leptos preview
+
+# No path filters: Cargo, crates, assets and future build inputs all trigger checks.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: leptos-preview-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CARGO_BUILD_JOBS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Rust checks
+        run: |
+          cargo fmt --check
+          cargo check --locked
+          cargo clippy --locked --all-targets --all-features -- -D warnings
+          cargo test --locked
+      - name: Build static preview
+        run: cargo run --locked --release -p site
+      - name: Verify preview artifact
+        run: python3 scripts/verify-site-preview.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leptos-preview
+          path: target/site-preview/
+          if-no-files-found: error
+          retention-days: 7
