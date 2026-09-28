@@ -27,13 +27,13 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] 3.4a Render static homepage with shared ProjectCard, trusted Markdown, existing links/assets/anchors and no client runtime; verify content, baseline metadata and exact asset copying.
 - [x] 3.4b: Deliver licensed local Inter variable fonts and Tabler SVG profile icons, with typed link kinds, accessible labels and asset verification. User authorized a restrained font/icon refresh.
 - [x] Prepare a separate owner-private hosted snapshot of `1455b38` for phone-based visual review; keep production unchanged.
-- [ ] **3.4c Visual release gate** (release gate; depends on 3.1b/3.2b): Compare Inter/icon candidate against the legacy homepage at 1440px/390px/320px and print on a supported preview; check wrapping, focus, font loading and accessible navigation. Visual approval is still outstanding.
+- [ ] **3.4c Visual release gate** (release gate; depends on 3.1b/3.2b): Compare Inter/icon candidate against the legacy homepage at 1440px/390px/320px and print on a supported preview; check wrapping, focus, font loading and accessible navigation. User approved the phone preview informally on 2026-09-28; exact-width desktop/mobile/print and accessibility checks remain outstanding.
 - [x] **3.5:** Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
 
 ## Milestone 4 — Content and project pages (uses M3 implementation; visual release gates remain open)
-- [x] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations. Local tests/artifact checks pass; hosted optimized build and visual release gates remain separate.
-- [ ] **4.2 Next:** Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
-- [ ] 4.3 Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
+- [x] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations. Local checks and clean hosted optimized build passed (run 36387341254); visual release gates remain separate.
+- [x] **4.2:** Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
+- [ ] **4.3 Next:** Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
 - [ ] 4.4 Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
 
 ## Milestone 5 — Cabane integration (depends on M3; game rewrites out of scope)

@@ -366,3 +366,29 @@
 
 ### Recommended next step
 - Review the private preview on mobile and report layout issues. Continue typed article loading (4.2) separately.
+
+## 2026-09-28 — Typed Markdown article loader
+
+### Completed
+- Added typed TOML front matter, validated slugs/calendar dates, optional tags/images and preserved trusted Markdown bodies.
+- Added deterministic publication selection excluding drafts and future dates; drafts default true and all source files are validated during generation.
+- Added six fixture/integration tests and GitHub authoring instructions. No personal articles or blog pages were invented.
+- Recorded positive user feedback on the phone preview; Cabane transition remains in its original milestone.
+
+### Decisions
+- Reuse locked Serde/TOML with parsing-only features; no separate date library. Flat Markdown filenames must match safe slugs.
+- Publication takes an explicit as-of date; a future date requires a rebuild rather than implying an automatic scheduler.
+- Drafts remain visible as source in the public repository. Blog rendering and asset publication follow in 4.3.
+
+### Validation
+- Formatting, locked compilation, strict all-target/all-feature Clippy and all 26 Rust tests passed. A damaged local test object was resolved by cleaning the site package.
+- The optimized generator completed; its recovered executable was rerun successfully after the session interruption and rejected an invalid article probe before writing output.
+- Artifact verification passed: 65 unchanged Cabane files, 27 page URLs and two simulated 404 responses. All 87 generated files match the prior artifact byte-for-byte.
+- Clean hosted release checks for project-page commit 1455b38 passed (run 36387341254). Hosted checks for this new commit remain separate.
+
+### Remaining concerns
+- Blog rendering/build-date selection and image existence checks remain for 4.3. The private visual preview is unchanged because the public output is unchanged.
+- Exact-width desktop/mobile/print and accessibility review remain open; final documentation cleanup remains scheduled.
+
+### Recommended next step
+- Implement static blog listing/article pages (4.3), use the publication filter and shared SEO/layout, and verify drafts never enter the output.

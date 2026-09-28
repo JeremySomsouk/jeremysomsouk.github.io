@@ -1,5 +1,8 @@
 //! Content models independent of rendering and filesystem access.
 
+mod articles;
+pub use articles::*;
+
 mod metadata;
 pub use metadata::*;
 

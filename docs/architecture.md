@@ -259,3 +259,18 @@ Cabane's independent styles and controllers remain untouched.
 - The verifier checks exact public bytes, WOFF2 signatures/size budget, local font
   URLs and HTTP MIME, passive SVG content and profile labels. It does not replace
   browser accessibility, responsive or visual checks. No new Rust/npm dependency.
+
+## Article loading (2026-09-28)
+
+`site-content` now validates flat `content/blog/<slug>.md` files with `+++` TOML
+front matter using explicit Serde structs. It directly depends on the already
+locked Serde and TOML versions; TOML enables only parse/serde/std, not display.
+Cargo also records optional TOML writer resolution in the lockfile, but it is not
+in the active dependency tree. No separate date/parser library is introduced.
+
+Private slug/date representations enforce portable paths and Gregorian dates.
+Drafts default true; publication selection requires an explicit as-of date,
+excludes drafts/future dates, and sorts newest first with slug tie-breaking.
+The generator validates even drafts during builds; rendering and build-date
+selection follow in 4.3. Raw author Markdown is preserved as owned text and remains
+trusted repository content. A draft is still public source in this repository.

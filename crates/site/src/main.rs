@@ -8,6 +8,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         .parent()
         .and_then(Path::parent)
         .ok_or("Cannot locate repository root")?;
+    // Validate article authoring now; static blog rendering is a separate migration step.
+    site_content::load_articles(&root.join("content/blog"))?;
     let mut manifest = Manifest::default();
     manifest.insert(
         Route::new("/")?.output().clone(),

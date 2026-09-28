@@ -148,3 +148,39 @@ shared UI; application/repository links retain their existing destinations. Add 
 project record to `HOMEPAGE.projects` with a unique safe slug and register any new
 image in the static asset manifest. Its presentation route is generated automatically;
 update the verifier’s expected route inventory when adding a project.
+
+### Writing articles on GitHub
+
+Article loading is implemented; blog page rendering and production publication are
+still migration tasks. To prepare a post, use GitHub's **Add file → Create new
+file** (or upload) at `content/blog/my-first-post.md`:
+
+```markdown
++++
+title = "My first post"
+description = "A short description for listings and search results."
+slug = "my-first-post"
+date = 2026-09-28
+draft = true
+tags = ["Rust"]
++++
+Write the article in Markdown here.
+```
+
+The filename must match `slug`. Use lowercase ASCII letters/numbers separated by
+single hyphens, at most 80 characters. `title`, `description`, `slug` and an
+unquoted `YYYY-MM-DD` date are required. `tags` is optional; omitted `draft`
+defaults to true. Set `draft = false` to opt into publication. The publishing
+selection also excludes dates after its explicit build date; rebuilding on/after
+that date is required, so this is not an automatic scheduling service.
+
+An optional `[image]` table at the end of the front matter accepts `src` (a
+site-root asset path) and nonblank `alt`. Image existence and publication must
+also be handled by the asset pipeline; declaring an image does not upload it.
+Keep assets outside `content/blog/`, which accepts flat `.md` files only.
+
+CI validates all files, including drafts: invalid dates, unknown metadata fields,
+empty content, duplicate/unsafe slugs, symlinks and filename mismatches fail with
+source-path context. Markdown is trusted repository-authored content; raw HTML
+is preserved, not sanitized. Drafts are excluded from generated pages, **not
+hidden in this public GitHub repository**—do not commit private drafts or secrets.
