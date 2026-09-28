@@ -190,3 +190,13 @@ The generator always creates `/blog/` and creates `/blog/<slug>/` only for eligi
 articles, never copying Markdown sources. An empty blog displays an honest empty
 state. Cover images must already be registered in the asset manifest; missing
 published covers fail the build. No example post is published by default.
+
+The generated artifact includes `sitemap.xml`, `robots.txt`, `.nojekyll` and an
+unchanged copy of `docs/CNAME`. The sitemap uses the canonical HTTPS origin and
+registered indexable pages, including published articles and existing Cabane
+routes. Error/proof pages and drafts are omitted; directory URLs appear once,
+without duplicate `index.html` aliases. No modification dates are invented.
+`robots.txt` allows crawling and points to the sitemap; noindex remains an HTML
+metadata policy. Generation fails if CNAME differs from the canonical origin.
+These files prepare the artifact for static hosting; they do not change DNS or
+activate deployment.

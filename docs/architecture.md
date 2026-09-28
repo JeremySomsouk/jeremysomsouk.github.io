@@ -289,3 +289,17 @@ date; explicit input keeps publication selection reproducible without another
 clock/date dependency. The index records that cutoff for independent artifact
 validation. No automatic schedule is configured. No posts are fabricated: the
 empty source directory produces a useful empty blog listing.
+
+## Discovery and domain files (2026-09-28)
+
+The output manifest records indexable pages alongside page insertion. Sitemap
+entries derive only from successful registrations; blog filtering therefore also
+controls discovery. Existing Cabane HTML is registered during allowlisted copying
+(current source has no noindex directive). The proof/error pages are excluded.
+Directory indexes use canonical trailing-slash URLs without index.html aliases.
+No inferred modification timestamps, priorities or change frequencies are emitted.
+
+The generator adds robots.txt (allow crawling plus sitemap URL), the exact existing
+docs/CNAME bytes, and an empty .nojekyll marker. Domain/origin mismatch fails the
+build. These are static artifact files only, not DNS or Pages-setting mutations.
+Cabane metadata improvements remain part of its later shared-shell migration.

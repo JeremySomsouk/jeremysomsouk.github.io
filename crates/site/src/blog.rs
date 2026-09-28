@@ -109,14 +109,16 @@ pub fn add_blog(
             }
         }
     }
-    manifest.insert(
-        Route::new("/blog/")?.output().clone(),
-        render_index(&published, as_of)?.into_bytes(),
+    manifest.insert_page(
+        Route::new("/blog/")?,
+        render_index(&published, as_of)?,
+        site_content::Indexing::Index,
     )?;
     for article in published {
-        manifest.insert(
-            Route::new(&article.metadata.slug.path())?.output().clone(),
-            render_article(article)?.into_bytes(),
+        manifest.insert_page(
+            Route::new(&article.metadata.slug.path())?,
+            render_article(article)?,
+            site_content::Indexing::Index,
         )?;
     }
     Ok(())

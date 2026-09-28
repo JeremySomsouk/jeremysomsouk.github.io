@@ -116,7 +116,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = legacy | home_assets | public_assets | blog_pages | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
+    expected = legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll")} | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -139,6 +139,24 @@ def verify():
             require(svg.attrib.get("viewBox") == "0 0 24 24", "Unexpected icon dimensions")
             require(all(element.tag.rsplit("}", 1)[-1] in {"svg", "path"} for element in svg.iter()), "Unexpected SVG element")
             require(all(not key.startswith("on") and "href" not in key for element in svg.iter() for key in element.attrib), "Active SVG content")
+
+    require((PREVIEW / "CNAME").read_bytes() == (ROOT / "docs/CNAME").read_bytes(), "Changed custom domain")
+    require((PREVIEW / "CNAME").read_text().strip() == "www.somsouk.fr", "Wrong domain")
+    require((PREVIEW / ".nojekyll").read_bytes() == b"", "Invalid static hosting marker")
+    sitemap = ET.fromstring((PREVIEW / "sitemap.xml").read_text())
+    ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+    require(sitemap.tag == ns + "urlset", "Wrong sitemap namespace")
+    locations = [node.text for node in sitemap.findall(ns + "url/" + ns + "loc")]
+    expected_locations = set()
+    for path in actual:
+        if path.suffix != ".html" or path in {Path("404.html"), Path("leptos-proof/index.html")}:
+            continue
+        url = path.as_posix()
+        if path.name == "index.html":
+            url = url.removesuffix("index.html")
+        expected_locations.add("https://www.somsouk.fr/" + url)
+    require(len(locations) == len(set(locations)) and set(locations) == expected_locations, "Wrong sitemap routes or duplicate aliases")
+    require((PREVIEW / "robots.txt").read_text() == "User-agent: *\nAllow: /\n\nSitemap: https://www.somsouk.fr/sitemap.xml\n", "Wrong robots policy")
 
     proof = Document()
     proof_html = (PREVIEW / "leptos-proof/index.html").read_text()
@@ -257,6 +275,8 @@ def verify():
                 address = urljoin(direct, resource)
                 require(urlsplit(address).netloc == urlsplit(base).netloc, f"Unexpected external resource: {address}")
                 fetch(address)
+        fetch(base + "/sitemap.xml", "application/xml")
+        fetch(base + "/robots.txt", "text/plain")
         fetch(base + "/cabane/memory/game.wasm", "application/wasm")
         for url in font_urls:
             fetch(base + url, "font/woff2")

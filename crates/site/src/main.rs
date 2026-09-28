@@ -1,7 +1,7 @@
 use std::{error::Error, path::Path};
 
 use site::output::{Manifest, OutputPath, Route};
-use site_content::PageMetadata;
+use site_content::{Indexing, PageMetadata};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -13,22 +13,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         .parse()?;
     let articles = site_content::load_articles(&root.join("content/blog"))?;
     let mut manifest = Manifest::default();
-    manifest.insert(
-        Route::new("/")?.output().clone(),
-        site::render_homepage()?.into_bytes(),
-    )?;
+    manifest.insert_page(Route::new("/")?, site::render_homepage()?, Indexing::Index)?;
     manifest.insert(
         OutputPath::new("404.html")?,
         site::render_not_found()?.into_bytes(),
     )?;
-    manifest.insert(
-        Route::new("/projects/")?.output().clone(),
-        site::render_projects()?.into_bytes(),
+    manifest.insert_page(
+        Route::new("/projects/")?,
+        site::render_projects()?,
+        Indexing::Index,
     )?;
     for project in site_content::HOMEPAGE.projects {
-        manifest.insert(
-            Route::new(&project.presentation_path())?.output().clone(),
-            site::render_project(project.clone())?.into_bytes(),
+        manifest.insert_page(
+            Route::new(&project.presentation_path())?,
+            site::render_project(project.clone())?,
+            Indexing::Index,
         )?;
     }
     for asset in [
@@ -61,13 +60,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         ),
         ..PageMetadata::new("Static Leptos proof")
     })?;
-    manifest.insert(route.output().clone(), html.into_bytes())?;
+    manifest.insert_page(route, html, Indexing::NoIndexNoFollow)?;
     manifest.insert(
         OutputPath::new("assets/main.css")?,
         site::SITE_CSS.as_bytes().to_vec(),
     )?;
     manifest.add_legacy_cabane(&root.join("docs"))?;
     site::blog::add_blog(&mut manifest, &articles, as_of)?;
+    manifest.add_discovery(&root.join("docs"))?;
     let output = root.join("target/site-preview");
     manifest.write_new(&output)?;
     println!("Generated {}", output.display());

@@ -34,10 +34,10 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations. Local checks and clean hosted optimized build passed (run 36387341254); visual release gates remain separate.
 - [x] **4.2:** Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
 - [x] **4.3:** Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
-- [ ] **4.4 Next:** Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
+- [x] **4.4:** Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
 
 ## Milestone 5 — Cabane integration (depends on M3; game rewrites out of scope)
-- [ ] 5.1 Replace only Cabane selection page composition with shared layout primitives and Cabane-scoped theme; keep game controllers/assets intact.
+- [ ] **5.1 Next:** Replace only Cabane selection page composition with shared layout primitives and Cabane-scoped theme; keep game controllers/assets intact.
 - [ ] 5.1a Add the requested gentle homepage → Cabane transition as progressive enhancement; preserve normal navigation, reduced motion, mobile responsiveness and per-project identity. See architecture brief.
 - [ ] 5.2 Establish documented app adapter/asset/DOM ownership contract; verify all relative imports and raw Memory Wasm ABI.
 - [ ] 5.3 Check every game in browser, touch inputs, reduced motion, sharing and errors; verify Fluence `?text`, history key, weekly schedule and mobile timer viewport.

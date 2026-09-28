@@ -173,3 +173,61 @@ fn explicitly_selected_asset_is_copied_and_rejects_invalid_sources() -> io::Resu
     assert_eq!(fs::read(output.join("images/test.webp"))?, [0, 1, 255]);
     Ok(())
 }
+
+#[test]
+fn discovery_uses_registered_indexable_pages_and_preserves_domain() -> io::Result<()> {
+    use site_content::Indexing;
+    let fixture = Fixture::new()?;
+    fs::write(fixture.0.join("CNAME"), "www.somsouk.fr")?;
+    fs::create_dir_all(fixture.0.join("cabane/memory"))?;
+    fs::write(fixture.0.join("cabane/memory/index.html"), "game")?;
+    let mut manifest = Manifest::default();
+    manifest.insert_page(Route::new("/")?, "home".into(), Indexing::Index)?;
+    manifest.insert_page(Route::new("/blog/")?, "blog".into(), Indexing::Index)?;
+    manifest.insert_page(
+        Route::new("/leptos-proof/")?,
+        "proof".into(),
+        Indexing::NoIndexNoFollow,
+    )?;
+    manifest.insert_page(Route::new("/hidden/")?, "hidden".into(), Indexing::NoIndex)?;
+    manifest.insert(OutputPath::new("404.html")?, b"error".to_vec())?;
+    manifest.add_legacy_cabane(&fixture.0)?;
+    // A failed duplicate must not change the indexing policy of the existing page.
+    assert!(
+        manifest
+            .insert_page(Route::new("/hidden/")?, "duplicate".into(), Indexing::Index)
+            .is_err()
+    );
+    manifest.add_discovery(&fixture.0)?;
+    let output = fixture.0.join("output");
+    manifest.write_new(&output)?;
+    let sitemap = fs::read_to_string(output.join("sitemap.xml"))?;
+    assert_eq!(sitemap.matches("<loc>").count(), 3);
+    for url in [
+        "https://www.somsouk.fr/",
+        "https://www.somsouk.fr/blog/",
+        "https://www.somsouk.fr/cabane/memory/",
+    ] {
+        assert!(sitemap.contains(&format!("<loc>{url}</loc>")));
+    }
+    for excluded in ["hidden", "404", "leptos-proof", "index.html", "lastmod"] {
+        assert!(!sitemap.contains(excluded));
+    }
+    assert_eq!(fs::read(output.join("CNAME"))?, b"www.somsouk.fr");
+    assert!(fs::read(output.join(".nojekyll"))?.is_empty());
+    assert!(
+        fs::read_to_string(output.join("robots.txt"))?
+            .contains("Sitemap: https://www.somsouk.fr/sitemap.xml")
+    );
+    Ok(())
+}
+
+#[test]
+fn discovery_rejects_canonical_domain_mismatch() -> io::Result<()> {
+    let fixture = Fixture::new()?;
+    fs::write(fixture.0.join("CNAME"), "other.example\n")?;
+    let mut manifest = Manifest::default();
+    assert!(manifest.add_discovery(&fixture.0).is_err());
+    assert!(!manifest.contains(&OutputPath::new("sitemap.xml")?));
+    Ok(())
+}

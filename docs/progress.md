@@ -417,3 +417,28 @@
 
 ### Recommended next step
 - Generate sitemap/robots and preserve domain/resource configuration from the route inventory (4.4).
+
+## 2026-09-28 — Sitemap, robots and domain artifact
+
+### Completed
+- Registered indexable pages alongside manifest insertion and generated sitemap.xml from successful page registrations, including legacy Cabane and published articles.
+- Added robots.txt, preserved exact docs/CNAME bytes, and emitted .nojekyll. Domain/origin mismatch fails generation.
+- Enabled hidden files only for the validated preview artifact upload so .nojekyll is retained; confirmed the option in upload-artifact v4's action.yml.
+- Extended independent artifact checks and documented hosting-file behavior.
+
+### Decisions
+- Use HTTPS directory canonicals without index.html aliases. Exclude proof/404, drafts and future posts; do not invent last-modified dates.
+- Allow crawlers to read noindex metadata rather than blocking those pages in robots.txt.
+- No DNS, production deployment, Pages settings, Cabane runtime or dependency changes.
+
+### Validation
+- Formatting, locked compilation, strict all-target/all-feature Clippy and all 30 tests passed.
+- Optimized build and verifier passed with 13 sitemap URLs, 29 page URLs, correct discovery-file MIME, exact CNAME and 65 unchanged Cabane files.
+- Temporary published/draft/future articles passed the full generator/verifier with 31 page URLs; sitemap included only the eligible article. Temporary content was removed and the real artifact restored.
+
+### Remaining concerns
+- New-head hosted CI must confirm the artifact upload. Activation of Pages deployment remains a later milestone.
+- The private visual preview need not change for these discovery-only files; its visible pages remain current. Browser release gates remain open.
+
+### Recommended next step
+- Migrate the Cabane selection page into shared layout primitives (5.1), preserving game controllers and its own theme; implement the requested transition in 5.1a afterward.

@@ -1,7 +1,7 @@
 //! A preflighted output manifest. Only explicitly registered files are published.
 
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet},
     fs, io,
     path::{Path, PathBuf},
 };
@@ -58,9 +58,65 @@ impl Route {
 #[derive(Default)]
 pub struct Manifest {
     files: BTreeMap<OutputPath, Vec<u8>>,
+    indexed_pages: BTreeSet<OutputPath>,
 }
 
 impl Manifest {
+    /// Register a rendered page and its indexing policy together.
+    pub fn insert_page(
+        &mut self,
+        route: Route,
+        html: String,
+        indexing: site_content::Indexing,
+    ) -> io::Result<()> {
+        let path = route.output().clone();
+        self.insert(path.clone(), html.into_bytes())?;
+        if indexing == site_content::Indexing::Index {
+            self.indexed_pages.insert(path);
+        }
+        Ok(())
+    }
+
+    /// Discovery files derive from registered, actually emitted pages only.
+    pub fn add_discovery(&mut self, docs: &Path) -> io::Result<()> {
+        let cname = docs.join("CNAME");
+        reject_symlinks(&cname)?;
+        let domain = fs::read_to_string(&cname)?;
+        if Some(domain.trim()) != site_content::SITE_ORIGIN.strip_prefix("https://") {
+            return Err(invalid("CNAME must match the canonical HTTPS origin"));
+        }
+        let mut sitemap = String::from(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n",
+        );
+        for path in &self.indexed_pages {
+            let file = path.as_str();
+            let url_path = if file == "index.html" {
+                "/".to_owned()
+            } else if let Some(directory) = file.strip_suffix("/index.html") {
+                format!("/{directory}/")
+            } else {
+                format!("/{file}")
+            };
+            let canonical = site_content::CanonicalUrl::from_site_path(&url_path)
+                .map_err(|error| invalid(error.to_string()))?;
+            // Canonical origin and validated output paths contain no XML metacharacters.
+            sitemap.push_str(&format!("  <url><loc>{}</loc></url>\n", canonical.as_str()));
+        }
+        sitemap.push_str("</urlset>\n");
+        self.insert(OutputPath::new("sitemap.xml")?, sitemap.into_bytes())?;
+        self.insert(
+            OutputPath::new("robots.txt")?,
+            format!(
+                "User-agent: *\nAllow: /\n\nSitemap: {}/sitemap.xml\n",
+                site_content::SITE_ORIGIN
+            )
+            .into_bytes(),
+        )?;
+        self.insert(OutputPath::new("CNAME")?, domain.into_bytes())?;
+        self.insert(OutputPath::new(".nojekyll")?, Vec::new())?;
+        Ok(())
+    }
+
     pub fn contains(&self, path: &OutputPath) -> bool {
         self.files.contains_key(path)
     }
@@ -135,7 +191,12 @@ impl Manifest {
                 .to_str()
                 .ok_or_else(|| invalid("Non-UTF-8 asset filename"))?
                 .replace(std::path::MAIN_SEPARATOR, "/");
-            self.insert(OutputPath::new(&portable)?, fs::read(source)?)?;
+            let path = OutputPath::new(&portable)?;
+            self.insert(path.clone(), fs::read(&source)?)?;
+            // Existing Cabane HTML pages have no noindex directive; preserve their discoverability.
+            if extension == Some("html") {
+                self.indexed_pages.insert(path);
+            }
         } else {
             return Err(invalid("Only regular files and directories are supported"));
         }
