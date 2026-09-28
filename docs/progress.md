@@ -347,3 +347,22 @@
 
 ### Recommended next step
 - Add the typed Markdown article loader (4.2), including dates, drafts and safe slugs; retain the separate visual release gate.
+
+
+## 2026-09-28 — Private visual review preview
+
+### Completed
+- Published a separate owner-private Sites snapshot of the generated artifact for migration commit `1455b38`, enabling review from a phone.
+
+### Decisions
+- GitHub remains the source of truth; the preview contains generated static files only and requires explicit refresh after source changes. Production hosting and domain settings remain unchanged.
+- Preserve source metadata and links exactly: absolute production links still lead to production; use preview-relative project/game links when reviewing.
+
+### Validation
+- Artifact verifier passed; all 87 preview files matched the validated artifact byte-for-byte. Host deployment status confirmed succeeded.
+
+### Remaining concerns
+- Publication is not visual approval. User screenshots and responsive/accessibility checks are still needed; the snapshot does not track future commits automatically.
+
+### Recommended next step
+- Review the private preview on mobile and report layout issues. Continue typed article loading (4.2) separately.
