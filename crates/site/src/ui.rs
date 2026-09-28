@@ -68,13 +68,27 @@ pub fn ResumeEntry(
 
 /// Project presentation shared by homepage and future project listings.
 #[component]
-pub fn ProjectCard(project: site_content::ProjectMetadata) -> impl IntoView {
+pub fn ProjectCard(
+    project: site_content::ProjectMetadata,
+    #[prop(optional)] show_details: bool,
+) -> impl IntoView {
     view! {
         <article class="project-card" data-project=project.slug aria-labelledby=project.heading_id>
             <img class="project-preview" src=project.image.src alt=project.image.alt
                 width=project.image.width height=project.image.height loading="lazy" decoding="async"/>
             <div class="project-body">
                 <h3 id=project.heading_id>{project.title}</h3>
+                {show_details.then(|| view! { <a class="project-details-link" href=project.presentation_path()>"About this project →"</a> })}
+                <ProjectDescription project=project.clone()/>
+            </div>
+        </article>
+    }
+}
+
+/// Shared project copy and application destination for cards and presentation pages.
+#[component]
+pub fn ProjectDescription(project: site_content::ProjectMetadata) -> impl IntoView {
+    view! { <div class="project-description">
                 <p class="project-tagline">{project.tagline}</p>
                 <p>{project.description}</p>
                 <ul class="project-tags" aria-label=project.tags_label>
@@ -82,9 +96,7 @@ pub fn ProjectCard(project: site_content::ProjectMetadata) -> impl IntoView {
                 </ul>
                 {project.note.map(|note| view! { <p class="project-note">{note}</p> })}
                 <a class="project-link" href=project.destination.url>{project.destination.label}</a>
-            </div>
-        </article>
-    }
+    </div> }
 }
 
 /// Public-site identity shared by ordinary pages, independent of Cabane controllers.

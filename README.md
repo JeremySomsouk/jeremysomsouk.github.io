@@ -140,3 +140,11 @@ paths must be served with HTTP 404 by the eventual host; `python3 -m http.server
 lets you inspect `/404.html` directly but does not use it as a custom fallback.
 The verifier separately simulates missing-path responses and checks their status,
 body, root-relative resources, indexing policy and recovery links.
+
+
+Project presentations are generated at `/projects/`, `/projects/cabane/` and
+`/projects/melimo/`. The project list and detail pages reuse homepage metadata and
+shared UI; application/repository links retain their existing destinations. Add a
+project record to `HOMEPAGE.projects` with a unique safe slug and register any new
+image in the static asset manifest. Its presentation route is generated automatically;
+update the verifier’s expected route inventory when adding a project.

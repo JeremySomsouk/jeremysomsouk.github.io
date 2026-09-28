@@ -102,6 +102,13 @@ pub struct ProjectMetadata {
     pub image: Image,
 }
 
+impl ProjectMetadata {
+    /// Presentation routes are distinct from application/repository destinations.
+    pub fn presentation_path(&self) -> String {
+        format!("/projects/{}/", self.slug)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Homepage {
     pub profile: Profile,

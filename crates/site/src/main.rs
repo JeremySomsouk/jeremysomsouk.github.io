@@ -17,6 +17,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         OutputPath::new("404.html")?,
         site::render_not_found()?.into_bytes(),
     )?;
+    manifest.insert(
+        Route::new("/projects/")?.output().clone(),
+        site::render_projects()?.into_bytes(),
+    )?;
+    for project in site_content::HOMEPAGE.projects {
+        manifest.insert(
+            Route::new(&project.presentation_path())?.output().clone(),
+            site::render_project(project.clone())?.into_bytes(),
+        )?;
+    }
     for asset in [
         "images/profile.webp",
         "images/js-icon.webp",

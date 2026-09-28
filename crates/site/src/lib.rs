@@ -7,6 +7,9 @@ pub use not_found::render_not_found;
 mod homepage;
 pub use homepage::render_homepage;
 
+mod projects;
+pub use projects::{render_project, render_projects};
+
 pub mod output;
 pub mod ui;
 

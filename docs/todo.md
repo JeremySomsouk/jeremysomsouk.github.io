@@ -26,12 +26,12 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] **3.3:** Extract typed profile/resume/project metadata and Markdown fixtures; preserve raw content, section IDs and public attribution.
 - [x] 3.4a Render static homepage with shared ProjectCard, trusted Markdown, existing links/assets/anchors and no client runtime; verify content, baseline metadata and exact asset copying.
 - [x] 3.4b: Deliver licensed local Inter variable fonts and Tabler SVG profile icons, with typed link kinds, accessible labels and asset verification. User authorized a restrained font/icon refresh.
-- [ ] **3.4c Next** (release gate; depends on 3.1b/3.2b): Compare Inter/icon candidate against the legacy homepage at 1440px/390px/320px and print on a supported preview; check wrapping, focus, font loading and accessible navigation. Visual approval is still outstanding.
+- [ ] **3.4c Visual release gate** (release gate; depends on 3.1b/3.2b): Compare Inter/icon candidate against the legacy homepage at 1440px/390px/320px and print on a supported preview; check wrapping, focus, font loading and accessible navigation. Visual approval is still outstanding.
 - [x] **3.5:** Render real 404 document and typed metadata head (language, HTTPS canonical, OG/Twitter, JSON-LD); validate escaping and absent optional values.
 
-## Milestone 4 — Content and project pages (depends on M3)
-- [ ] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations.
-- [ ] 4.2 Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
+## Milestone 4 — Content and project pages (uses M3 implementation; visual release gates remain open)
+- [x] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations. Local tests/artifact checks pass; hosted optimized build and visual release gates remain separate.
+- [ ] **4.2 Next:** Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
 - [ ] 4.3 Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
 - [ ] 4.4 Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
 

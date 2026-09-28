@@ -110,9 +110,9 @@ body.site-page { margin: 0; }
 .site-shell .projects-jump { display: inline-block; margin-top: .625rem; font-weight: 600; }
 .site-shell .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin: 1.25rem 0 2.5rem; scroll-margin-top: 1.25rem; }
 .site-shell .project-card { --project-accent: #e3abd3; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #53405f; border-top: 4px solid var(--project-accent); border-radius: 1rem; background: #19132b; text-align: left; }
-.site-shell .project-card[data-project="cabane"] { --project-accent: #efc185; }
+.site-shell [data-project="cabane"] { --project-accent: #efc185; }
 .site-shell .project-preview { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; background: #201923; }
-.site-shell .project-card[data-project="cabane"] .project-preview { background: #f4eadb; }
+.site-shell [data-project="cabane"] .project-preview { background: #f4eadb; }
 .site-shell .project-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1.5rem; overflow-wrap: anywhere; }
 .site-shell .project-body h3 { margin: 0 0 .75rem; font-size: 1.5rem; font-weight: 700; color: var(--project-accent); }
 .site-shell .project-tagline { font-weight: 600; }
@@ -163,4 +163,19 @@ body.site-page { margin: 0; }
   .profile-links .profile-icon-link { width: auto; border: 1px solid ButtonText; padding: .5rem; }
   .profile-icon-link img { display: none; }
   .profile-icon-label { position: static; width: auto; height: auto; margin: 0; clip-path: none; white-space: normal; }
+}
+
+.page-trail { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-block: 1rem 2rem; }
+.page-trail a { display: inline-flex; align-items: center; min-height: 44px; }
+.page-trail [aria-current] { align-self: center; color: var(--site-muted); overflow-wrap: anywhere; }
+.project-details-link { display: inline-block; margin-block: 0 1rem; }
+.project-presentation { --project-accent: #e3abd3; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.project-presentation > * { min-width: 0; }
+.project-description { display: flex; flex: 1; flex-direction: column; align-items: flex-start; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .project-presentation { grid-template-columns: 1fr; }
+}
+@media print {
+  .page-trail { display: none; }
+  .project-presentation { grid-template-columns: 1fr; }
 }

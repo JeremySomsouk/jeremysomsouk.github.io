@@ -96,7 +96,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = legacy | home_assets | public_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css")}
+    expected = legacy | home_assets | public_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -155,6 +155,22 @@ def verify():
         if address.path.endswith("/"):
             destination += "index.html"
         require(Path(destination) in actual, f"Broken local homepage link: {href}")
+
+    require("/projects/" in home.links, "Homepage must expose project index")
+    for route in ["projects", "projects/cabane", "projects/melimo"]:
+        page_html = (PREVIEW / route / "index.html").read_text()
+        page = Document()
+        page.feed(page_html)
+        require(not page.runtime and ".wasm" not in page_html, f"Unexpected project runtime: {route}")
+        require(f'href="https://www.somsouk.fr/{route}/"' in page_html, f"Wrong project canonical: {route}")
+        require(page.metadata.get("description") and page.metadata.get("og:title"), f"Missing project metadata: {route}")
+        require(all(fragment in page.ids for fragment in page.fragments), f"Broken project anchor: {route}")
+        for href in page.links:
+            address = urlsplit(href)
+            if address.scheme or address.netloc or not address.path:
+                continue
+            path = address.path.lstrip("/") + ("index.html" if address.path.endswith("/") else "")
+            require(Path(path) in actual, f"Broken project link: {href}")
 
     error_html = (PREVIEW / "404.html").read_text()
     error = Document()

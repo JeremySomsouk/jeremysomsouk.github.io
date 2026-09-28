@@ -322,3 +322,28 @@
 
 ### Recommended next step
 - Continue project presentation pages (4.1) on the consolidated branch; perform milestone 8 at release completion.
+
+## 2026-09-28 — Shared static project presentations
+
+### Completed
+- Added `/projects/`, `/projects/cabane/` and `/projects/melimo/` using the existing typed project records, assets and shared website shell.
+- Shared project descriptions/tags/actions between homepage cards and detail pages; added breadcrumbs and a homepage link to the project index.
+- Generated project-specific canonical/social metadata and preview images, with no client runtime. Existing Cabane and Mélimo application/repository destinations are preserved.
+
+### Decisions
+- Presentation paths derive from each project slug; the generator automatically registers each detail page. Content remains in one record per project.
+- Continue on the consolidated PR branch while visual release gates remain open. No Cabane controller rewrite, new dependency, hosting change or extra project claims.
+- Essential project-authoring instructions belong in README; the final documentation cleanup remains scheduled.
+
+### Validation
+- Formatting, locked compilation, strict all-target/all-feature Clippy and all 20 Rust tests passed, including project metadata/destination checks and invalid-path rejection.
+- Restored the pinned Rust toolchain after the workspace environment expired. The release build produced a zero-length rstml object even after cleaning that package; no toolchain/build-policy change.
+- Debug generation and artifact verification passed: 65 unchanged Cabane files, 27 page URLs, project metadata/local links and two simulated 404 responses. Clean hosted CI must validate the normal optimized build for this head.
+- Previous PR head `303a648` passed hosted Leptos and Cabane checks (runs 36358976756 and 36358976738).
+
+### Remaining concerns
+- Actual browser responsive/print/accessibility comparison remains outstanding; automated checks do not establish visual approval.
+- New-head hosted CI must complete after publishing. Production remains unchanged.
+
+### Recommended next step
+- Add the typed Markdown article loader (4.2), including dates, drafts and safe slugs; retain the separate visual release gate.

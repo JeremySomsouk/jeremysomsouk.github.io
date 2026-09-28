@@ -32,6 +32,7 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                 </div>
             </Section>
             <Section id="things-i-m-building" title=home.projects_title.to_owned()>
+                <p><a href="/projects/">"All projects →"</a></p>
                 <div class="project-grid" id=home.projects_id>
                     {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone()/> }).collect_view()}
                 </div>
