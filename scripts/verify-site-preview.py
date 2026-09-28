@@ -1,6 +1,8 @@
 """Validate the partial Leptos artifact using only Python's standard library."""
 
 import json
+import tomllib
+from datetime import date
 import re
 import xml.etree.ElementTree as ET
 from functools import partial
@@ -93,10 +95,28 @@ def verify():
             continue
         require(path.suffix in RUNTIME_EXTENSIONS, f"Unregistered asset: {path}")
         legacy.add(Path("cabane") / path)
+    index_html = (PREVIEW / "blog/index.html").read_text()
+    cutoff_match = re.search(r'data-published-through="([0-9-]+)"', index_html)
+    require(cutoff_match, "Missing publication cutoff")
+    cutoff = date.fromisoformat(cutoff_match[1])
+    blog_pages = {Path("blog/index.html")}
+    published = []
+    for source_file in sorted((ROOT / "content/blog").glob("*.md")):
+        lines = source_file.read_text().splitlines()
+        require(lines and lines[0] == "+++", f"Invalid article delimiters: {source_file}")
+        end = lines.index("+++", 1)
+        meta = tomllib.loads("\n".join(lines[1:end]))
+        route = Path("blog") / meta["slug"] / "index.html"
+        if not meta.get("draft", True) and meta["date"] <= cutoff:
+            blog_pages.add(route)
+            published.append((meta, route))
+        else:
+            require(not (PREVIEW / route).exists(), f"Unpublished article leaked: {route}")
+            require(f'/blog/{meta["slug"]}/' not in index_html, "Unpublished listing leaked")
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = legacy | home_assets | public_assets | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
+    expected = legacy | home_assets | public_assets | blog_pages | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -171,6 +191,30 @@ def verify():
                 continue
             path = address.path.lstrip("/") + ("index.html" if address.path.endswith("/") else "")
             require(Path(path) in actual, f"Broken project link: {href}")
+
+    require("/blog/" in home.links, "Homepage must expose blog")
+    for meta, path in [(None, Path("blog/index.html"))] + published:
+        page_html = (PREVIEW / path).read_text()
+        page = Document()
+        page.feed(page_html)
+        require(not page.runtime and ".wasm" not in page_html, "Blog must remain static")
+        require(all(fragment in page.ids for fragment in page.fragments), "Broken blog anchor")
+        canonical = "https://www.somsouk.fr/" + path.parent.as_posix() + "/"
+        require(f'href="{canonical}"' in page_html, "Wrong blog canonical")
+        if meta:
+            require(page.metadata.get("og:type") == "article", "Wrong article social type")
+            blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', page_html, re.S)
+            require(len(blocks) == 1, "Missing article structured data")
+            structured_article = json.loads(blocks[0])
+            require(structured_article["@type"] == "BlogPosting" and structured_article["datePublished"] == meta["date"].isoformat(), "Wrong article schema")
+            require(structured_article["headline"] == meta["title"], "Wrong article headline")
+        for href in page.links:
+            address = urlsplit(href)
+            if address.scheme or address.netloc or not address.path:
+                continue
+            resolved = urlsplit(urljoin("/" + path.as_posix(), href)).path
+            target = resolved.lstrip("/") + ("index.html" if resolved.endswith("/") else "")
+            require(Path(target) in actual, f"Broken blog link: {href}")
 
     error_html = (PREVIEW / "404.html").read_text()
     error = Document()

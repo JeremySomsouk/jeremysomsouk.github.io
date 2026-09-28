@@ -1,7 +1,9 @@
 //! Native static rendering. No client router or hydration entry point.
 
+pub mod blog;
 pub mod document;
 mod not_found;
+mod prose;
 pub use not_found::render_not_found;
 
 mod homepage;

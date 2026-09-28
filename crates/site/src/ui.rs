@@ -115,6 +115,7 @@ pub fn WebsiteLayout(children: Children) -> impl IntoView {
                         </a>
                     }).collect_view()}
                 </div>
+                <div class="site-page-links"><a href="/projects/">"Projects"</a><a href="/blog/">"Blog"</a></div>
                 <p class="profile-contact">"Email: "<a href=format!("mailto:{}", home.profile.email)>{home.profile.email}</a></p>
             </Header>
         }.into_any())

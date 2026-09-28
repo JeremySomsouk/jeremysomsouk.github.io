@@ -179,3 +179,13 @@ body.site-page { margin: 0; }
   .page-trail { display: none; }
   .project-presentation { grid-template-columns: 1fr; }
 }
+
+.site-page-links { display: flex; gap: 1rem; }
+.article-list { list-style: none; padding: 0; }
+.article-list li { padding-block: 1.5rem; border-bottom: 1px solid var(--site-rule); }
+.article-list h3 { margin-block: 0 .5rem; }
+.blog-article { max-width: 48rem; margin-inline: auto; overflow-wrap: anywhere; }
+.blog-article time, .article-list time { color: var(--site-muted); }
+.article-description { margin-top: 1rem; }
+.article-cover, .blog-article .prose img { display: block; max-width: 100%; height: auto; margin-block: 1.5rem; }
+.blog-article pre { max-width: 100%; overflow-x: auto; padding: 1rem; border: 1px solid var(--site-rule); }

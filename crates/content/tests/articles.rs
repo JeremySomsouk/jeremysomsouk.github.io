@@ -168,3 +168,28 @@ fn symlink_sources_and_nested_directories_are_rejected() {
     fs::create_dir(dir.0.join("nested")).expect("nested directory");
     assert!(load_articles(&dir.0).is_err());
 }
+
+#[test]
+fn build_date_requires_a_calendar_date_without_a_time() {
+    for value in ["2024-02-29", "2026-09-28"] {
+        assert_eq!(
+            value
+                .parse::<site_content::ArticleDate>()
+                .expect("date")
+                .to_string(),
+            value
+        );
+    }
+    for value in [
+        "",
+        "2023-02-29",
+        "2026-09-28T00:00:00Z",
+        "0000-01-01",
+        "2026-13-01",
+    ] {
+        assert!(
+            value.parse::<site_content::ArticleDate>().is_err(),
+            "{value}"
+        );
+    }
+}

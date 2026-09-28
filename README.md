@@ -77,7 +77,7 @@ Install Rust through rustup, then run from the repository root (the checked-in
 
 ```sh
 rm -rf target/site-preview # Only the disposable generated preview
-cargo run --locked --release -p site
+SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
 python3 -m http.server 8766 --directory target/site-preview
 ```
 
@@ -151,8 +151,7 @@ update the verifier’s expected route inventory when adding a project.
 
 ### Writing articles on GitHub
 
-Article loading is implemented; blog page rendering and production publication are
-still migration tasks. To prepare a post, use GitHub's **Add file → Create new
+Static blog generation is implemented; production cutover is still a migration task. To prepare a post, use GitHub's **Add file → Create new
 file** (or upload) at `content/blog/my-first-post.md`:
 
 ```markdown
@@ -164,7 +163,7 @@ date = 2026-09-28
 draft = true
 tags = ["Rust"]
 +++
-Write the article in Markdown here.
+Write the article in Markdown here. Use level-two headings (`##`) within the body.
 ```
 
 The filename must match `slug`. Use lowercase ASCII letters/numbers separated by
@@ -184,3 +183,10 @@ empty content, duplicate/unsafe slugs, symlinks and filename mismatches fail wit
 source-path context. Markdown is trusted repository-authored content; raw HTML
 is preserved, not sanitized. Drafts are excluded from generated pages, **not
 hidden in this public GitHub repository**—do not commit private drafts or secrets.
+
+The build requires `SITE_BUILD_DATE=YYYY-MM-DD`, the UTC publication cutoff. CI
+supplies the current UTC date; set a fixed value to reproduce a previous build.
+The generator always creates `/blog/` and creates `/blog/<slug>/` only for eligible
+articles, never copying Markdown sources. An empty blog displays an honest empty
+state. Cover images must already be registered in the asset manifest; missing
+published covers fail the build. No example post is published by default.

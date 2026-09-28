@@ -392,3 +392,28 @@
 
 ### Recommended next step
 - Implement static blog listing/article pages (4.3), use the publication filter and shared SEO/layout, and verify drafts never enter the output.
+
+## 2026-09-28 — Static blog pages
+
+### Completed
+- Added the static /blog/ listing and /blog/<slug>/ article generator, shared navigation, breadcrumbs and readable article styles.
+- Reused the Markdown renderer for homepage and articles; added shared article social metadata and escaped BlogPosting JSON-LD.
+- Required an explicit build-date cutoff, wired current UTC date in CI, and validated published cover assets against the output manifest.
+- Updated authoring instructions; the real site has an empty blog rather than invented personal posts.
+
+### Decisions
+- Only publication-filtered articles reach the manifest. Draft/future source files are never copied into output.
+- Normal pages remain static with no hydration, runtime server, new dependency or automatic publishing schedule.
+- Keep all work in PR #37 for the final single squash merge; production and Cabane controllers remain unchanged.
+
+### Validation
+- Formatting, locked check, strict all-target/all-feature Clippy and all 28 Rust tests passed.
+- Optimized generation and artifact verification passed: 65 unchanged Cabane files, 29 page URLs and two simulated 404 responses.
+- Temporary published/draft/future fixtures exercised the real optimized generator and independent verifier: 31 page URLs passed, unpublished pages were absent, and article structured metadata was verified. Temporary sources were removed and the real empty-blog artifact restored.
+
+### Remaining concerns
+- Browser visual/accessibility review of the new blog remains open; previous phone approval covered the earlier homepage/project snapshot.
+- Hosted CI for the new commit and eventual production Pages settings require verification. Sitemap/robots and Cabane integration remain separate tasks.
+
+### Recommended next step
+- Generate sitemap/robots and preserve domain/resource configuration from the route inventory (4.4).

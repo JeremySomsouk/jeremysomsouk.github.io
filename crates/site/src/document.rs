@@ -4,7 +4,7 @@ use serde::Serialize;
 use site_content::{PageMetadata, StructuredData};
 
 #[derive(Serialize)]
-struct WebSiteSchema<'a> {
+struct DocumentSchema<'a> {
     #[serde(rename = "@context")]
     context: &'static str,
     #[serde(rename = "@type")]
@@ -15,12 +15,14 @@ struct WebSiteSchema<'a> {
     description: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     url: Option<&'a str>,
+    #[serde(rename = "datePublished", skip_serializing_if = "Option::is_none")]
+    date_published: Option<String>,
 }
 
 fn structured_json(metadata: &PageMetadata) -> Result<Option<String>, serde_json::Error> {
     match metadata.structured {
         None => Ok(None),
-        Some(StructuredData::WebSite) => {
+        Some(kind) => {
             let title = metadata
                 .social
                 .as_ref()
@@ -30,9 +32,16 @@ fn structured_json(metadata: &PageMetadata) -> Result<Option<String>, serde_json
                 .as_ref()
                 .and_then(|social| social.site_name.as_deref())
                 .unwrap_or(title);
-            let schema = WebSiteSchema {
+            let schema = DocumentSchema {
                 context: "https://schema.org",
-                kind: "WebSite",
+                kind: match kind {
+                    StructuredData::WebSite => "WebSite",
+                    StructuredData::Article { .. } => "BlogPosting",
+                },
+                date_published: match kind {
+                    StructuredData::Article { published } => Some(published.to_string()),
+                    _ => None,
+                },
                 name,
                 headline: title,
                 description: metadata.description.as_deref(),
@@ -59,6 +68,10 @@ fn open_graph(property: &'static str, content: impl Into<String>) -> impl IntoVi
 
 #[component]
 fn DocumentHead(metadata: PageMetadata, structured: Option<String>) -> impl IntoView {
+    let article_date = match metadata.structured {
+        Some(StructuredData::Article { published }) => Some(published.to_string()),
+        _ => None,
+    };
     let canonical = metadata.canonical.map(|url| url.as_str().to_owned());
     let description = metadata.description;
     view! {
@@ -74,7 +87,8 @@ fn DocumentHead(metadata: PageMetadata, structured: Option<String>) -> impl Into
                 view! {
                     {open_graph("og:title", social.title.clone())}
                     <meta name="twitter:title" content=social.title/>
-                    {open_graph("og:type", "website")}
+                    {open_graph("og:type", if article_date.is_some() { "article" } else { "website" })}
+                    {article_date.map(|date| open_graph("article:published_time", date))}
                     {open_graph("og:locale", metadata.language.locale())}
                     <meta name="twitter:card" content=card/>
                     {social.site_name.map(|name| open_graph("og:site_name", name))}

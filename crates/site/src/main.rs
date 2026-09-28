@@ -8,8 +8,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         .parent()
         .and_then(Path::parent)
         .ok_or("Cannot locate repository root")?;
-    // Validate article authoring now; static blog rendering is a separate migration step.
-    site_content::load_articles(&root.join("content/blog"))?;
+    let as_of: site_content::ArticleDate = std::env::var("SITE_BUILD_DATE")
+        .map_err(|_| "Set SITE_BUILD_DATE=YYYY-MM-DD (UTC publication cutoff)")?
+        .parse()?;
+    let articles = site_content::load_articles(&root.join("content/blog"))?;
     let mut manifest = Manifest::default();
     manifest.insert(
         Route::new("/")?.output().clone(),
@@ -65,6 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         site::SITE_CSS.as_bytes().to_vec(),
     )?;
     manifest.add_legacy_cabane(&root.join("docs"))?;
+    site::blog::add_blog(&mut manifest, &articles, as_of)?;
     let output = root.join("target/site-preview");
     manifest.write_new(&output)?;
     println!("Generated {}", output.display());

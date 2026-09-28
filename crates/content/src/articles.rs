@@ -75,6 +75,19 @@ impl TryFrom<toml::value::Datetime> for ArticleDate {
         })
     }
 }
+impl std::str::FromStr for ArticleDate {
+    type Err = &'static str;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        if value.len() != 10 {
+            return Err("expected YYYY-MM-DD build date");
+        }
+        let date = value
+            .parse::<toml::value::Datetime>()
+            .map_err(|_| "invalid build date")?;
+        Self::try_from(date)
+    }
+}
+
 impl fmt::Display for ArticleDate {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:04}-{:02}-{:02}", self.year, self.month, self.day)

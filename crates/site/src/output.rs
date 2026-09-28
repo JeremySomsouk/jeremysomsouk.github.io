@@ -61,6 +61,10 @@ pub struct Manifest {
 }
 
 impl Manifest {
+    pub fn contains(&self, path: &OutputPath) -> bool {
+        self.files.contains_key(path)
+    }
+
     pub fn insert(&mut self, path: OutputPath, bytes: Vec<u8>) -> io::Result<()> {
         for existing in self.files.keys() {
             if existing == &path

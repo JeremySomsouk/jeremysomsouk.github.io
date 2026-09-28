@@ -33,8 +33,8 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 ## Milestone 4 — Content and project pages (uses M3 implementation; visual release gates remain open)
 - [x] 4.1 Add shared project presentation layout and `/projects/`, `/projects/cabane/`, `/projects/melimo/`; preserve existing homepage and application destinations. Local checks and clean hosted optimized build passed (run 36387341254); visual release gates remain separate.
 - [x] **4.2:** Add typed TOML-front-matter Markdown article loader with dates/drafts/slugs and fixture tests; document GitHub-only authoring workflow.
-- [ ] **4.3 Next:** Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
-- [ ] 4.4 Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
+- [x] **4.3:** Add static `/blog/` and `/blog/<slug>/` layouts; verify drafts excluded and metadata/links valid. Do not invent personal article content.
+- [ ] **4.4 Next:** Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
 
 ## Milestone 5 — Cabane integration (depends on M3; game rewrites out of scope)
 - [ ] 5.1 Replace only Cabane selection page composition with shared layout primitives and Cabane-scoped theme; keep game controllers/assets intact.

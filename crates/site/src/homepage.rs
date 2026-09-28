@@ -1,24 +1,9 @@
 //! Homepage composition. Content is repository-authored, never request input.
+use crate::prose::Prose;
 use leptos::prelude::*;
-use pulldown_cmark::{Options, Parser, html};
-use site_content::{HOMEPAGE, Markdown};
+use site_content::HOMEPAGE;
 
 use crate::ui::{ProjectCard, ResumeEntry, Section, WebsiteLayout};
-
-fn markdown_html(markdown: Markdown) -> String {
-    let mut output = String::new();
-    html::push_html(
-        &mut output,
-        Parser::new_ext(markdown.0, Options::ENABLE_SMART_PUNCTUATION),
-    );
-    output
-}
-
-/// Only accepts the explicit trusted-author Markdown type; not a sanitizer.
-#[component]
-fn Prose(content: Markdown) -> impl IntoView {
-    view! { <div class="prose" inner_html=markdown_html(content)></div> }
-}
 
 pub fn render_homepage() -> Result<String, serde_json::Error> {
     let home = &HOMEPAGE;
@@ -28,7 +13,7 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                 <div class="about-layout">
                     <img class="profile-image" src=home.profile.image.src alt=home.profile.image.alt
                         width=home.profile.image.width height=home.profile.image.height decoding="async"/>
-                    <Prose content=home.profile.about/>
+                    <Prose content=home.profile.about.0.to_owned()/>
                 </div>
             </Section>
             <Section id="things-i-m-building" title=home.projects_title.to_owned()>
@@ -43,13 +28,13 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                         <ResumeEntry id=entry.heading_id title=entry.title.to_owned()
                             subtitle=entry.subtitle.to_owned() period=entry.period.to_owned()
                             url=entry.url>
-                            <Prose content=entry.description/>
+                            <Prose content=entry.description.0.to_owned()/>
                         </ResumeEntry>
                     }).collect_view()}
                 </Section>
             }).collect_view()}
             <Section id="a-little-more-about-me" title=home.hobbies_title.to_owned()>
-                <Prose content=home.hobbies/>
+                <Prose content=home.hobbies.0.to_owned()/>
             </Section>
         </WebsiteLayout>
     };
@@ -59,17 +44,6 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn markdown_keeps_lists_paragraphs_and_intentional_html() {
-        let html = markdown_html(Markdown(
-            "Hello <mark>Rust</mark>.\n\n- One\n- Two\n\n<a href=\"#personal-projects\">Projects</a>\n\n`<script>` & text",
-        ));
-        assert!(html.contains("<p>Hello <mark>Rust</mark>.</p>"));
-        assert!(html.contains("<ul>\n<li>One</li>\n<li>Two</li>\n</ul>"));
-        assert!(html.contains("href=\"#personal-projects\""));
-        assert!(html.contains("<code>&lt;script&gt;</code> &amp; text"));
-    }
 
     #[test]
     fn card_metadata_is_escaped_instead_of_interpreted_as_markdown() {

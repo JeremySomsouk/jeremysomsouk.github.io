@@ -99,6 +99,7 @@ pub struct SocialMetadata {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum StructuredData {
     WebSite,
+    Article { published: crate::ArticleDate },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

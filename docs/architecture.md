@@ -274,3 +274,18 @@ excludes drafts/future dates, and sorts newest first with slug tie-breaking.
 The generator validates even drafts during builds; rendering and build-date
 selection follow in 4.3. Raw author Markdown is preserved as owned text and remains
 trusted repository content. A draft is still public source in this repository.
+
+
+## Static blog rendering (2026-09-28)
+
+`blog::add_blog` registers the index and only publication-filtered articles after
+static assets are registered. A cover must exist in the manifest. Homepage and
+article prose use the same trusted Markdown renderer. Article metadata extends
+the shared document head with BlogPosting JSON-LD, article Open Graph type and
+publication date; it uses the existing escaping boundary.
+
+`SITE_BUILD_DATE=YYYY-MM-DD` is required at generation time. CI supplies the UTC
+date; explicit input keeps publication selection reproducible without another
+clock/date dependency. The index records that cutoff for independent artifact
+validation. No automatic schedule is configured. No posts are fabricated: the
+empty source directory produces a useful empty blog listing.
