@@ -132,6 +132,14 @@ def verify():
 
     require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
 
+    # Both documents must opt in; games and ordinary pages must not participate.
+    transition_pages = {
+        path for path in actual if path.suffix == ".html"
+        and 'href="/assets/page-transition.css"' in (PREVIEW / path).read_text()
+    }
+    require(transition_pages == {Path("index.html"), Path("cabane/index.html")},
+            f"Unexpected transition participants: {transition_pages}")
+
     for path in public_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "public" / path).read_bytes(), f"Changed public asset: {path}")
     css = (PREVIEW / "assets/main.css").read_text()

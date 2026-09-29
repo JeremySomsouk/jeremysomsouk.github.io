@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;
     }
     for asset in [
+        "assets/page-transition.css",
         "fonts/inter/inter-latin-wght-italic.woff2",
         "fonts/inter/inter-latin-wght-normal.woff2",
         "fonts/inter/inter-vietnamese-wght-italic.woff2",

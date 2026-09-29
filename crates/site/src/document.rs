@@ -112,7 +112,7 @@ fn DocumentHead(
             {structured.map(|json| view! { <script type="application/ld+json">{json}</script> })}
             <link rel="stylesheet" href="/assets/main.css"/>
             <link rel="icon" href=assets.icon/>
-            {assets.stylesheet.map(|href| view! { <link rel="stylesheet" href=href/> })}
+            {assets.stylesheets.iter().map(|href| view! { <link rel="stylesheet" href=*href/> }).collect_view()}
             {assets.theme_color.map(|color| view! { <meta name="theme-color" content=color/> })}
         </head>
     }
@@ -129,7 +129,7 @@ pub fn render_document(
 pub struct DocumentAssets {
     pub body_class: &'static str,
     pub icon: &'static str,
-    pub stylesheet: Option<&'static str>,
+    pub stylesheets: &'static [&'static str],
     pub theme_color: Option<&'static str>,
 }
 impl Default for DocumentAssets {
@@ -137,7 +137,7 @@ impl Default for DocumentAssets {
         Self {
             body_class: "site-page",
             icon: "/images/favicon.ico",
-            stylesheet: None,
+            stylesheets: &[],
             theme_color: None,
         }
     }

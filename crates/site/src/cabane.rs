@@ -129,7 +129,10 @@ pub fn render_cabane() -> Result<String, Box<dyn std::error::Error>> {
         DocumentAssets {
             body_class: "cabane-page",
             icon: "/cabane/favicon.svg?v=20260921-center-star",
-            stylesheet: Some("/cabane/style.css?v=20260910-illustrations"),
+            stylesheets: &[
+                "/cabane/style.css?v=20260910-illustrations",
+                "/assets/page-transition.css",
+            ],
             theme_color: Some("#f8f4eb"),
         },
     )?)

@@ -201,3 +201,8 @@ without duplicate `index.html` aliases. No modification dates are invented.
 metadata policy. Generation fails if CNAME differs from the canonical origin.
 These files prepare the artifact for static hosting; they do not change DNS or
 activate deployment.
+
+The homepage and Cabane selection page share an optional 250ms CSS page crossfade.
+It uses native same-origin navigation, adds no JavaScript or Wasm, and is disabled
+for reduced motion. Browsers without cross-document View Transitions navigate
+normally; game pages do not participate.

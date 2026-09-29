@@ -465,3 +465,27 @@
 
 ### Recommended next step
 - Implement 5.1a: the gentle homepage-to-Cabane transition, with normal navigation and reduced-motion fallback; then refresh the private review snapshot.
+
+## 2026-09-29 — Homepage to Cabane transition
+
+### Completed
+- Added an optional 250ms cross-document opacity transition for the homepage and Cabane selection page, in both directions.
+- Explicit stylesheet lists let those two documents opt in without affecting games or other pages. Added artifact participant checks.
+- Confirmed previous Cabane commit `4025663` passed clean hosted Leptos release CI (36534533045 / 36534528827) and Cabane checks (36534533095), resolving the previous local release-build concern.
+
+### Decisions
+- Use native CSS View Transitions with real anchors; no JS/Wasm, event interception, navigation delay or state storage.
+- Disable animation for reduced motion and retain normal navigation on unsupported browsers. Use a fade without image morphing or vertical movement to preserve the distinct compositions.
+
+### Validation
+- Rust fmt/check, strict all-target/all-feature Clippy and all 31 tests passed.
+- Fresh optimized build succeeded. Artifact verification passed: exactly two transition participants, 64 byte-identical Cabane game/assets, 29 page URLs, local resources and two missing-route responses.
+- CSS review confirms motion opt-out, no layout transforms and no new executable client code. Browser appearance awaits user review.
+- Workspace transport failed after successful preview publication and before GitHub commit. Recovered the same source edits from the known base through the GitHub connector; hosted CI provides an additional check of the saved commit.
+
+### Remaining concerns
+- Actual animation appearance, exact mobile/desktop widths, print and accessibility remain browser review gates. No browser visual parity claim.
+- The refreshed owner-private preview deployed successfully: https://somsouk-leptos-review.j-souki.chatgpt.site (preview source `0e1a28cbfb292be8d25c1fb5443c188c12dc2820`). Production remains unchanged.
+
+### Recommended next step
+- Review the transition on the private preview by following “Enter the cabane →” in the same tab and returning via the site link; check reduced motion separately. Then continue 5.2, the application asset/DOM ownership contract.

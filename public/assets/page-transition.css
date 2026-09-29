@@ -1,0 +1,22 @@
+/* Only the homepage and Cabane landing opt in. Navigation remains native. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  ::view-transition-old(root) {
+    animation: page-fade-out 250ms ease-out both;
+  }
+  ::view-transition-new(root) {
+    animation: page-fade-in 250ms ease-in both;
+  }
+  ::view-transition-group(root) { animation-duration: 250ms; }
+}
+
+@keyframes page-fade-out { to { opacity: 0; } }
+@keyframes page-fade-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
