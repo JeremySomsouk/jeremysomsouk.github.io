@@ -489,3 +489,23 @@
 
 ### Recommended next step
 - Review the transition on the private preview by following “Enter the cabane →” in the same tab and returning via the site link; check reduced motion separately. Then continue 5.2, the application asset/DOM ownership contract.
+
+## 2026-09-29 — Keep the Cabane icon on the current site
+
+### Completed
+- Fixed the profile/navigation Cabane icon's absolute production URL to `/cabane/`, matching the project card destination.
+- Added generated HTML regression checks for the icon destination and accidental production Cabane links on the homepage.
+
+### Decisions
+- Internal navigation stays relative to the current origin; canonical and social URLs retain the production origin for SEO.
+- The cross-origin icon link prevented native cross-document transitions and escaped the private preview. Fix the link without adding a client router or animation fallback.
+
+### Validation
+- Rust fmt/check, strict Clippy and all 31 tests passed. Native debug generation and artifact verification passed, including the icon URL regression check, 64 unchanged game/assets and 29 page URLs.
+- The local optimized build again hit the environment’s zero-length object/archive error; clean hosted release CI remains the production gate. The preceding transition build had passed locally.
+
+### Remaining concerns
+- Phone animation review remains open; native transitions still depend on browser support and reduced-motion preferences.
+
+### Recommended next step
+- Recheck the homepage Cabane icon and project button in the refreshed preview, then continue 5.2.

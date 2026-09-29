@@ -30,7 +30,7 @@ pub const HOMEPAGE: Homepage = Homepage {
             ProfileLink {
                 kind: ProfileLinkKind::Home,
                 label: "La cabane à découvertes",
-                url: "https://www.somsouk.fr/cabane/",
+                url: "/cabane/",
             },
             ProfileLink {
                 kind: ProfileLinkKind::Website,

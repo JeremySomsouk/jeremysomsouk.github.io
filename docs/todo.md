@@ -39,6 +39,7 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 ## Milestone 5 — Cabane integration (depends on M3; game rewrites out of scope)
 - [x] **5.1:** Render the Cabane selection page with shared layout/document primitives and its existing project theme; preserve six game destinations, copy, sharing targets and all 64 remaining legacy files. Browser visual review remains part of the release gates.
 - [x] **5.1a:** Add a 250ms native homepage ↔ Cabane crossfade, without JS/Wasm; preserve normal navigation and disable for reduced motion. Both pages explicitly opt in; other pages/games remain excluded. Phone visual verification remains a release gate.
+- [x] 5.1b Fix Cabane header icon to use the current origin, matching the project button; guard against production-link escape in preview.
 - [ ] **5.2 Next:** Establish documented app adapter/asset/DOM ownership contract; verify all relative imports and raw Memory Wasm ABI.
 - [ ] 5.3 Check every game in browser, touch inputs, reduced motion, sharing and errors; verify Fluence `?text`, history key, weekly schedule and mobile timer viewport.
 - [ ] 5.4 Propose one small native Leptos interaction only if it has concrete benefit; no blanket game rewrite or Melimo hosting.

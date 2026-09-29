@@ -188,6 +188,10 @@ def verify():
     home.feed(home_html)
     require(not home.runtime and ".wasm" not in home_html, "Homepage must render without a client runtime")
     require(home_html.count('class="profile-icon-link"') == 4, "Missing profile icon links")
+    require('href="/cabane/" title="La cabane à découvertes"' in home_html,
+            "Cabane icon must stay on the current origin")
+    require('href="https://www.somsouk.fr/cabane/"' not in home_html,
+            "Cabane navigation escaped to production")
     require(home_html.count('class="profile-icon-label"') == 4, "Missing accessible icon labels")
     require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
     require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
