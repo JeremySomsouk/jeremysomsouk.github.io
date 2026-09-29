@@ -37,8 +37,8 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] **4.4:** Generate sitemap/robots from route registry; preserve resource paths/CNAME and check artifact completeness.
 
 ## Milestone 5 — Cabane integration (depends on M3; game rewrites out of scope)
-- [ ] **5.1 Next:** Replace only Cabane selection page composition with shared layout primitives and Cabane-scoped theme; keep game controllers/assets intact.
-- [ ] 5.1a Add the requested gentle homepage → Cabane transition as progressive enhancement; preserve normal navigation, reduced motion, mobile responsiveness and per-project identity. See architecture brief.
+- [x] **5.1:** Render the Cabane selection page with shared layout/document primitives and its existing project theme; preserve six game destinations, copy, sharing targets and all 64 remaining legacy files. Browser visual review remains part of the release gates.
+- [ ] **5.1a Next:** Add the requested gentle homepage → Cabane transition as progressive enhancement; preserve normal navigation, reduced motion, mobile responsiveness and per-project identity. See architecture brief.
 - [ ] 5.2 Establish documented app adapter/asset/DOM ownership contract; verify all relative imports and raw Memory Wasm ABI.
 - [ ] 5.3 Check every game in browser, touch inputs, reduced motion, sharing and errors; verify Fluence `?text`, history key, weekly schedule and mobile timer viewport.
 - [ ] 5.4 Propose one small native Leptos interaction only if it has concrete benefit; no blanket game rewrite or Melimo hosting.

@@ -303,3 +303,6 @@ The generator adds robots.txt (allow crawling plus sitemap URL), the exact exist
 docs/CNAME bytes, and an empty .nojekyll marker. Domain/origin mismatch fails the
 build. These are static artifact files only, not DNS or Pages-setting mutations.
 Cabane metadata improvements remain part of its later shared-shell migration.
+
+### Cabane selection composition
+The generated `/cabane/` is owned by `site::cabane`: typed game records and build-time Leptos markup. It reuses PageLayout landmarks with explicit classes and a localized skip label, plus the shared document metadata renderer with explicit project resources. Generic UI has no Cabane game concepts. Existing Cabane CSS is loaded only by that document, preserving its rounded typography, artwork and responsive rules; ordinary pages never load it. The existing sharing module owns only its two stable DOM targets. No hydration or Wasm is added. Legacy copying skips exactly `cabane/index.html`; every other application resource remains byte-preserved. The old source landing page remains available for rollback until cutover.

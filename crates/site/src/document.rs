@@ -67,7 +67,11 @@ fn open_graph(property: &'static str, content: impl Into<String>) -> impl IntoVi
 }
 
 #[component]
-fn DocumentHead(metadata: PageMetadata, structured: Option<String>) -> impl IntoView {
+fn DocumentHead(
+    metadata: PageMetadata,
+    structured: Option<String>,
+    assets: DocumentAssets,
+) -> impl IntoView {
     let article_date = match metadata.structured {
         Some(StructuredData::Article { published }) => Some(published.to_string()),
         _ => None,
@@ -107,7 +111,9 @@ fn DocumentHead(metadata: PageMetadata, structured: Option<String>) -> impl Into
             })}
             {structured.map(|json| view! { <script type="application/ld+json">{json}</script> })}
             <link rel="stylesheet" href="/assets/main.css"/>
-            <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
+            <link rel="icon" href=assets.icon/>
+            {assets.stylesheet.map(|href| view! { <link rel="stylesheet" href=href/> })}
+            {assets.theme_color.map(|color| view! { <meta name="theme-color" content=color/> })}
         </head>
     }
 }
@@ -116,12 +122,38 @@ pub fn render_document(
     metadata: PageMetadata,
     body: impl IntoView,
 ) -> Result<String, serde_json::Error> {
+    render_document_with_assets(metadata, body, DocumentAssets::default())
+}
+
+/// Explicit static page resources; project behavior stays outside the document shell.
+pub struct DocumentAssets {
+    pub body_class: &'static str,
+    pub icon: &'static str,
+    pub stylesheet: Option<&'static str>,
+    pub theme_color: Option<&'static str>,
+}
+impl Default for DocumentAssets {
+    fn default() -> Self {
+        Self {
+            body_class: "site-page",
+            icon: "/images/favicon.ico",
+            stylesheet: None,
+            theme_color: None,
+        }
+    }
+}
+pub fn render_document_with_assets(
+    metadata: PageMetadata,
+    body: impl IntoView,
+    assets: DocumentAssets,
+) -> Result<String, serde_json::Error> {
     let structured = structured_json(&metadata)?;
     let language = metadata.language.tag();
+    let body_class = assets.body_class;
     let html = view! {
         <html lang=language>
-            <DocumentHead metadata structured/>
-            <body class="site-page">{body}</body>
+            <DocumentHead metadata structured assets/>
+            <body class=body_class>{body}</body>
         </html>
     }
     .to_html();

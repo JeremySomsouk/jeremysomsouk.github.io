@@ -442,3 +442,26 @@
 
 ### Recommended next step
 - Migrate the Cabane selection page into shared layout primitives (5.1), preserving game controllers and its own theme; implement the requested transition in 5.1a afterward.
+
+## 2026-09-29 — Static Cabane selection page
+
+### Completed
+- Replaced generated `/cabane/` composition with typed game cards and Leptos, reusing shared PageLayout and document metadata primitives.
+- Preserved all six destinations, French copy, artwork, responsive Cabane stylesheet and sharing module/DOM targets. Added French skip navigation, canonical and social metadata.
+- Excluded only the legacy selection index from copying; all 64 remaining Cabane files remain byte-identical. Updated artifact checks, README and continuation tasks.
+
+### Decisions
+- Keep project composition in `site::cabane`; generic layout accepts classes/localized labels and document resources without Cabane-specific concepts.
+- No new dependency, hydration, game rewrite or deployment change. Transition remains the next separate step.
+
+### Validation
+- Rust fmt/check, strict all-target/all-feature Clippy and 31 tests passed; 89 existing Node tests passed.
+- Native debug generator and artifact verifier passed: 64 unchanged Cabane files, 29 page URLs, local resources, sitemap and two missing-route responses.
+- Optimized build attempted twice but the local compiler emitted a zero-length object/archive mapping error, including after cleaning the site release cache. Clean hosted release CI must confirm the production build; no compiler workaround committed.
+- Reviewed existing responsive selectors against preserved classes and copy against legacy HTML. Browser visual parity is not claimed.
+
+### Remaining concerns
+- Desktop/mobile/print and interaction browser review gates remain open. The private hosted review snapshot has not been refreshed for this step; production remains unchanged.
+
+### Recommended next step
+- Implement 5.1a: the gentle homepage-to-Cabane transition, with normal navigation and reduced-motion fallback; then refresh the private review snapshot.

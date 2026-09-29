@@ -66,6 +66,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         site::SITE_CSS.as_bytes().to_vec(),
     )?;
     manifest.add_legacy_cabane(&root.join("docs"))?;
+    manifest.insert_page(
+        Route::new("/cabane/")?,
+        site::render_cabane()?,
+        Indexing::Index,
+    )?;
     site::blog::add_blog(&mut manifest, &articles, as_of)?;
     manifest.add_discovery(&root.join("docs"))?;
     let output = root.join("target/site-preview");

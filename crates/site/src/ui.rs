@@ -4,12 +4,19 @@ use leptos::prelude::*;
 
 /// Shared page landmarks. Each page supplies its own identity and body.
 #[component]
-pub fn PageLayout(header: Children, footer: Children, children: Children) -> impl IntoView {
+pub fn PageLayout(
+    header: Children,
+    footer: Children,
+    children: Children,
+    #[prop(default = "site-shell")] shell_class: &'static str,
+    #[prop(default = "site-container")] main_class: &'static str,
+    #[prop(default = "Skip to content")] skip_label: &'static str,
+) -> impl IntoView {
     view! {
-        <div class="site-shell">
-            <a class="skip-link" href="#main-content">"Skip to content"</a>
+        <div class=shell_class>
+            <a class="skip-link" href="#main-content">{skip_label}</a>
             {header()}
-            <main id="main-content" class="site-container" tabindex="-1">{children()}</main>
+            <main id="main-content" class=main_class tabindex="-1">{children()}</main>
             {footer()}
         </div>
     }

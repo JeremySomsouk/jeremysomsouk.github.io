@@ -1,4 +1,6 @@
 //! Native static rendering. No client router or hydration entry point.
+mod cabane;
+pub use cabane::render_cabane;
 
 pub mod blog;
 pub mod document;

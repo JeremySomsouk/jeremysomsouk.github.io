@@ -109,6 +109,16 @@ fn legacy_routes_cannot_overwrite_generated_pages() -> io::Result<()> {
     fs::write(fixture.0.join("cabane/index.html"), "legacy")?;
     let mut manifest = Manifest::default();
     manifest.insert(Route::new("/cabane/")?.output().clone(), b"new".to_vec())?;
+    manifest.add_legacy_cabane(&fixture.0)?;
+    let output = fixture.0.join("output");
+    manifest.write_new(&output)?;
+    assert_eq!(fs::read_to_string(output.join("cabane/index.html"))?, "new");
+    fs::create_dir(fixture.0.join("cabane/memory"))?;
+    fs::write(fixture.0.join("cabane/memory/index.html"), "game")?;
+    manifest.insert(
+        Route::new("/cabane/memory/")?.output().clone(),
+        b"collision".to_vec(),
+    )?;
     assert!(manifest.add_legacy_cabane(&fixture.0).is_err());
     fs::write(fixture.0.join("cabane/unregistered.txt"), "unexpected")?;
     assert!(Manifest::default().add_legacy_cabane(&fixture.0).is_err());

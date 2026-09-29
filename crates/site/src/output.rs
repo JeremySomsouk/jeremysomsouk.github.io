@@ -191,6 +191,10 @@ impl Manifest {
                 .to_str()
                 .ok_or_else(|| invalid("Non-UTF-8 asset filename"))?
                 .replace(std::path::MAIN_SEPARATOR, "/");
+            // The selection page is now composed by Leptos; games remain byte-preserved.
+            if portable == "cabane/index.html" {
+                return Ok(());
+            }
             let path = OutputPath::new(&portable)?;
             self.insert(path.clone(), fs::read(&source)?)?;
             // Existing Cabane HTML pages have no noindex directive; preserve their discoverability.

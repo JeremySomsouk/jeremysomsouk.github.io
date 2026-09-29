@@ -189,3 +189,7 @@ body.site-page { margin: 0; }
 .article-description { margin-top: 1rem; }
 .article-cover, .blog-article .prose img { display: block; max-width: 100%; height: auto; margin-block: 1.5rem; }
 .blog-article pre { max-width: 100%; overflow-x: auto; padding: 1rem; border: 1px solid var(--site-rule); }
+
+/* Cabane uses the shared landmarks with its existing project theme. */
+.cabane-landing { --site-ink: #f8f4eb; }
+.cabane-content { min-width: 0; }

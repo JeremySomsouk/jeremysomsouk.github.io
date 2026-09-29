@@ -83,14 +83,15 @@ python3 -m http.server 8766 --directory target/site-preview
 
 Open `http://localhost:8766/` for the homepage or `/leptos-proof/` for the fixture.
 Both contain complete HTML with local CSS and no executable JavaScript, Wasm or
-hydration. The homepage includes non-executable JSON-LD metadata. `/cabane/` retains its existing JS/Wasm runtime.
+hydration. The homepage includes non-executable JSON-LD metadata. `/cabane/` is a static Leptos selection page with its existing optional sharing module and Cabane theme. The game routes retain their existing JS/Wasm runtimes.
 The generator writes only to `target/site-preview/`, regardless of the working
 directory, and never changes production sources. It refuses an existing preview
 directory: remove the disposable preview before rebuilding, including after a
 failed write. The manifest is validated before any output is written.
 
 Only `docs/cabane/` runtime extensions (HTML, CSS, JS/MJS, JSON, Wasm, PNG, SVG,
-WebP and ICO) are copied, byte for byte. Markdown is excluded; unknown extensions,
+WebP and ICO) are copied, byte for byte, except the generated selection index.
+Markdown is excluded; unknown extensions,
 symlinks, unsafe paths and duplicate/file-directory destinations fail the build.
 Four explicitly registered homepage assets from `docs/images/` are also copied
 byte for byte. Jekyll configuration, authoring Markdown and migration notes are
@@ -115,7 +116,7 @@ Read [migration TODO](docs/todo.md), [progress](docs/progress.md) and
 [architecture](docs/architecture.md) before continuing. The `Leptos preview` workflow runs on every branch push and pull request, and
 supports manual dispatch once available on the default branch. It uses the pinned
 Rust toolchain, runs the workspace checks and release generator, then validates
-the exact artifact file set, unchanged Cabane bytes, static proof, page routes and
+the exact artifact file set, unchanged Cabane game/asset bytes, static proof, page routes and
 local HTML resource URLs. Successful runs upload `leptos-preview` for seven days.
 The artifact is downloadable from the workflow run; it is not a hosted deployment.
 The existing Cabane/Jekyll workflow remains independent and unchanged.

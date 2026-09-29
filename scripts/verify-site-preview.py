@@ -1,5 +1,6 @@
 """Validate the partial Leptos artifact using only Python's standard library."""
 
+import html
 import json
 import tomllib
 from datetime import date
@@ -91,10 +92,18 @@ def verify():
     source = ROOT / "docs/cabane"
     legacy = set()
     for path in files_under(source):
-        if path.suffix == ".md":
+        if path.suffix == ".md" or path == Path("index.html"):
             continue
         require(path.suffix in RUNTIME_EXTENSIONS, f"Unregistered asset: {path}")
         legacy.add(Path("cabane") / path)
+    cabane = (PREVIEW / "cabane/index.html").read_text()
+    original = (source / "index.html").read_text()
+    for route in re.findall(r'href="./([^"#]+/)"', original):
+        require(f'href="/cabane/{route}"' in cabane, f"Lost Cabane route: {route}")
+    for text in re.findall(r'<(?:h2|p|span)[^>]*>([^<>]+)</(?:h2|p|span)>', original):
+        require(html.unescape(text) in html.unescape(cabane), f"Lost Cabane copy: {text}")
+    require('id="share"' in cabane and 'id="share-status"' in cabane, "Lost sharing contract")
+    require(cabane.count("<script") == 1 and ".wasm" not in cabane, "Unexpected landing runtime")
     index_html = (PREVIEW / "blog/index.html").read_text()
     cutoff_match = re.search(r'data-published-through="([0-9-]+)"', index_html)
     require(cutoff_match, "Missing publication cutoff")
@@ -116,7 +125,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll")} | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll")} | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
