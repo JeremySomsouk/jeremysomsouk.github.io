@@ -6,15 +6,13 @@ date = 2026-09-30
 draft = false
 tags = ["Rust", "Leptos", "Static sites"]
 +++
-The site you're reading used to be Jekyll. It worked fine, mostly. It ran on a
-remote theme I never pinned, a Sass pipeline I never opened, and a Ruby
-toolchain I only saw when something broke. Which it did, quietly: Google listed
-me under `http://`, there was no sitemap, robots.txt returned a 404, and if you
-typed a wrong URL the 404 page showed you my resume instead of an error.
-Confident, at least.
-
-So I rewrote it in Rust, with [Leptos](https://book.leptos.dev/) doing the
-rendering. The games did not get rewritten. More on that.
+The site you're reading used to be Jekyll. It worked fine. It ran on a remote
+theme I never pinned, a Sass pipeline I never opened, and a Ruby toolchain I
+only saw when something broke. For clarity about the stakes: this is a
+personal site, the most demanding visitors are my kids coming for the games,
+and nobody ever filed a bug. I rewrote it anyway, in Rust, with
+[Leptos](https://book.leptos.dev/) doing the rendering. Mostly because I
+wanted to. The games did not get rewritten. More on that.
 
 ## What I wanted
 
@@ -68,11 +66,11 @@ an asset or rebuild the engine wrong, and the build fails before publishing.
 
 ## Was it worth it
 
-For a site this size, honestly, maybe not. Jekyll worked. But I got things
-I'd wanted for a while: typed content where the compiler catches my typos, a
-real 404, a sitemap, robots.txt, https canonicals, and a deploy that builds,
-verifies and publishes in one pass. The whole migration landed as a single
-commit with a rollback plan I wrote down and hope to never use.
+For a site this size, honestly, maybe not. Jekyll worked. But I wanted a build
+I trust: typed content where the compiler catches my typos, a real 404, https
+canonicals, and a deploy that builds, verifies and publishes in one pass. The
+whole migration landed as a single commit with a rollback plan I wrote down
+and hope to never use.
 
 One regret: I kept a "proof" page around long past the point where it proved
 anything, and let migration notes pile up in the published tree for weeks.
