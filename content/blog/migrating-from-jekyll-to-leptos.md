@@ -28,9 +28,8 @@ side projects die:
 - The games stay frozen. My kids play them. They work. The migration does not
   touch them.
 - The output stays a plain folder. I host on GitHub Pages today, but the
-  artifact shouldn't know that. `CNAME` and `.nojekyll` are the only
-  Pages-shaped files in it, and both are inert anywhere else. The day I want a
-  VPS, moving is a copy and a five-line Caddy config, not another migration.
+  artifact shouldn't know that. The day I want a VPS, moving is a copy and a
+  five-line Caddy config, not another migration.
 
 Softer goals existed too. Cabane deserved to feel like part of the site instead
 of a folder parked next to my resume, and I wanted a build I actually trust.
