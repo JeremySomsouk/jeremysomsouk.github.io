@@ -89,8 +89,12 @@ pure module, the way the memory engine did.
 ## The verdict
 
 I kept Java at work and Rust at the seams: a game engine here, a static site
-generator there, small tools that need to be fast and correct. That is a
-very comfortable place to be a Java developer, and it keeps getting more
+generator there, small tools that need to be fast and correct. The seam I
+keep pulling on is
+[prctrl](https://github.com/JeremySomsouk/prctrl), a terminal for reviewing
+pull requests without context switching. Apparently reviewing code all day at
+work was not enough; I went home and built a better place to do it. That is
+a very comfortable place to be a Java developer, and it keeps getting more
 comfortable: every small Rust module the agents write is held to a compiler
 that cannot be charmed, and each one that ships builds a little more
 confidence in what can be delegated. The kids, meanwhile, don't know
