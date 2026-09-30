@@ -59,3 +59,27 @@
 @media (max-width: 450px) { .ripple-board { gap: 2px; margin-inline: -.5rem; } .ripple-game .ripple-cell { height: 48px; border-radius: 6px; font-size: .75rem; } }
 @media (prefers-reduced-motion: reduce) { .ripple-cell, .ripple-spark::after, .ripple-cell.ripple-point { animation: none; transition: none; } }
 @media print { .ripple-home, .ripple-discovery { display: none; } }
+/* Play first; the search tools are a progressive disclosure below the board. */
+.ripple-game .ripple-workspace { display: block; max-width: 44rem; margin-inline: auto; }
+.ripple-game .ripple-intro { margin-bottom: 1.5rem; }
+.ripple-challenge { border-top: 1px solid var(--site-rule); padding-top: 1.5rem; }
+.ripple-route-totals { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.5rem; font-size: .875rem; }
+.ripple-route-totals p { margin: 0; }
+.ripple-route-totals strong { display: block; font-size: 1.15rem; color: var(--site-text); font-weight: 500; }
+.ripple-route-totals .chosen strong::after { content: ' ✓'; }
+.ripple-game .ripple-cell[data-wall="true"] { visibility: hidden; }
+.ripple-game .ripple-cell.intervention { border: 2px solid var(--site-lilac); background: #35244d; font-size: 1.15rem; }
+.ripple-game .ripple-cell.diamond { border-color: #d7bc82; color: #f7dfa8; }
+.ripple-game .ripple-cell.diamond[data-mark="path"] { color: #0b0826; }
+.ripple-cell[data-mark="current"]::before { content: '●'; position: absolute; top: -12px; left: calc(50% - 5px); color: #f7dfa8; font-size: 1rem; }
+.ripple-game:not([data-inspect="true"]) .ripple-cell[data-mark="frontier"] { border-style: solid; border-color: var(--site-rule); }
+.ripple-game:not([data-inspect="true"]) .ripple-cell.intervention[data-mark="frontier"] { border-color: var(--site-lilac); }
+.ripple-game:not([data-inspect="true"]) .ripple-cell:not([data-mark="path"])::after { content: none; }
+.ripple-game .ripple-observation { border: 0; border-top: 1px solid var(--site-rule); padding: 1rem 0; margin-top: 1.5rem; }
+.ripple-observation summary { min-height: 44px; cursor: pointer; color: var(--site-lilac); }
+.ripple-observation summary:focus-visible { outline: 3px solid var(--site-lilac); outline-offset: 3px; }
+.ripple-observation[open] > p:first-of-type { margin-top: .75rem; }
+.ripple-game #ripple-feedback p { font-size: 1rem; color: var(--site-text); }
+.ripple-game #ripple-next { background: var(--site-lilac); color: var(--site-ink); }
+.ripple-game [hidden] { display: none !important; }
+#ripple-nudge { margin-top: .75rem; color: #f7dfa8; }
