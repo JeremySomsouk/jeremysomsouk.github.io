@@ -632,3 +632,21 @@
 
 ### Recommended next step
 - Owner re-reviews the transition; then close 5.4 as not justified and begin Milestone 6 cutover preparation.
+
+## 2026-09-30 — 5.4 closed: no native interaction justified
+
+### Completed
+- Closed 5.4 with the decision that no native Leptos interaction is currently justified.
+
+### Decisions
+- Every page renders fully without JS/Wasm; the games are self-contained legacy controllers and the doorway transition is pure CSS. Hydration or a client bundle would reintroduce risk the migration explicitly avoids (client router, hydration bugs, runtime dependencies) for no concrete benefit.
+- The option can be revisited after the migration if a measured need appears; no blanket game rewrite or Melimo hosting is in scope.
+
+### Validation
+- Documentation-only change; Milestone 5 is now fully complete (5.1, 5.1a, 5.1b, 5.2, 5.3, 5.5, and 5.4 closed without implementation).
+
+### Remaining concerns
+- Visual release gates (3.1b/3.2b/3.4c) remain open before cutover.
+
+### Recommended next step
+- Begin Milestone 6.1: reconcile with latest master, then compare the full old/new route, content and asset manifests as the first cutover-preparation step.
