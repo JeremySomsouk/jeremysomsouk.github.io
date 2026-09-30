@@ -6,9 +6,10 @@ date = 2026-09-30
 draft = false
 tags = ["Rust", "Leptos", "Static sites"]
 +++
-The site you're reading used to be Jekyll. It worked fine. It ran on a remote
-theme I never pinned, a Sass pipeline I never opened, and a Ruby toolchain I
-only saw when something broke. For clarity about the stakes: this is a
+The site you're reading used to be Jekyll. It worked fine, the whole time. It
+ran on a remote theme I never pinned, a Sass pipeline I never opened, and a
+Ruby toolchain I never had to touch. The thing just kept working. For clarity
+about the stakes: this is a
 personal site, the most demanding visitors are my kids coming for the games,
 and nobody ever filed a bug. I rewrote it anyway, in Rust, with
 [Leptos](https://book.leptos.dev/) doing the rendering. Three honest reasons:
