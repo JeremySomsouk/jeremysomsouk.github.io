@@ -12,7 +12,7 @@ Ruby toolchain I never had to touch. The thing just kept working. For clarity
 about the stakes: this is a personal site, the most demanding visitors are my
 kids coming for the games, and nobody ever filed, or would file, a bug. I rewrote it anyway, in Rust, with
 [Leptos](https://book.leptos.dev/) doing the rendering. Three honest reasons:
-it sounded fun, I wanted to vibe code it with an AI agent doing the typing,
+it sounded fun, I wanted an AI agent to do the typing while I steered,
 and I wanted to know where the limits of that were. How far can an agent
 take a migration like this before a human has to actually care? The games
 did not get rewritten. More on that.
@@ -76,7 +76,7 @@ and hope to never use.
 As an experiment, it answered its own question. An agent can carry a surprising
 amount of the discipline, byte-identity checks and Wasm parsing included, as
 long as the human keeps saying no to shortcuts. And there is a payoff that
-points forward: future updates are now easy to vibe code. Adding a project or
+points forward: future updates are now easy to delegate. Adding a project or
 an article is a small typed diff, the compiler complains when a record is
 wrong, and the verifier rebuilds the expected artifact from scratch every run.
 That loop is exactly what an agent needs, so my next change will probably
