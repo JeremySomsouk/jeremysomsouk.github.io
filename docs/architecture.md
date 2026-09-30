@@ -318,19 +318,20 @@ games do not opt in. Stylesheet lists in the document renderer keep optional
 presentation resources explicit.
 
 The 2026-09-30 owner instruction supersedes the earlier minimal crossfade: the
-transition must be visible, smooth and joyful, "like entering a cabane". An
-initial shared-element implementation flew the welcome illustration between
-the homepage card and the landing header; the owner's phone review found it
-made the page jump, so element-level animation was dropped entirely. The final
-transition animates only the page snapshots: the leaving page sinks 16px with
-a slight settle (300ms, ease-in), the arriving page rises 26px out of a warm
-cream doorway veil (`#f4eadb`, the Cabane artwork background) that shows
-through both fades (520ms, ease-out quintic). Because no document element
-receives a view-transition-name, nothing can shift layout. The artifact
-verifier enforces the contract: exactly two participants, no element-level
-view-transition-name in the opt-in stylesheet, the veil on the root group, the
-reduced-motion opt-out and a 600ms motion budget. No markup, script or Wasm
-change was required.
+transition must be visible, smooth and joyful, "like entering a cabane". Two
+iterations followed. A shared-element implementation flying the welcome
+illustration between the homepage card and the landing header was rejected in
+phone review for making the page jump. A snapshot-only veil morph still jumped:
+the leaving page's upward shift and both snapshots' scaling cropped and shifted
+the top edge the moment navigation began. The final transition moves only the
+arriving snapshot, and only upward from below: the leaving page is a pure fade
+into a warm cream doorway veil (`#f4eadb`, the Cabane artwork background), and
+the arriving page rises 18px out of that veil (480ms, ease-out quintic). No
+edge ever shifts or crops, no document element receives a view-transition-name,
+and nothing can shift layout. The artifact verifier enforces the contract:
+exactly two participants, no element-level view-transition-name in the opt-in
+stylesheet, the veil on the root group, the reduced-motion opt-out and a 600ms
+motion budget. No markup, script or Wasm change was required.
 
 Reference: [MDN cross-document opt-in](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition). Browser support remains limited; verify the effect on the intended phone browser via the private preview, with reduced motion both enabled and disabled. Direct URL entry/reload is not a transition test: follow the homepage Cabane link in the same tab.
 

@@ -3,26 +3,27 @@
   @view-transition { navigation: auto; }
 
   /* Entering feels like stepping through the doorway: the leaving page
-     sinks into warm lamplight and the arriving page rises out of it.
-     No document element changes position; only the page snapshots move,
-     so nothing can shift layout. */
+     dissolves into warm lamplight and the arriving page rises out of it.
+     Only the arriving snapshot moves, and only upward from below: the
+     leaving page is a pure fade so no edge ever shifts or crops, and
+     nothing in either document changes position. */
   ::view-transition-old(root) {
-    animation: page-exit 300ms cubic-bezier(0.4, 0, 1, 1) both;
+    animation: page-exit 240ms ease-out both;
   }
   ::view-transition-new(root) {
-    animation: page-enter 520ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+    animation: page-enter 480ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
   }
   ::view-transition-group(root) {
-    animation-duration: 520ms;
+    animation-duration: 480ms;
     background: #f4eadb;
   }
 }
 
 @keyframes page-exit {
-  to { opacity: 0; transform: translateY(-16px) scale(0.985); }
+  to { opacity: 0; }
 }
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(26px) scale(1.015); }
+  from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
 }
 

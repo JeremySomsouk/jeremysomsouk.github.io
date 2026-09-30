@@ -610,3 +610,25 @@
 
 ### Recommended next step
 - Owner re-reviews the transition; then close 5.4 as not justified and begin Milestone 6 cutover preparation.
+
+## 2026-09-30 — Doorway veil rework: no top-edge motion (5.5 iteration 2)
+
+### Completed
+- Owner still saw a jump at the top of the page with the sink/rise veil morph.
+- Removed every transform except the arriving page's rise: the leaving page is now a pure 240ms fade into the cream veil, and the arriving page rises 18px (480ms, ease-out quintic) with no scaling.
+- The earlier jump sources are structurally gone: the leaving snapshot no longer shifts up, and neither snapshot scales, so no top edge is cropped or displaced at navigation start.
+
+### Decisions
+- Only the arriving snapshot moves, and only upward from below; any exit motion or scale on either snapshot reads as an instant top-edge jump on the phone.
+- Veil, participants, budget and reduced-motion contract unchanged; the verifier needs no modification.
+
+### Validation
+- Debug generation plus full artifact verification passed: 64 unchanged Cabane files, 29 page URLs.
+- Rust suite, Clippy, fmt and Node suites unchanged and green (no code change beyond the stylesheet).
+
+### Remaining concerns
+- Owner must confirm the jump is gone on the phone in both directions; if a jump remains with this design, the suspect shifts to browser chrome (iOS URL bar viewport change during navigation) rather than the stylesheet.
+- Visual release gates (3.1b/3.2b/3.4c) and the 5.4 decision remain open.
+
+### Recommended next step
+- Owner re-reviews the transition; then close 5.4 as not justified and begin Milestone 6 cutover preparation.
