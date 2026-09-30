@@ -89,6 +89,9 @@ pure module, the way the memory engine did.
 ## The verdict
 
 I kept Java at work and Rust at the seams: a game engine here, a static site
-generator there, small tools that need to be fast and correct. That is a very
-comfortable place to be a Java developer. The kids, meanwhile, don't know
+generator there, small tools that need to be fast and correct. That is a
+very comfortable place to be a Java developer, and it keeps getting more
+comfortable: every small Rust module the agents write is held to a compiler
+that cannot be charmed, and each one that ships builds a little more
+confidence in what can be delegated. The kids, meanwhile, don't know
 what a borrow checker is. They just match the cards.
