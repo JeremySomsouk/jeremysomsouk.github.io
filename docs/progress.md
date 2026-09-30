@@ -561,3 +561,28 @@
 
 ### Recommended next step
 - Close 5.4 by documenting that no native interaction is currently justified (or propose one with concrete benefit), then begin Milestone 6 cutover preparation: reconcile master, compare route/content manifests and prepare the single final squash commit.
+
+## 2026-09-30 — Richer Cabane entry transition (5.5)
+
+### Completed
+- Replaced the plain 250ms crossfade with a shared-element entry per the owner's request for a visible, smooth, joyful transition "like entering a cabane": the welcome illustration now carries `view-transition-name: cabane-welcome` on the homepage Cabane card and the landing header, gliding between them inside its warm cream frame while the entering page rises into place and the leaving page fades quickly.
+- Extended the artifact verifier transition contract: exactly two participants (existing check), both documents' markup must carry the shared illustration, the CSS must keep the morph contain-guarded, provide the reduced-motion opt-out and stay within a 600ms motion budget.
+- No HTML markup, Rust, script or Wasm change: the transition remains a pure CSS opt-in of the same two documents.
+
+### Decisions
+- The 2026-09-30 owner instruction supersedes the earlier minimal 250ms fade. The welcome illustration is the doorway; the card's cream artwork background becomes the travelling frame.
+- The 2026-09-27 no-distortion constraint is preserved through `object-fit: contain` on the snapshot pair instead of avoiding the morph.
+- Entry motion: 500ms page rise (26px, ease-out quintic), 240ms exit fade, 560ms illustration glide, all inside the enforced budget; reduced motion disables cross-document transitions entirely.
+- 5.4 (native Leptos interaction) remains separate and open; this step adds no executable runtime.
+
+### Validation
+- `cargo fmt --all --check`, locked check, strict all-target/all-feature Clippy, all 32 Rust tests and 89 Node tests passed.
+- Debug and optimized generation plus the extended artifact verification passed: 64 unchanged Cabane files, 29 page URLs, local resources and two missing-route 404 responses.
+- Negative probes all fired and were restored byte-for-byte: a missing reduced-motion opt-out, a 900ms budget violation and a single-sided shared element were each rejected by the verifier.
+
+### Remaining concerns
+- The richer effect awaits owner phone review on the LAN preview in both navigation directions and with reduced motion; unsupported browsers keep plain navigation.
+- Visual release gates (3.1b/3.2b/3.4c) and the 5.4 decision remain open.
+
+### Recommended next step
+- Owner re-reviews the homepage→Cabane transition on the LAN preview; then close 5.4 as not justified and begin Milestone 6 cutover preparation.
