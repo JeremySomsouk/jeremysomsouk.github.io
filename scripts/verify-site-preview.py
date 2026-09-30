@@ -126,7 +126,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("leptos-proof/index.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -255,7 +255,7 @@ def verify():
     locations = [node.text for node in sitemap.findall(ns + "url/" + ns + "loc")]
     expected_locations = set()
     for path in actual:
-        if path.suffix != ".html" or path in {Path("404.html"), Path("leptos-proof/index.html")}:
+        if path.suffix != ".html" or path == Path("404.html"):
             continue
         url = path.as_posix()
         if path.name == "index.html":
@@ -263,14 +263,6 @@ def verify():
         expected_locations.add("https://www.somsouk.fr/" + url)
     require(len(locations) == len(set(locations)) and set(locations) == expected_locations, "Wrong sitemap routes or duplicate aliases")
     require((PREVIEW / "robots.txt").read_text() == "User-agent: *\nAllow: /\n\nSitemap: https://www.somsouk.fr/sitemap.xml\n", "Wrong robots policy")
-
-    proof = Document()
-    proof_html = (PREVIEW / "leptos-proof/index.html").read_text()
-    proof.feed(proof_html)
-    require(proof_html.lower().startswith("<!doctype html>"), "Missing document doctype")
-    require({"html", "head", "title", "body", "header", "footer", "nav", "main", "h1"} <= proof.tags, "Incomplete proof document")
-    require(all(fragment in proof.ids for fragment in proof.fragments), "Broken proof anchor or skip link")
-    require(not proof.runtime and proof.resources == ["/assets/main.css", "/images/favicon.ico"] and ".wasm" not in proof_html, "Unexpected proof client resources")
 
     home = Document()
     home_html = (PREVIEW / "index.html").read_text()
@@ -354,7 +346,6 @@ def verify():
     require(not any(key.startswith(("og:", "twitter:")) for key in error.metadata), "Unexpected error social metadata")
     require("/" in error.links and "/cabane/" in error.links, "Missing recovery links")
     require(all(resource.startswith("/") for resource in error.resources), "404 assets must work at nested missing URLs")
-    require(proof.metadata.get("robots") == "noindex, nofollow", "Proof must not be indexed")
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(PREVIEW)))
     worker = Thread(target=server.serve_forever, daemon=True)

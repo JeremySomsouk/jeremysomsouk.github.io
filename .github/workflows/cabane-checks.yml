@@ -40,22 +40,14 @@ jobs:
           rustup run 1.96.0 cargo test --manifest-path games/memory/Cargo.toml
           rustup run 1.96.0 cargo clippy --manifest-path games/memory/Cargo.toml --all-targets -- -D warnings
           bash scripts/build-games.sh
-      - name: Production Jekyll build
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./docs
-          destination: ./_site
+      - name: Build static artifact
+        run: SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
       - name: Verify published game files
         run: |
           for file in docs/cabane/lumiere/*; do
-            cmp "$file" "_site/cabane/lumiere/$(basename "$file")"
+            cmp "$file" "target/site-preview/cabane/lumiere/$(basename "$file")"
           done
           for file in docs/cabane/river/*; do
-            cmp "$file" "_site/cabane/river/$(basename "$file")"
+            cmp "$file" "target/site-preview/cabane/river/$(basename "$file")"
           done
-          cmp docs/cabane/memory/game.wasm _site/cabane/memory/game.wasm
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cabane-site
-          path: _site/
-          retention-days: 7
+          cmp docs/cabane/memory/game.wasm target/site-preview/cabane/memory/game.wasm

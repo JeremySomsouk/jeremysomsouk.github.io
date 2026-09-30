@@ -200,8 +200,8 @@ fn discovery_uses_registered_indexable_pages_and_preserves_domain() -> io::Resul
     manifest.insert_page(Route::new("/")?, "home".into(), Indexing::Index)?;
     manifest.insert_page(Route::new("/blog/")?, "blog".into(), Indexing::Index)?;
     manifest.insert_page(
-        Route::new("/leptos-proof/")?,
-        "proof".into(),
+        Route::new("/unlisted/")?,
+        "hidden".into(),
         Indexing::NoIndexNoFollow,
     )?;
     manifest.insert_page(Route::new("/hidden/")?, "hidden".into(), Indexing::NoIndex)?;
@@ -225,7 +225,7 @@ fn discovery_uses_registered_indexable_pages_and_preserves_domain() -> io::Resul
     ] {
         assert!(sitemap.contains(&format!("<loc>{url}</loc>")));
     }
-    for excluded in ["hidden", "404", "leptos-proof", "index.html", "lastmod"] {
+    for excluded in ["hidden", "404", "unlisted", "index.html", "lastmod"] {
         assert!(!sitemap.contains(excluded));
     }
     assert_eq!(fs::read(output.join("CNAME"))?, b"www.somsouk.fr");
