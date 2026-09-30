@@ -2,40 +2,27 @@
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
 
-  /* The welcome illustration is the shared doorway between the two pages:
-     it glides from the homepage card into the Cabane landing header, and back. */
-  .site-shell [data-project="cabane"] .project-preview { view-transition-name: cabane-welcome; }
-  .menu .welcome-brand img { view-transition-name: cabane-welcome; }
-
-  /* Leaving pages fade quickly; entering pages rise gently into place,
-     like stepping through the cabane doorway. */
+  /* Entering feels like stepping through the doorway: the leaving page
+     sinks into warm lamplight and the arriving page rises out of it.
+     No document element changes position; only the page snapshots move,
+     so nothing can shift layout. */
   ::view-transition-old(root) {
-    animation: page-fade-out 240ms ease-in both;
+    animation: page-exit 300ms cubic-bezier(0.4, 0, 1, 1) both;
   }
   ::view-transition-new(root) {
-    animation: page-enter 500ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+    animation: page-enter 520ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
   }
-  ::view-transition-group(root) { animation-duration: 500ms; }
-
-  /* The illustration travels between its two homes. Contain keeps it
-     undistorted while its warm cream frame widens or narrows around it. */
-  ::view-transition-group(cabane-welcome) {
-    animation-duration: 560ms;
-    animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+  ::view-transition-group(root) {
+    animation-duration: 520ms;
     background: #f4eadb;
-  }
-  ::view-transition-image-pair(cabane-welcome) { isolation: auto; }
-  ::view-transition-old(cabane-welcome),
-  ::view-transition-new(cabane-welcome) {
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
   }
 }
 
-@keyframes page-fade-out { to { opacity: 0; } }
+@keyframes page-exit {
+  to { opacity: 0; transform: translateY(-16px) scale(0.985); }
+}
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(26px); }
+  from { opacity: 0; transform: translateY(26px) scale(1.015); }
   to { opacity: 1; transform: none; }
 }
 

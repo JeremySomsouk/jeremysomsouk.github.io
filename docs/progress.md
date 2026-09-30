@@ -586,3 +586,27 @@
 
 ### Recommended next step
 - Owner re-reviews the homepage→Cabane transition on the LAN preview; then close 5.4 as not justified and begin Milestone 6 cutover preparation.
+
+## 2026-09-30 — Warm doorway veil morph (5.5 rework)
+
+### Completed
+- Owner phone review found the shared-illustration flight made the page jump; removed element-level animation entirely per the owner's instruction to forget the illustration and do a better morph.
+- The transition now animates only the page snapshots: the leaving page sinks 16px with a slight settle (300ms, ease-in) while the arriving page rises 26px out of a warm cream veil (520ms, ease-out quintic) that shows through both fades.
+- Replaced the verifier contract accordingly: no `view-transition-name` may appear in the opt-in stylesheet, the root group must carry the `#f4eadb` veil, plus the existing participants/reduced-motion/budget checks. Dropped the now-moot illustration markup and contain-guard checks.
+
+### Decisions
+- No document element receives a transition name, so nothing can shift layout; the jump is structurally impossible.
+- The veil reuses the Cabane artwork cream, keeping the doorway metaphor without moving content.
+- Symmetric in both directions; reduced motion still disables cross-document transitions entirely.
+
+### Validation
+- Debug and optimized generation plus the extended artifact verification passed: 64 unchanged Cabane files, 29 page URLs.
+- Negative probes all fired and were restored byte-for-byte: an element-level `view-transition-name`, a missing veil and a 900ms budget violation were each rejected by the verifier.
+- `cargo fmt --all --check`, locked check, strict Clippy and all 32 Rust tests passed; 89 Node tests passed.
+
+### Remaining concerns
+- Owner must re-review the veil morph in both navigation directions and with reduced motion on the LAN preview.
+- Visual release gates (3.1b/3.2b/3.4c) and the 5.4 decision remain open.
+
+### Recommended next step
+- Owner re-reviews the transition; then close 5.4 as not justified and begin Milestone 6 cutover preparation.

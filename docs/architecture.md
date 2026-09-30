@@ -318,19 +318,19 @@ games do not opt in. Stylesheet lists in the document renderer keep optional
 presentation resources explicit.
 
 The 2026-09-30 owner instruction supersedes the earlier minimal crossfade: the
-transition must be visible, smooth and joyful, "like entering a cabane". The
-welcome illustration is the doorway. It carries `view-transition-name:
-cabane-welcome` on both pages (the homepage Cabane card preview and the
-landing header image) and glides between them inside a warm cream frame
-(`#f4eadb`, the card artwork background) that narrows or widens around it.
-`object-fit: contain` on the snapshot pair keeps the illustration undistorted
-at every intermediate shape, preserving the 2026-09-27 no-distortion constraint
-through the guard rather than by avoiding the morph. The entering page rises
-26px into place over 500ms with an ease-out quintic curve; the leaving page fades
-out in 240ms; the illustration glide lasts 560ms. The artifact verifier enforces
-the contract: exactly two participants, the shared element present in both
-documents' markup, the contain guard, the reduced-motion opt-out, and a 600ms
-motion budget. No HTML markup, script or Wasm change was required.
+transition must be visible, smooth and joyful, "like entering a cabane". An
+initial shared-element implementation flew the welcome illustration between
+the homepage card and the landing header; the owner's phone review found it
+made the page jump, so element-level animation was dropped entirely. The final
+transition animates only the page snapshots: the leaving page sinks 16px with
+a slight settle (300ms, ease-in), the arriving page rises 26px out of a warm
+cream doorway veil (`#f4eadb`, the Cabane artwork background) that shows
+through both fades (520ms, ease-out quintic). Because no document element
+receives a view-transition-name, nothing can shift layout. The artifact
+verifier enforces the contract: exactly two participants, no element-level
+view-transition-name in the opt-in stylesheet, the veil on the root group, the
+reduced-motion opt-out and a 600ms motion budget. No markup, script or Wasm
+change was required.
 
 Reference: [MDN cross-document opt-in](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition). Browser support remains limited; verify the effect on the intended phone browser via the private preview, with reduced motion both enabled and disabled. Direct URL entry/reload is not a transition test: follow the homepage Cabane link in the same tab.
 

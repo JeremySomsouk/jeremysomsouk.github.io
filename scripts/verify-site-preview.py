@@ -210,13 +210,15 @@ def verify():
     require(transition_pages == {Path("index.html"), Path("cabane/index.html")},
             f"Unexpected transition participants: {transition_pages}")
 
-    # The transition is a pure-CSS contract: exactly two participants, one
-    # shared illustration element per participant, no pixel distortion, a
-    # motion budget, and a reduced-motion opt-out. No script or router is involved.
+    # The transition is a pure-CSS contract: exactly two participants, a warm
+    # doorway veil between the two pages, no element-level animation, a motion
+    # budget, and a reduced-motion opt-out. No script or router is involved.
     transition_css = (PREVIEW / "assets/page-transition.css").read_text()
-    require(transition_css.count("view-transition-name: cabane-welcome") == 2,
-            "The welcome illustration must be the single shared transition element on both pages")
-    require("object-fit: contain" in transition_css, "The morphed illustration must stay undistorted")
+    require("view-transition-name" not in transition_css,
+            "The transition must not animate individual page elements")
+    require("::view-transition-group(root)" in transition_css
+            and "background: #f4eadb" in transition_css,
+            "The root transition must carry the warm doorway veil")
     require("@media (prefers-reduced-motion: reduce)" in transition_css
             and "navigation: none" in transition_css
             and "animation: none !important" in transition_css,
@@ -224,11 +226,6 @@ def verify():
     durations = [int(value) for value in re.findall(r"(\d+)ms", transition_css)]
     require(durations and all(value <= 600 for value in durations),
             f"Transition durations exceed the motion budget: {durations}")
-    require('data-project="cabane"' in (PREVIEW / "index.html").read_text()
-            and 'class="project-preview"' in (PREVIEW / "index.html").read_text(),
-            "Homepage cabane card must carry the shared illustration")
-    require('class="welcome-brand"' in (PREVIEW / "cabane/index.html").read_text(),
-            "Cabane landing must carry the shared illustration")
 
     for path in public_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "public" / path).read_bytes(), f"Changed public asset: {path}")
