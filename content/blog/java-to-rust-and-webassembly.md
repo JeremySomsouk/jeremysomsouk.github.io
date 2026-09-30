@@ -1,6 +1,6 @@
 +++
 title = "A Java developer's short guide to Rust and WebAssembly"
-description = "What a decade of Java teaches you about learning Rust, and why compiling a small game engine to WebAssembly is a great first project."
+description = "What years of Java teach you about learning Rust, and why compiling a small game engine to WebAssembly is a great first project."
 slug = "java-to-rust-and-webassembly"
 date = 2026-09-29
 draft = false
@@ -17,7 +17,8 @@ cross it.
 If you have kept up with modern Java, you already like half of Rust.
 
 Cargo is Maven with the XML and the ceremony removed. A project starts with a
-two-line manifest, dependencies are one line each, and the toolchain handles
+manifest you can read in one glance, dependencies are one line each, and the
+toolchain handles
 build, test, docs and formatting without a plugin summit. I have spent entire
 afternoons of my life in Gradle and Maven configuration. I have never once
 thought about that in Cargo.
@@ -60,8 +61,8 @@ language I wanted to learn anyway, and compile it to the browser. WebAssembly
 settled that question.
 
 The memory game on this site has its logic in a Rust crate: 183 lines that
-shuffle a deck, track flips, score matches. That
-compiles to a 22 KB WebAssembly module with a plain C-style interface. The
+shuffle a deck, track flips, score matches. That compiles to a 22 KB
+WebAssembly module with a plain C-style interface. The
 browser page keeps a small JavaScript controller that calls it like any
 module: start, flip, card, is matched. The module imports nothing from the
 host at all, which matters to me enough that the build parses the binary and
@@ -69,15 +70,16 @@ fails if an import sneaks in.
 
 What that buys over writing the game in JavaScript:
 
-- Predictable performance with no garbage collector pauses or type-jitting
-  warmup, on a hot path like a game loop.
+- Predictable performance with no garbage collector pauses and no waiting for
+  a JIT to warm up, on a hot path like a game loop.
 - Real tests, run natively, in the same crate. The game logic is verified
   without opening a browser.
-- A dependency-free artifact. The whole engine, RNG included, is 22 KB.
+- A dependency-free artifact. The crate has zero external dependencies; the
+  random shuffle is a few lines of xorshift, not a library.
 
 The comparison I keep coming back to: WebAssembly is the JVM's portability
 dream without the JVM. Any page, any browser, instant start, tiny footprint,
-sandboxed. Write once, run everywhere actually happened, quietly.
+sandboxed. Write once, run anywhere actually happened, quietly.
 
 Two honest warnings. Don't reach for Wasm when JavaScript is obviously enough;
 this site's ordinary pages ship zero client code, and they are better for it.
