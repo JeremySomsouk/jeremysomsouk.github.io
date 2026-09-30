@@ -52,8 +52,12 @@ images, `CNAME` and the license.
 
 ## Ripple
 
-`/ripple/` is a pathfinding puzzle: change cell costs or block a cell with a
-budget of two interventions to make the search pass through the lower waypoint.
+`/ripple/` starts with a spark that chooses the route needing the least energy.
+Two guided challenges introduce changing a cell's energy, then closing a route,
+to send it through a diamond. The first challenge exposes only two marked cells;
+route totals explain its choice. Optional hints follow unsuccessful attempts.
+The algorithm inspector and unrestricted experiment remain available below the
+board. Each attempt has a budget of two interventions.
 Undo, reset, replay, step and Dijkstra/A* comparison use the same deterministic
 input (seed `7F93A2`). Numbers are entry costs; the start costs zero. A* uses an
 admissible Manhattan heuristic on unit grid edges and falls back to zero on

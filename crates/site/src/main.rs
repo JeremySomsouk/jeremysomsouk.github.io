@@ -47,6 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     for asset in [
         "assets/page-transition.css",
         "ripple/engine.js",
+        "ripple/lessons.js",
         "ripple/game.js",
         "ripple/home.js",
         "ripple/ripple.css",

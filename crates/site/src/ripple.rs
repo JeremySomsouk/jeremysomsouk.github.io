@@ -17,52 +17,65 @@ pub fn render_ripple() -> Result<String, serde_json::Error> {
             <WebsiteLayout>
                 <nav class="page-trail" aria-label="Breadcrumb"><a href="/">"Home"</a><a href="/projects/">"Projects"</a><span aria-current="page">"Ripple"</span></nav>
                 <section class="ripple-game" aria-labelledby="ripple-title" data-seed="7F93A2">
-                    <div class="ripple-intro"><p class="ripple-eyebrow">"An experiment in cause & effect · 01"</p>
-                        <h2 id="ripple-title">"Ripple"</h2><p class="ripple-tagline">"One change. A different path."</p>
-                        <p id="ripple-objective">"Make the search pass through ◇ on the lower route. You have two changes."</p>
+                    <div class="ripple-intro"><p class="ripple-eyebrow">"A small change. A surprising consequence."</p>
+                        <h2 id="ripple-title">"Ripple"</h2><p class="ripple-tagline">"Can you change its mind?"</p>
+                        <p id="ripple-objective">"The spark takes the cheapest route. Make it visit the diamond ◇."</p>
                     </div>
                     <div class="ripple-workspace">
-                        <div>
-                            <div class="ripple-board" role="group" aria-label="Weighted pathfinding board" aria-describedby="ripple-objective ripple-instructions">
+                        <div class="ripple-challenge">
+                            <p id="ripple-lesson" class="ripple-eyebrow">"1 / 2 · Make a route tempting"</p>
+                            <p id="ripple-instructions" tabindex="-1">"Tap a marked cell to make it easier or harder. Watch the spark choose again."</p>
+                            <div class="ripple-route-totals" aria-label="Energy needed by each route">
+                                <p>"Upper route "<strong id="ripple-upper">"—"</strong></p>
+                                <p>"Diamond route ◇ "<strong id="ripple-lower">"—"</strong></p>
+                            </div>
+                            <div class="ripple-board" role="group" aria-label="Send the spark through the diamond" aria-describedby="ripple-objective ripple-instructions">
                                 {level.graph.nodes.iter().enumerate().map(|(i,node)| {
                                     let wall = node.cost.is_none();
-                                    let label = if i == level.graph.start { "S".into() } else if i == level.graph.target { "T".into() }
-                                        else if i == level.checkpoint { format!("◇ {}",node.cost.unwrap()) } else { node.cost.map_or("·".into(),|c| c.to_string()) };
+                                    let label = if i == level.graph.start { "●".into() } else if i == level.graph.target { "◎".into() }
+                                        else if i == level.checkpoint { format!("◇ {}",node.cost.unwrap()) } else { node.cost.map_or("".into(),|c| if c == 1 {"·".into()} else {c.to_string()}) };
                                     view! { <button type="button" class="ripple-cell" data-node=i data-wall=wall.to_string()
-                                        disabled=true aria-label=format!("Row {}, column {}, {}",node.y+1,node.x+1, if wall {"fixed wall".into()} else {format!("cost {}",node.cost.unwrap())})>{label}</button> }
+                                        disabled=true aria-label=format!("Row {}, column {}, {}",node.y+1,node.x+1, if wall {"fixed wall".into()} else {format!("energy {}",node.cost.unwrap())})>{label}</button> }
                                 }).collect_view()}
                             </div>
-                            <p class="ripple-legend">"S start · T target · ◇ required waypoint · numbers = entry cost"<br/>"○ frontier · ✓ visited · → chosen path · × blocked"</p>
-                            <p id="ripple-instructions">"Tap a cell to change its cost between 1 and 9, or choose Block. The algorithm draws the path."</p>
-                            <div class="ripple-controls" role="group" aria-label="Intervention controls">
-                                <button type="button" id="ripple-weight" aria-pressed="true" disabled=true>"Change cost"</button>
-                                <button type="button" id="ripple-block" aria-pressed="false" disabled=true>"Block"</button>
+                            <p class="ripple-legend">"● spark · ◎ finish · ◇ visit here · each small dot costs 1 energy"</p>
+                            <p id="ripple-status" role="status" aria-live="polite">"Waking the spark…"</p>
+                            <div class="ripple-controls" role="group" aria-label="Try another idea">
                                 <button type="button" id="ripple-undo" disabled=true>"Undo"</button>
-                                <button type="button" id="ripple-reset" disabled=true>"Reset"</button>
+                                <button type="button" id="ripple-reset" disabled=true>"Try again"</button>
+                                <button type="button" id="ripple-replay" disabled=true>"Watch again"</button>
                                 <span id="ripple-budget">"2 changes left"</span>
                             </div>
+                            <div id="ripple-feedback" hidden=true>
+                                <p id="ripple-reason"></p>
+                            </div>
+                            <button type="button" id="ripple-next" hidden=true>"Next: close a route →"</button>
+                            <button type="button" id="ripple-hint" hidden=true>"A little nudge?"</button>
+                            <p id="ripple-nudge" hidden=true>"The diamond costs 9 energy. What if it cost only 1?"</p>
                         </div>
-                        <aside class="ripple-observation" aria-label="Search observation">
-                            <p class="ripple-eyebrow">"Watch the decisions"</p>
+                        <details class="ripple-observation" id="ripple-lab">
+                            <summary>"Look inside the algorithm"</summary>
+                            <p>"It adds up the energy along each route and chooses the smallest total. You change the conditions; it chooses the path."</p>
                             <div class="ripple-controls">
                                 <label for="ripple-algorithm">"Search "</label>
                                 <select id="ripple-algorithm" disabled=true><option value="0">"Dijkstra"</option><option value="1">"A*"</option></select>
                             </div>
-                            <p id="ripple-algorithm-note">"Dijkstra expands the cheapest known cost first."</p>
+                            <p id="ripple-algorithm-note">"Dijkstra tries the lowest energy total first."</p>
                             <div class="ripple-controls" role="group" aria-label="Playback controls">
                                 <button type="button" id="ripple-play" disabled=true>"Play"</button>
                                 <button type="button" id="ripple-step" disabled=true>"Step"</button>
-                                <button type="button" id="ripple-replay" disabled=true>"Replay"</button>
                             </div>
-                            <p id="ripple-status" role="status" aria-live="polite">"Loading the experiment…"</p>
-                            <dl class="ripple-metrics"><dt>"Explored"</dt><dd id="ripple-explored">"—"</dd><dt>"Path cost"</dt><dd id="ripple-cost">"—"</dd></dl>
-                            <div id="ripple-feedback" hidden=true>
-                                <h3>"The ripple point"</h3><p id="ripple-reason"></p>
-                                <p id="ripple-before-after"></p>
-                                <button type="button" id="ripple-compare" aria-pressed="false">"Show original path"</button>
+                            <p class="ripple-legend">"○ waiting to be checked · ✓ checked · → chosen path · × closed"</p>
+                            <dl class="ripple-metrics"><dt>"Cells checked"</dt><dd id="ripple-explored">"—"</dd><dt>"Route energy"</dt><dd id="ripple-cost">"—"</dd></dl>
+                            <p id="ripple-before-after"></p>
+                            <button type="button" id="ripple-compare" aria-pressed="false" disabled=true>"Show original path"</button>
+                            <div class="ripple-controls" id="ripple-tools" hidden=true role="group" aria-label="Intervention controls">
+                                <button type="button" id="ripple-weight" aria-pressed="true" disabled=true>"Change energy"</button>
+                                <button type="button" id="ripple-block" aria-pressed="false" disabled=true>"Close a cell"</button>
                             </div>
+                            <button type="button" id="ripple-free" disabled=true>"Experiment freely"</button>
                             <p class="ripple-seed">"Level seed · 7F93A2"</p>
-                        </aside>
+                        </details>
                     </div>
                     <noscript><p>"Ripple needs JavaScript and WebAssembly to run. All other pages remain available."</p></noscript>
                 </section>

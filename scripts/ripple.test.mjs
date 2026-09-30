@@ -33,3 +33,20 @@ test('built Wasm ABI runs the same puzzle, undo, budgets and A* comparison', asy
   e.init(0,0); e.change(10,1); e.change(24,1); assert.equal(e.info(6) >>> 0,0xffffffff);
   assert.equal(e.event(e.info(9)-1,0),8);
 });
+
+test('guided challenges offer a small choice, preserve edits, then unlock obstacles and free play', async () => {
+  const { canEdit, routeEnergy } = await import('../public/ripple/lessons.js');
+  const bytes=await readFile(new URL('../target/ripple/engine.wasm',import.meta.url));
+  const {instance}=await WebAssembly.instantiate(bytes,{});const e=instance.exports;
+  e.init(0,0x7f93a2);
+  const snapshot=()=>({start:e.info(1),target:e.info(2),checkpoint:e.info(3),nodes:Array.from({length:e.info(0)},(_,i)=>({cost:e.node(i,0)>>>0,y:e.node(i,2),editable:Boolean(e.node(i,3))}))});
+  const original=snapshot();
+  assert.deepEqual(original.nodes.map((_,i)=>i).filter(i=>canEdit(original,i,'energy',original)),[10,24]);
+  assert.equal(routeEnergy(original,1),10);assert.equal(routeEnergy(original,3),16);
+  e.change(24,0);const changed=snapshot();
+  assert.ok(canEdit(changed,24,'energy',original));assert.equal(routeEnergy(changed,3),8);assert.equal(e.info(8),1);
+  e.reset();assert.equal(canEdit(original,24,'obstacle',original),false);
+  assert.ok(canEdit(original,10,'obstacle',original));e.change(10,1);
+  assert.equal(routeEnergy(snapshot(),1),null);assert.equal(routeEnergy(snapshot(),3),16);assert.equal(e.info(8),1);
+  assert.ok(canEdit(original,24,'free',original));assert.equal(canEdit(original,original.start,'free',original),false);
+});
