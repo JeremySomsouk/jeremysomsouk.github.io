@@ -21,3 +21,6 @@ pub const SITE_CSS: &str = include_str!("../../../styles/site.css");
 
 mod ripple;
 pub use ripple::render_ripple;
+
+mod guess;
+pub use guess::render_guess;

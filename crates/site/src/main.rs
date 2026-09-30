@@ -28,6 +28,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         site::render_ripple()?,
         Indexing::Index,
     )?;
+    manifest.insert_page(
+        Route::new("/guess/")?,
+        site::render_guess()?,
+        Indexing::Index,
+    )?;
     manifest.add_static_asset(&root.join("target"), OutputPath::new("ripple/engine.wasm")?)?;
     for project in site_content::HOMEPAGE.projects {
         manifest.insert_page(
@@ -46,6 +51,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     for asset in [
         "assets/page-transition.css",
+        "guess/game.js",
+        "guess/transport.js",
+        "guess/config.js",
+        "guess/guess.css",
         "ripple/engine.js",
         "ripple/game.js",
         "ripple/home.js",

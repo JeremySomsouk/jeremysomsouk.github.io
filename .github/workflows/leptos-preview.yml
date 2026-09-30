@@ -41,6 +41,13 @@ jobs:
           node-version: '22'
       - name: Ripple runtime tests
         run: node --test scripts/ripple.test.mjs
+      - name: Social guessing game checks
+        working-directory: services/guess
+        run: |
+          npm ci
+          npm test
+          npm run test:worker
+          npx wrangler deploy --dry-run
       - name: Build static preview
         run: SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
       - name: Verify preview artifact
