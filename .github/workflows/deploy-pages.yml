@@ -1,0 +1,50 @@
+name: Deploy Pages
+
+# Production deployment of the generated static artifact. The legacy Jekyll
+# source in docs/ stays on master for rollback until it is removed.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; never cancel an in-flight production deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      CARGO_BUILD_JOBS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+      - name: Rust checks
+        run: |
+          cargo fmt --check
+          cargo check --locked
+          cargo clippy --locked --all-targets --all-features -- -D warnings
+          cargo test --locked
+      - name: Build static site
+        run: SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
+      - name: Verify artifact
+        run: python3 scripts/verify-site-preview.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/site-preview
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

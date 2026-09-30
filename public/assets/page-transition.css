@@ -1,0 +1,35 @@
+/* Only the homepage and Cabane landing opt in. Navigation remains native. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  /* Entering feels like stepping through the doorway: the leaving page
+     dissolves into warm lamplight and the arriving page rises out of it.
+     Only the arriving snapshot moves, and only upward from below: the
+     leaving page is a pure fade so no edge ever shifts or crops, and
+     nothing in either document changes position. */
+  ::view-transition-old(root) {
+    animation: page-exit 240ms ease-out both;
+  }
+  ::view-transition-new(root) {
+    animation: page-enter 480ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+  ::view-transition-group(root) {
+    animation-duration: 480ms;
+    background: #f4eadb;
+  }
+}
+
+@keyframes page-exit {
+  to { opacity: 0; }
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
