@@ -82,9 +82,11 @@ wrong, and the verifier rebuilds the expected artifact from scratch every run.
 That loop is exactly what an agent needs, so my next change will probably
 happen with me reviewing instead of typing.
 
-One regret: I kept a "proof" page around long past the point where it proved
-anything, and let migration notes pile up in the published tree for weeks.
-Fixtures are for branches. Ship the site.
+One regret: the site carried its own scaffolding for weeks. A demo page whose
+only job was to prove the new rendering worked stayed online long after anyone
+needed convincing, and the repository filled with to-do lists and progress
+logs nobody but me would ever read. Scaffolding helps while you build. Then
+you take it down.
 
 Would I recommend it as a weekend project? The migration was the fun part,
 and honestly the last one this site needs. The point of the setup is to never
