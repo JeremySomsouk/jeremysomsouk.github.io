@@ -80,16 +80,14 @@ points forward: future updates are now easy to delegate. Adding a project or
 an article is a small typed diff, the compiler complains when a record is
 wrong, and the verifier rebuilds the expected artifact from scratch every run.
 That loop is exactly what an agent needs, so my next change will probably
-happen with me reviewing instead of typing. What's missing now is the process
-on my side: a way to line up the work, hand it to an agent in a sensible order,
-and know what to check when I get a moment. The site is ready for that. I'm
-the part that still needs a routine.
+happen with me reviewing instead of typing.
 
-One regret: the site carried its own scaffolding for weeks. A demo page whose
-only job was to prove the new rendering worked stayed online long after anyone
-needed convincing, and the repository filled with to-do lists and progress
-logs nobody but me would ever read. Scaffolding helps while you build. Then
-you take it down.
+What's left is my side of the process: line up the work, hand it to an agent
+in a sensible order, know what to check when I get a moment. The site is ready
+for that. I'm the part that needs a routine. Same story with my one regret:
+the scaffolding lingered. A demo page stayed online long after anyone needed
+convincing, and the repository filled with to-do lists nobody but me would
+ever read. Scaffolding helps while you build. Then you take it down.
 
 Would I recommend it as a weekend project? The migration was the fun part,
 and honestly the last one this site needs. The point of the setup is to never
