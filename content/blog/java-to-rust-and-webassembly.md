@@ -53,8 +53,14 @@ question the type system answers.
 
 ## Where WebAssembly fits
 
-Here is the concrete story. The memory game on this site has its logic in a
-Rust crate: 183 lines that shuffle a deck, track flips, score matches. That
+Here is the concrete story, and the honest reason it exists: I have no
+history with JavaScript whatsoever. The choice was never Rust versus
+JavaScript. It was learn JavaScript properly, or write the game in the
+language I already know and compile it to the browser. WebAssembly settled
+that question.
+
+The memory game on this site has its logic in a Rust crate: 183 lines that
+shuffle a deck, track flips, score matches. That
 compiles to a 22 KB WebAssembly module with a plain C-style interface. The
 browser page keeps a small JavaScript controller that calls it like any
 module: start, flip, card, is matched. The module imports nothing from the
