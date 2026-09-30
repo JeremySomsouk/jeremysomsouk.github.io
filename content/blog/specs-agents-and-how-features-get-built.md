@@ -2,7 +2,7 @@
 title = "Specs, agents, and how features get built now"
 description = "How an open spec format and a few AI agents changed feature work into writing, reviewing, and shipping."
 slug = "specs-agents-and-how-features-get-built"
-date = 2026-09-30
+date = 2026-10-01
 draft = false
 tags = ["Agentic coding", "OpenSpec", "Software development"]
 +++
