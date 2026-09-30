@@ -88,14 +88,16 @@ pure module, the way the memory engine did.
 
 ## The verdict
 
-I kept Java at work and Rust at the seams: a game engine here, a static site
-generator there, small tools that need to be fast and correct. The seam I
-keep pulling on is
+I kept Java at work and gave Rust the seams: a game engine, a static site
+generator, and
 [prctrl](https://github.com/JeremySomsouk/prctrl), a terminal for reviewing
-pull requests without context switching. Apparently reviewing code all day at
-work was not enough; I went home and built a better place to do it. That is
-a very comfortable place to be a Java developer, and it keeps getting more
-comfortable: every small Rust module the agents write is held to a compiler
-that cannot be charmed, and each one that ships builds a little more
-confidence in what can be delegated. The kids, meanwhile, don't know
-what a borrow checker is. They just match the cards.
+pull requests without context switching. Reviewing code all day at work
+apparently was not enough, so I built a better place to do it. A Java
+developer with a few Rust seams, it turns out, is a comfortable thing to be.
+
+Those seams also made me better at delegating. Every Rust module an agent
+writes goes through a compiler that cannot be charmed, and every module that
+ships quietly raises the bar for what I am willing to hand over next.
+
+The kids, meanwhile, don't know what a borrow checker is. They just match the
+cards.
