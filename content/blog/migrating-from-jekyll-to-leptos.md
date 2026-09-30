@@ -16,6 +16,28 @@ served my resume instead of an error.
 So I migrated the site to Rust, with [Leptos](https://book.leptos.dev/) doing
 the rendering. This post is the short version of how it went.
 
+## What I actually wanted
+
+Before writing code, I wrote down concrete goals, because "rewrite the site"
+is how side projects die:
+
+1. **Zero broken links.** Every URL, asset and bookmark that worked before
+   keeps working, byte-identical where content is carried over. Renames were
+   off the table.
+2. **Freeze the games.** The Cabane activities work and are loved; they get
+   copied byte for byte, never rewritten — and the build has to *prove* it.
+3. **Make Cabane part of the site.** Not a folder bolted next to the resume:
+   a real project page, a selection page rendered by the new generator in the
+   shared layout, and a gentle doorway transition between homepage and games,
+   disabled for reduced motion, with no JavaScript.
+4. **Stay host-agnostic.** The build output is a plain static folder. The only
+   Pages-specific things in it are two inert files (`CNAME` and `.nojekyll`);
+   routes, metadata, the `404.html` convention, sitemap and robots work on any
+   static host. Migrating off GitHub Pages should one day be a copy and a web
+   server config, not a project.
+5. **Trust the build.** Typed content checked at compile time, an artifact
+   verified on every run, one deploy pipeline.
+
 ## The shape of the new build
 
 Two small crates do all the work:
@@ -41,7 +63,9 @@ Next to the articles, this site hosts little browser games for my kids, built
 as plain static files — one of them with a Rust engine compiled to WebAssembly.
 A blanket rewrite of working games was out of the question, so the migration
 treated them as a frozen boundary: every game file is copied byte for byte,
-except the single selection page the new generator renders.
+except the single selection page the new generator renders in the shared site
+layout — which is also what lets the homepage and the games share a gentle
+cross-document transition with zero scripts.
 
 To keep that promise honest, the verifier walks every relative import and fetch
 in the copied scripts to prove they still resolve, and parses the Memory
@@ -57,6 +81,10 @@ published.
 - Content is typed: the compiler catches a broken record before I push.
 - Deployment is a single pipeline: build, verify, publish to GitHub Pages.
 - The whole migration landed as one commit with a recorded rollback.
+- Cabane got its own presentation pages and the doorway transition, so the
+  games read as part of the site rather than a separate folder.
+- The artifact stays host-agnostic: serving it from a VPS tomorrow is a copy
+  and a small server config, nothing else.
 
 ## What I would do differently
 
