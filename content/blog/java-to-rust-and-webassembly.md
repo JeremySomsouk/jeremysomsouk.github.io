@@ -39,6 +39,12 @@ surprises at 3am. The price is that you argue with the compiler for the first
 two weeks. The benefit is that after it compiles, the boring guarantees are
 already checked.
 
+That strictness matters even more now that agents write a lot of the code. The
+borrow checker will argue with an agent all day, at no emotional cost, and it
+cannot be talked into accepting sloppy ownership. When an agent tells you "it
+compiles," that sentence means more in Rust than in most languages: the
+boring guarantees were checked by something that does not get tired.
+
 Two smaller gifts worth the trip: there is no null. An absent value is an
 Option, and you cannot touch it without handling the absent case. And errors
 are values returned from functions, not exceptions thrown from six frames down.
