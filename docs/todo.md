@@ -41,7 +41,7 @@ Source of truth for remaining work. Actual source is Jekyll, not Hugo. Read [dis
 - [x] **5.1a:** Add a 250ms native homepage ↔ Cabane crossfade, without JS/Wasm; preserve normal navigation and disable for reduced motion. Both pages explicitly opt in; other pages/games remain excluded. Phone visual verification remains a release gate.
 - [x] 5.1b Fix Cabane header icon to use the current origin, matching the project button; guard against production-link escape in preview.
 - [x] **5.2:** Establish documented app adapter/asset/DOM ownership contract; verify all relative imports and raw Memory Wasm ABI. The artifact verifier resolves every relative import/dynamic import/fetch in copied scripts and parses the raw Memory Wasm import/export sections; a generation test pins the share-module cache version between the generated page and legacy controllers. Contract documented in [architecture](architecture.md). No game source changed.
-- [ ] 5.3 Check every game in browser, touch inputs, reduced motion, sharing and errors; verify Fluence `?text`, history key, weekly schedule and mobile timer viewport.
+- [x] 5.3 Check every game in browser, touch inputs, reduced motion, sharing and errors; verify Fluence `?text`, history key, weekly schedule and mobile timer viewport. Owner phone review of the verified `733bc0c` artifact (2026-09-30) reported everything working properly; exact-width desktop/print/accessibility baselines remain separate release gates.
 - [ ] 5.4 Propose one small native Leptos interaction only if it has concrete benefit; no blanket game rewrite or Melimo hosting.
 
 ## Milestone 6 — Publication cutover and legacy removal (depends on M4 + required M5 parity)

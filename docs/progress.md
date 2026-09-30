@@ -538,3 +538,26 @@
 
 ### Recommended next step
 - Refresh the owner-private preview with the current artifact and perform the 5.3 game walkthroughs on a phone, reporting any behavioral issue; then decide on 5.4 (native Leptos interaction) separately.
+
+## 2026-09-30 — 5.3 game walkthrough and hosted CI confirmation
+
+### Completed
+- Hosted CI for `733bc0c` passed: Cabane checks (run 36700586923) and both Leptos preview runs (36700586889, 36700579498) succeeded, confirming the clean hosted release build of the ownership-contract head.
+- Served the locally verified `733bc0c` artifact to the owner's phone over the local network for the game walkthrough. The previous chatgpt.site review snapshot could not be refreshed from this environment, and the corporate TLS-intercepting proxy rejected a Cloudflare quick tunnel; the LAN server (firewall-permitted) served the identical bytes instead.
+- Owner reviewed the preview on the phone and reported it works properly; recorded as the 5.3 browser walkthrough for the games, touch input, sharing and the transition.
+
+### Decisions
+- Record 5.3 as passed on the owner's phone confirmation of the same artifact bytes that passed generation verification and hosted CI.
+- The LAN server is a disposable review channel, not a deployment; production remains unchanged.
+- Exact-width desktop, print and accessibility baselines (3.1b/3.2b/3.4c) remain separate release gates and are not waived by this walkthrough.
+
+### Validation
+- The reviewed artifact is the release build whose verifier passed 64 unchanged Cabane files and 29 page URLs, with `application/wasm` MIME locally.
+- All three hosted workflows green for `733bc0c`.
+
+### Remaining concerns
+- 5.4 decision pending: a native Leptos interaction must demonstrate a concrete benefit; no blanket game rewrite or Melimo hosting is in scope.
+- Desktop exact-width, print and accessibility checks remain open before cutover.
+
+### Recommended next step
+- Close 5.4 by documenting that no native interaction is currently justified (or propose one with concrete benefit), then begin Milestone 6 cutover preparation: reconcile master, compare route/content manifests and prepare the single final squash commit.
