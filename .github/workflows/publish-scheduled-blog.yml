@@ -1,0 +1,46 @@
+name: Publish scheduled blog
+
+# Every day at 00:00 UTC, publish blog articles whose front matter is dated
+# today or earlier: find the open pull request, confirm its checks passed, mark
+# it ready for review if it is still a draft, squash-merge it, then deploy.
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Override the publishing date (YYYY-MM-DD, UTC)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Report what would merge without merging'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  checks: read
+  statuses: read
+
+# One publisher at a time; never cancel an in-flight merge.
+concurrency:
+  group: publish-scheduled-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Publish articles dated today
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_DATE: ${{ inputs.date }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: bash scripts/publish-scheduled-blog.sh
