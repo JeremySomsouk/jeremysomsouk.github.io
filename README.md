@@ -115,6 +115,22 @@ read-only permissions and deploys nothing.
   register any new image in the static asset manifest; the presentation route
   is generated automatically (update the verifier's expected routes).
 
+## Article pipeline
+
+Article ideas live in an Obsidian vault synced to GitHub
+(`jiwi-thought-vault`, local path
+`/Users/jeremy.somsouk/Documents/ObsidianVault`), under
+`10 Projects/Website Blog/`:
+
+- `Inbox/`: raw captures from the phone. Promote promising ones to briefs
+  using facts from this repository.
+- `Queue/`: briefs with `status: ready`. Write these one branch at a time
+  (`blog/<slug>`), draft PR, keep the vault note's status in sync
+  (`writing` with the PR link, `published` with the live URL, moved to
+  `Published/`).
+- The vault README holds the full contract, including the house voice:
+  plain, honest, first person, no em dashes.
+
 ## Deployment
 
 Production serves the generated artifact through the `Deploy Pages` workflow:
