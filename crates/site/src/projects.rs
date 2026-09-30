@@ -102,6 +102,7 @@ mod tests {
             )));
             assert!(page.contains("property=\"og:image\""));
             assert!(page.contains(project.description));
+            assert!(page.contains(project.tags_label));
             assert_eq!(page.matches("<h1>").count(), 1);
             for forbidden in ["<script", ".wasm", "noindex", "modulepreload"] {
                 assert!(!page.contains(forbidden), "Unexpected {forbidden}");

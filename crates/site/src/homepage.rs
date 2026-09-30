@@ -19,7 +19,7 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
             <Section id="things-i-m-building" title=home.projects_title.to_owned()>
                 <p><a href="/projects/">"All projects →"</a></p>
                 <div class="project-grid" id=home.projects_id>
-                    {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone()/> }).collect_view()}
+                    {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }).collect_view()}
                 </div>
             </Section>
             {home.resume.iter().map(|section| view! {
@@ -84,6 +84,8 @@ mod tests {
             assert!(html.contains(project.destination.url));
             assert!(html.contains(project.image.src));
         }
+        assert!(!html.contains("Cabane features and technologies"));
+        assert!(html.contains(r#"class="cabane-entrance""#));
         for section in HOMEPAGE.resume {
             for entry in section.entries {
                 assert!(html.contains(entry.title));
