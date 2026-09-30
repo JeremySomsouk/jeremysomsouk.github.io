@@ -6,7 +6,7 @@ date = 2026-09-29
 draft = false
 tags = ["Java", "Rust", "WebAssembly"]
 +++
-I write Java all day at work. At home, one of my kids' favorite browser games
+I write and review Java all day at work. At home, one of my kids' favorite browser games
 runs on Rust compiled to WebAssembly. I used to think that sentence was for
 other people. It turns out the distance from Java to Rust is shorter than the
 distance from Java to most things, and WebAssembly is the most fun place to
