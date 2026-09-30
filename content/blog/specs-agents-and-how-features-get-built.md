@@ -67,9 +67,7 @@ straight to main. The rest of us challenge, and we are expected to, but we do
 it by opening PRs the lead orchestrates, not by editing around each other. No
 specification stranded in a chat thread, no truth living in slides. When a
 spec is wrong it gets fixed on main, and the next person starts from something
-real. My personal website runs the same shape in miniature, with me as the
-lead of a team of one: ideas in a vault, one branch per article, a verifier
-that rebuilds expectations from scratch, and me saying no to shortcuts.
+real.
 
 ## The catch
 
