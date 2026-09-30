@@ -163,6 +163,7 @@ body.site-page { margin: 0; }
   .profile-links .profile-icon-link { width: auto; border: 1px solid ButtonText; padding: .5rem; }
   .profile-icon-link img { display: none; }
   .profile-icon-label { position: static; width: auto; height: auto; margin: 0; clip-path: none; white-space: normal; }
+  .site-page-links a { border: 1px solid ButtonText; }
 }
 
 .page-trail { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-block: 1rem 2rem; }
@@ -180,9 +181,10 @@ body.site-page { margin: 0; }
   .project-presentation { grid-template-columns: 1fr; }
 }
 
-.site-page-links { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
-.site-page-links a { min-height: 3rem; padding-inline: .125rem; text-decoration: none; font-weight: 500; }
-.site-page-links a:hover, .site-page-links a:focus-visible { text-decoration: underline; }
+.site-page-links { display: flex; flex-wrap: wrap; gap: .75rem; }
+.site-page-links a { min-height: 3rem; padding-inline: 1.25rem; border-radius: 999px; background: var(--site-text); color: var(--site-ink); }
+.site-page-links a:hover { background: var(--site-lilac); }
+.site-page-links a:focus-visible { outline-color: var(--site-lilac); }
 .article-list { list-style: none; padding: 0; }
 .article-list li { padding-block: 1.5rem; border-bottom: 1px solid var(--site-rule); }
 .article-list h3 { margin-block: 0 .5rem; }
