@@ -140,6 +140,11 @@ pub fn render_cabane() -> Result<String, Box<dyn std::error::Error>> {
 
 #[cfg(test)]
 mod tests {
+    /// Legacy Fluence controller: the only copied source that loads the shared
+    /// module with an explicit cache version. The generated page must stay in
+    /// the same cache generation so both callers receive equal behavior.
+    const LEGACY_READING: &str = include_str!("../../../docs/cabane/lecture/reading.js");
+
     use super::*;
     #[test]
     fn static_landing_preserves_games_and_share_contract() {
@@ -157,5 +162,28 @@ mod tests {
         assert_eq!(html.matches("<main").count(), 1);
         assert_eq!(html.matches("<script").count(), 1);
         assert!(!html.contains(".wasm"));
+    }
+
+    #[test]
+    fn share_module_loads_the_version_legacy_controllers_import() {
+        let html = render_cabane().expect("render Cabane");
+        let script = html
+            .split("<script src=\"")
+            .nth(1)
+            .expect("generated page must load the shared share module")
+            .split('"')
+            .next()
+            .expect("terminated script src");
+        assert!(
+            script.starts_with("/cabane/share.mjs?"),
+            "share script {script:?}"
+        );
+        let version = script.split('?').nth(1).expect("cache version");
+        assert!(
+            LEGACY_READING.contains(&format!(
+                "import {{ setupShare }} from '../share.mjs?{version}';"
+            )),
+            "legacy Fluence controller no longer imports the shared module version {version}"
+        );
     }
 }

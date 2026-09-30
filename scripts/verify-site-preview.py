@@ -2,6 +2,7 @@
 
 import html
 import json
+import posixpath
 import tomllib
 from datetime import date
 import re
@@ -131,6 +132,75 @@ def verify():
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
 
     require((PREVIEW / "assets/main.css").read_bytes() == (ROOT / "styles/site.css").read_bytes(), "Changed site stylesheet")
+
+    # The copied application keeps its own module graph: every relative import,
+    # dynamic import and fetch inside copied scripts must resolve in the artifact.
+    module_reference = re.compile(
+        r"(?:\bfrom\s+|\bimport\s*\(\s*|\bfetch\s*\(\s*)['\"](\.{1,2}/[^'\"]+)['\"]",
+        re.S,
+    )
+    for path in sorted(p for p in actual if p.suffix in {".js", ".mjs"}):
+        script = (PREVIEW / path).read_text()
+        for literal in module_reference.findall(script):
+            target = posixpath.normpath(
+                posixpath.join(posixpath.dirname(path.as_posix()), literal.split("?", 1)[0])
+            )
+            require(Path(target) in actual, f"Legacy module reference missing: {path} -> {literal}")
+
+    # Le Memory drives its engine through the raw Wasm ABI: the Rust build must
+    # import nothing from the host and export every function the controller calls.
+    def parse_wasm_boundaries(data):
+        def read_leb(buf, offset):
+            value = shift = 0
+            while True:
+                byte = buf[offset]
+                offset += 1
+                value |= (byte & 0x7F) << shift
+                if not byte & 0x80:
+                    return value, offset
+                shift += 7
+
+        require(data[:8] == b"\x00asm\x01\x00\x00\x00", "Malformed Wasm module header")
+        imports = exports = None
+        cursor = 8
+        while cursor < len(data):
+            section, cursor = read_leb(data, cursor)
+            size, cursor = read_leb(data, cursor)
+            section_end = cursor + size
+            require(section_end <= len(data), "Truncated Wasm section")
+            if section == 2:
+                require(imports is None, "Duplicated Wasm import section")
+                imports, offset = read_leb(data, cursor)
+                require(imports == 0, f"Memory Wasm must import nothing; got {imports}")
+            elif section == 7:
+                require(exports is None, "Duplicated Wasm export section")
+                exports = []
+                count, offset = read_leb(data, cursor)
+                for _ in range(count):
+                    length, offset = read_leb(data, offset)
+                    name = data[offset:offset + length].decode("utf-8")
+                    offset += length
+                    kind = data[offset]
+                    offset += 1
+                    # Every export descriptor (func/table/memory/global) is a
+                    # name, a one-byte kind and a single index LEB.
+                    _, offset = read_leb(data, offset)
+                    exports.append(name)
+                require(offset <= section_end, "Malformed Wasm export section")
+            cursor = section_end
+        require(not imports, "Memory Wasm must import nothing (raw ABI)")
+        require(exports is not None, "Missing Wasm export section")
+        return set(exports)
+
+    wasm_exports = parse_wasm_boundaries((PREVIEW / "cabane/memory/game.wasm").read_bytes())
+    require("memory" in wasm_exports, "Memory Wasm must export its linear memory")
+    memory_controller = (PREVIEW / "cabane/memory/game.js").read_text()
+    engine_calls = set(re.findall(r"\bengine\.(\w+)", memory_controller))
+    require(engine_calls, "Memory controller must call the raw Wasm exports")
+    missing_abis = engine_calls - wasm_exports
+    require(not missing_abis, f"Memory Wasm ABI mismatch: {sorted(missing_abis)}")
+    require({"start", "card", "flip", "is_matched", "hide_mismatch"} <= wasm_exports,
+            "Memory Wasm is missing a controller export")
 
     # Both documents must opt in; games and ordinary pages must not participate.
     transition_pages = {

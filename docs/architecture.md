@@ -1,6 +1,6 @@
 # Leptos migration architecture
 
-Status: static homepage, shared document metadata and 404 implemented; deployment and visual gates remain open (2026-09-28). Earlier implementation sections describe their original stages. See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
+Status: static homepage, projects, blog, sitemap/robots, Cabane selection page, page transition and the application ownership contract implemented; deployment and visual gates remain open (2026-09-30). Earlier implementation sections describe their original stages. See [discovery](migration-discovery.md), [TODO](todo.md), [progress](progress.md).
 
 ## Rendering and deployment
 
@@ -311,3 +311,34 @@ The generated `/cabane/` is owned by `site::cabane`: typed game records and buil
 Only the homepage and Cabane selection document load `public/assets/page-transition.css`. Both opt into native cross-document View Transitions for same-origin navigation. A 250ms opacity crossfade preserves the different illustration sizes without moving or morphing content. No script, router, click interception, artificial delay or persistent browser state is involved. The ordinary anchors retain new-tab and history behavior. Reduced motion opts out; unsupported browsers ignore the enhancement. Other pages and games do not opt in. Stylesheet lists in the document renderer keep optional presentation resources explicit.
 
 Reference: [MDN cross-document opt-in](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@view-transition). Browser support remains limited; verify the effect on the intended phone browser via the private preview, with reduced motion both enabled and disabled. Direct URL entry/reload is not a transition test: follow the homepage Cabane link in the same tab.
+
+### Application ownership contract (5.2)
+
+The boundary between the generated site and the legacy Cabane application is an
+explicit adapter contract, now documented and enforced at generation time:
+
+- **Route ownership.** The generator owns exactly `cabane/index.html`
+  (composed by `site::cabane`). Every other `docs/cabane/**` runtime file is
+  legacy-owned and copied byte-identically; the generator must not rewrite,
+  rename or reference their internals. The legacy selection page stays in the
+  source tree until cutover for rollback.
+- **Closed module graph.** Copied legacy scripts keep their own module graph:
+  every relative `import`, dynamic `import()` and literal `fetch` in a copied
+  `.js`/`.mjs` must resolve to a file present in the artifact. The verifier
+  rejects unresolved references, so removing or renaming a legacy asset in
+  `docs/` fails the build instead of breaking a live game.
+- **Single script and shared DOM targets.** The generated selection page is
+  the adapter between the shared shell and the application. It loads exactly
+  one script: the legacy `share.mjs`, with the same cache-version query
+  (`?v=…`) the legacy Fluence controller imports. A generation test pins that
+  equality, so changing the version on one side alone fails. The share module
+  owns only its two stable DOM targets; the page must keep them and adds no
+  other executable runtime, Wasm or hydration into the app namespace.
+- **Raw Memory Wasm ABI.** `cabane/memory/game.wasm` must import nothing from
+  the host and must export its linear memory plus every function the legacy
+  controller calls through the raw `engine.*` ABI (`start`, `card`, `flip`,
+  `is_matched`, `hide_mismatch`). The verifier parses the Wasm import/export
+  sections directly; rebuilding the engine with a changed ABI fails the check.
+
+No game controller or engine source was changed by this contract; it records
+and enforces the existing boundary only.

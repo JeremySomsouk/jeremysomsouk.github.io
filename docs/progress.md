@@ -509,3 +509,32 @@
 
 ### Recommended next step
 - Recheck the homepage Cabane icon and project button in the refreshed preview, then continue 5.2.
+
+## 2026-09-30 — Application ownership contract (5.2)
+
+### Completed
+- Documented the adapter/asset/DOM ownership contract in architecture.md: the generator owns exactly `cabane/index.html`; all other `docs/cabane/**` runtime files stay legacy-owned and byte-identical; the generated page loads only the legacy `share.mjs` and keeps its two stable DOM targets.
+- Extended the artifact verifier: every relative import, dynamic import and literal fetch inside copied `.js`/`.mjs` files must resolve in the artifact; the raw Memory Wasm import/export sections are parsed directly and must expose no host imports, linear memory and every `engine.*` function the controller calls.
+- Added a generation test pinning the share-module cache-version query shared by the generated page and the legacy Fluence controller import.
+- Fixed the Rust test fixtures to canonicalize the system temporary directory so symlinked host aliases (macOS `/var`) are resolved before the output symlink guards; the suite now runs on macOS.
+- Removed untracked `games/river/` build debris: 29 MB of stale cargo output from an abandoned wasm experiment with no source ever committed; La Rivière lives in `docs/cabane/river/` as JavaScript.
+
+### Decisions
+- The ownership contract records the existing boundary; it does not modify any game controller, engine or asset bytes.
+- Module-graph and Wasm ABI checks fail the build at generation time instead of waiting for a live game to break.
+- The share cache version is a two-sided contract: changing it on the generated page without the legacy controllers (or vice versa) fails the build.
+
+### Validation
+- `cargo fmt --all --check`, locked check, strict all-target/all-feature Clippy and all 32 Rust tests passed (the new share-version test included).
+- Existing Node suites: 89 passed, 0 failed.
+- Debug and optimized generation plus artifact verification passed: 64 unchanged Cabane files, 29 page URLs, local resources and two missing-route 404 responses.
+- Negative probes all fired and were restored byte-for-byte (git diff on docs/ clean): an unresolved legacy module reference, a Wasm import section (`got 1`) and a mismatched Wasm export set (`Memory Wasm ABI mismatch`) were each rejected by the verifier.
+- Release build completed locally without the earlier zero-length archive error this time; hosted CI remains the production gate for the new head.
+
+### Remaining concerns
+- 5.3 browser game walkthroughs (touch inputs, reduced motion, sharing, Fluence `?text`, history key, weekly schedule, mobile timer viewport) remain outstanding and need a human on the private preview.
+- Exact-width desktop/mobile/print visual release gates (3.1b/3.2b/3.4c) remain open; no visual parity is claimed.
+- Production remains unchanged; all work stays on the consolidated branch for the final single squash commit.
+
+### Recommended next step
+- Refresh the owner-private preview with the current artifact and perform the 5.3 game walkthroughs on a phone, reporting any behavioral issue; then decide on 5.4 (native Leptos interaction) separately.
