@@ -14,7 +14,7 @@ ends: writing what should be true, and checking that it became true.
 
 ## The format
 
-The tool is [OpenSpec](https://github.com/openspecio/openspec), an open source
+The tool is [OpenSpec](https://github.com/Fission-AI/openspec), an open source
 CLI it describes as an "AI-native system for spec-driven development". Each
 repository carries an `openspec/` folder. `specs/` is the living truth, one
 document per capability. `changes/` holds one folder per proposed change. The
