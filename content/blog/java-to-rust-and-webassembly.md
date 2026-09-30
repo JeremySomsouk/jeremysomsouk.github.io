@@ -2,7 +2,7 @@
 title = "A Java developer's short guide to Rust and WebAssembly"
 description = "What a decade of Java teaches you about learning Rust, and why compiling a small game engine to WebAssembly is a great first project."
 slug = "java-to-rust-and-webassembly"
-date = 2026-09-30
+date = 2026-09-29
 draft = false
 tags = ["Java", "Rust", "WebAssembly"]
 +++
