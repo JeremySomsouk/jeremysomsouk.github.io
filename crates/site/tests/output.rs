@@ -193,6 +193,7 @@ fn discovery_uses_registered_indexable_pages_and_preserves_domain() -> io::Resul
     use site_content::Indexing;
     let fixture = Fixture::new()?;
     fs::write(fixture.0.join("CNAME"), "www.somsouk.fr")?;
+    fs::write(fixture.0.join("LICENSE"), "GPL notice")?;
     fs::create_dir_all(fixture.0.join("cabane/memory"))?;
     fs::write(fixture.0.join("cabane/memory/index.html"), "game")?;
     let mut manifest = Manifest::default();
@@ -229,6 +230,7 @@ fn discovery_uses_registered_indexable_pages_and_preserves_domain() -> io::Resul
     }
     assert_eq!(fs::read(output.join("CNAME"))?, b"www.somsouk.fr");
     assert!(fs::read(output.join(".nojekyll"))?.is_empty());
+    assert_eq!(fs::read(output.join("LICENSE"))?, b"GPL notice");
     assert!(
         fs::read_to_string(output.join("robots.txt"))?
             .contains("Sitemap: https://www.somsouk.fr/sitemap.xml")

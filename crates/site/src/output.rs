@@ -114,6 +114,14 @@ impl Manifest {
         )?;
         self.insert(OutputPath::new("CNAME")?, domain.into_bytes())?;
         self.insert(OutputPath::new(".nojekyll")?, Vec::new())?;
+        // The site carries its GPL notice at the same public path as before.
+        let license = docs.join("LICENSE");
+        reject_symlinks(&license)?;
+        let license = fs::read(&license)?;
+        if license.is_empty() {
+            return Err(invalid("Site license must not be empty"));
+        }
+        self.insert(OutputPath::new("LICENSE")?, license)?;
         Ok(())
     }
 

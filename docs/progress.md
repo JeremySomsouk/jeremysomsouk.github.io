@@ -650,3 +650,29 @@
 
 ### Recommended next step
 - Begin Milestone 6.1: reconcile with latest master, then compare the full old/new route, content and asset manifests as the first cutover-preparation step.
+
+## 2026-09-30 — Cutover manifest comparison (6.1)
+
+### Completed
+- Fetched origin: master is still the consolidation baseline `ef5113e` and an ancestor of the branch; no reconciliation required.
+- Compared production's published surface (the `docs/` tree plus Jekyll-rendered routes) against the generated artifact manifest:
+  - All legacy URLs preserved: `/`, `/404.html`, `/cabane/` and the seven game routes, `/assets/main.css`, the four `/images/` assets and `CNAME`; the 64 legacy Cabane runtime files and homepage images are byte-identical (artifact verifier).
+  - Additive: `/projects/`, `/projects/cabane/`, `/projects/melimo/`, `/blog/`, `sitemap.xml`, `robots.txt`, Inter fonts, Tabler icons, the page-transition stylesheet and the noindex `leptos-proof` fixture.
+  - SEO deltas: canonical/social URLs move from HTTP to HTTPS (an intended fix); sitemap and robots now exist and both return 404 on production today.
+- Found and fixed one gap: production serves the GPL-3.0 site license at `/LICENSE` (HTTP 200), which the artifact omitted. `add_discovery` now copies `docs/LICENSE` byte-for-byte to the artifact root; the verifier checks exact bytes and the GPL notice, and the discovery test asserts the license content.
+- Documented one intentional exclusion: `/cabane/images/generation-prompts.md` is an authoring note Jekyll serves verbatim today (HTTP 200), excluded by the generator's Markdown policy; nothing references it and it remains in the repository.
+
+### Decisions
+- The license copy preserves the public license URL and the license-retention requirement.
+- The generation-prompts note is authoring metadata, not site content; keeping it unhosted is intentional.
+
+### Validation
+- All 32 Rust tests, strict Clippy, fmt, 89 Node tests passed; release generation plus the extended artifact verification passed with `LICENSE` present byte-identical.
+- Negative probe: replacing `docs/LICENSE` with a non-GPL notice failed verification ("Missing GPL notice") and was restored; `git diff` on `docs/` is clean.
+
+### Remaining concerns
+- Exact-width desktop/print/accessibility visual gates (3.1b/3.2b/3.4c) remain open before cutover approval.
+- 6.1a squash preparation, 6.2 Pages activation, 6.3 deployed verification and 6.4 Jekyll removal remain.
+
+### Recommended next step
+- Prepare the final squash commit (6.1a) with baseline SHA and rollback record, pending the owner's cutover approval and the visual release gates.
