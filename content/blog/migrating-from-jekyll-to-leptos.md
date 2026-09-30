@@ -80,7 +80,10 @@ points forward: future updates are now easy to delegate. Adding a project or
 an article is a small typed diff, the compiler complains when a record is
 wrong, and the verifier rebuilds the expected artifact from scratch every run.
 That loop is exactly what an agent needs, so my next change will probably
-happen with me reviewing instead of typing.
+happen with me reviewing instead of typing. What's missing now is the process
+on my side: a way to line up the work, hand it to an agent in a sensible order,
+and know what to check when I get a moment. The site is ready for that. I'm
+the part that still needs a routine.
 
 One regret: the site carried its own scaffolding for weeks. A demo page whose
 only job was to prove the new rendering worked stayed online long after anyone
