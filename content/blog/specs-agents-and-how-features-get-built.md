@@ -64,10 +64,10 @@ button. That is the whole feature, from my side of the keyboard.
 The boring part holds it all together: everything lives in a single repository
 the team shares. The lead owns the specs, writes the updates, and pushes them
 straight to main. The rest of us challenge, and we are expected to, but we do
-it by opening PRs the lead orchestrates, not by editing around each other. No
-specification stranded in a chat thread, no truth living in slides. When a
-spec is wrong it gets fixed on main, and the next person starts from something
-real.
+it by talking it through, not by editing around each other or opening our own
+pull requests. The lead opens and orchestrates those. No specification
+stranded in a chat thread, no truth living in slides. When a spec is wrong it
+gets fixed on main, and the next person starts from something real.
 
 ## The catch
 
