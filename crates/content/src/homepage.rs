@@ -47,12 +47,10 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "melimo-title",
             title: "Mélimo",
             tagline: "Your music, in your terminal.",
-            description: "A lightweight music player built in Rust. Search and stream audio with Deezer or Invidious, build one queue, and control playback from your keyboard. Explore your Deezer playlists and follow synchronized lyrics when available.",
+            description: "A lightweight music player built in Rust. Search and stream music, build your queue, and control playback from your keyboard. Explore playlists and follow synchronized lyrics when available.",
             tags: &["Rust", "Terminal UI", "macOS & Linux"],
             tags_label: "Mélimo technologies and platforms",
-            note: Some(
-                "Invidious instances are selected automatically for audio streaming. An unofficial client for both providers.",
-            ),
+            note: Some("Available on macOS and Linux."),
             destination: Link {
                 label: "Explore on GitHub →",
                 url: "https://github.com/JeremySomsouk/Melimo",

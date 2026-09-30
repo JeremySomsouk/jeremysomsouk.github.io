@@ -191,7 +191,7 @@ mod tests {
     }
 
     #[test]
-    fn projects_preserve_copy_and_have_unique_safe_identifiers_and_assets() {
+    fn projects_preserve_metadata_and_have_unique_safe_identifiers_and_assets() {
         let mut slugs = BTreeSet::new();
         let mut ids = BTreeSet::new();
         assert_eq!(HOMEPAGE.projects.len(), 2);
@@ -207,7 +207,6 @@ mod tests {
             for value in [
                 project.title,
                 project.tagline,
-                project.description,
                 project.tags_label,
                 project.destination.label,
                 project.destination.url,
@@ -217,9 +216,13 @@ mod tests {
             ]
             .into_iter()
             .chain(project.tags.iter().copied())
-            .chain(project.note)
             {
                 assert!(LEGACY.contains(&value.replace('&', "&amp;")), "{value}");
+            }
+            // Project descriptions and notes are maintained after the migration.
+            assert!(!project.description.trim().is_empty());
+            if let Some(note) = project.note {
+                assert!(!note.trim().is_empty());
             }
             assert!(project.image.width > 0 && project.image.height > 0);
             assert!(project.image.src.starts_with('/') && !project.image.src.contains(".."));
