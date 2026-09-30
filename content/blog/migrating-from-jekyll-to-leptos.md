@@ -9,9 +9,8 @@ tags = ["Rust", "Leptos", "Static sites"]
 The site you're reading used to be Jekyll. It worked fine, the whole time. It
 ran on a remote theme I never pinned, a Sass pipeline I never opened, and a
 Ruby toolchain I never had to touch. The thing just kept working. For clarity
-about the stakes: this is a
-personal site, the most demanding visitors are my kids coming for the games,
-and nobody ever filed a bug. I rewrote it anyway, in Rust, with
+about the stakes: this is a personal site, the most demanding visitors are my
+kids coming for the games, and nobody ever filed, or would file, a bug. I rewrote it anyway, in Rust, with
 [Leptos](https://book.leptos.dev/) doing the rendering. Three honest reasons:
 it sounded fun, I wanted to vibe code it with an AI agent doing the typing,
 and I wanted to know where the limits of that were. How far can an agent
