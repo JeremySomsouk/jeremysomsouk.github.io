@@ -126,7 +126,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("ripple/index.html"), Path("ripple/engine.wasm")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("ripple/engine.wasm")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")

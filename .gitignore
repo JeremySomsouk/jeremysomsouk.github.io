@@ -1,2 +1,6 @@
 .idea
 /target/
+# Multiplayer game development: no temporary room storage or credentials.
+services/guess/node_modules/
+services/guess/.wrangler/
+services/guess/.dev.vars*

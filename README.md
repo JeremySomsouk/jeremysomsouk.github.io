@@ -172,3 +172,95 @@ migration landed as squash `28e9b7b` with the pre-migration baseline and
 account-settings restore procedure recorded in its message), followed by a
 redeploy. The legacy Jekyll sources removed in this cleanup remain
 recoverable from that history.
+## Who said that?
+
+`/guess/` is a social game for 3–20 friends. The host prepares all questions and
+individual timers, shares a room code, and starts from the lobby. Players answer
+privately, independently match anonymous answers to authors, and compare their
+scores. Self-identification earns no points. The host advances through the
+prepared rounds. Rooms expire after 24 hours; there are no accounts or histories.
+
+The page follows the site's static Leptos rendering and small browser-controller
+pattern. The authoritative rules live in `services/guess/engine.mjs`, shared by
+the local WebSocket server and the Cloudflare Durable Object. Only sanitized,
+per-player views reach browsers. Clients display server deadlines and never
+calculate scores. The host can excuse disconnected participants from readiness
+checks for the current round; their submitted answers remain valid candidates.
+Skipped answerers may guess but are excluded from possible authors.
+
+After generating the preview as above:
+
+```sh
+cd services/guess
+npm ci
+npm test
+npm start
+```
+
+Open `http://localhost:8787/guess/` in four tabs. Create five questions in one tab
+and join its code with three different names in the others. Identity is stored
+per tab in session storage so refreshing reconnects without duplicating players.
+Local rooms are in memory and disappear if the server restarts. A reconnect in
+another device requires the original private token; room codes grant no privileges.
+The local server binds to loopback by default.
+
+To use the real local Cloudflare runtime instead, run `npm run dev` in
+`services/guess`, serve `target/site-preview` on port 8787, and open
+`http://localhost:8787/guess/?backend=worker`. That selects the local Worker at
+port 8788; shared invitations retain the transport selection.
+
+Shared links use `/guess/?room=CODE`, compatible with GitHub Pages without a
+client router. The local server additionally accepts `/guess/CODE`. The game is
+listed on the projects page. Production uses `https://somsouk-games-api.jh-somsouk.workers.dev`;
+localhost keeps using the local transport.
+
+The Cloudflare deployment is named `somsouk-games-api`. `wrangler.toml` declares
+one SQLite-backed Durable Object per room, with hibernating WebSockets and alarms
+for deadline/24-hour expiry. Both `https://www.somsouk.fr` and
+`https://somsouk.fr` are allowed origins, along with the local server on port 8787.
+All game rules are shared with the local server; scores and reveal progress are
+persisted authoritatively. Reconnecting restores the current question, deadline,
+private answer, submitted guesses, reveal screen and cumulative scores.
+Commands carry the current question ID to reject stale round replays.
+
+Deploy from a checkout of this branch:
+
+```sh
+cd services/guess
+npm ci
+npm test
+npm run test:worker                 # complete game against local Cloudflare runtime
+npx wrangler login
+npx wrangler deploy
+```
+
+`GET /` and `GET /health` are neutral health checks. WebSocket `/create` creates a room;
+`/room?room=CODE` joins/reconnects. There are no public room-state endpoints.
+`public/guess/config.js` centralizes the public production API origin. Publishing
+the frontend follows the existing GitHub Pages workflow; no Cloudflare Pages
+migration is involved. No credentials or account IDs belong in this repository.
+Apply Cloudflare edge rate limits before opening creation broadly (per-socket
+message and per-room connection limits are not an IP quota).
+
+Use the existing **Cloudflare Workers Builds** connection (no separate GitHub
+Actions deployment or manually created API token). In **somsouk-games-api →
+Settings → Build**, set:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `services/guess` |
+| Build command | `npm ci && npm test && npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Production branch | `master` after merging this change |
+| Node version | `22` or newer |
+
+Save and trigger/retry a build of a commit containing this implementation.
+Cloudflare bundles the JavaScript backend; it does not need Rust/Wasm tools.
+The existing GitHub Pages workflow continues to build the Rust/Leptos site and
+its Wasm assets. Keep non-production preview builds disabled until explicitly
+needed; do not point their deploy command at the production Worker.
+
+For an immediate backend test before merging, choose `feat/social-guess` as the
+Cloudflare production build branch temporarily, then return it to `master` once
+merged. This deploys the same existing Worker. The frontend still publishes only
+through the established GitHub Pages workflow.

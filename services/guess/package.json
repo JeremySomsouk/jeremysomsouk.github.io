@@ -1,0 +1,23 @@
+{
+  "name": "site-guess-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node local.mjs",
+    "test": "node --test *.test.mjs",
+    "test:worker": "GUESS_WORKER_TEST=1 node --test websocket.test.mjs",
+    "deploy": "wrangler deploy",
+    "build": "node --check engine.mjs && node --check worker.mjs && wrangler deploy --dry-run",
+    "dev": "wrangler dev --ip 127.0.0.1 --port 8788"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "wrangler": "4.76.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
