@@ -128,7 +128,9 @@ mod tests {
     use super::*;
     use std::collections::BTreeSet;
 
-    const LEGACY: &str = include_str!("../../../docs/_config.yml");
+    /// Frozen copy of the removed legacy Jekyll configuration, kept as the
+    /// parity evidence for the migrated homepage prose.
+    const LEGACY: &str = include_str!("../tests/fixtures/legacy-homepage.yml");
 
     #[test]
     fn prose_is_preserved_from_legacy_yaml() {

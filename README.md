@@ -45,8 +45,9 @@ reduced motion.
 
 Site styling lives in `styles/site.css`; self-hosted Inter fonts, Tabler icons
 and licenses live in `public/`. The site's own GPL-3.0 notice is
-`docs/LICENSE`, published at `/LICENSE`. The legacy Jekyll source in `docs/`
-remains the production site until cutover.
+`docs/LICENSE`, published at `/LICENSE`. `docs/` now contains only the legacy
+Cabane game runtime (copied byte-identical into the artifact), registered
+images, `CNAME` and the license.
 
 ## Build and preview
 
@@ -89,8 +90,8 @@ read-only permissions and deploys nothing.
 
 - **Homepage prose**: edit `content/home/*.md`; profile/resume/project records
   are typed in `crates/content/src/homepage.rs` (see
-  `content/home/README.md`). Keep both in sync with the legacy YAML until
-  cutover.
+  `content/home/README.md`). A frozen snapshot of the removed legacy YAML is
+  kept as a parity fixture in `crates/content/tests/fixtures/`.
 - **Articles**: create `content/blog/<slug>.md` with TOML front matter:
 
   ```markdown
@@ -114,19 +115,12 @@ read-only permissions and deploys nothing.
   register any new image in the static asset manifest; the presentation route
   is generated automatically (update the verifier's expected routes).
 
-## Migration status
+## Deployment
 
-The static Leptos generator is feature-complete and validated (all routes and
-assets preserved, walkthrough-tested, CI-green). Production still serves the
-legacy Jekyll site from `master`. Remaining steps before cutover:
-
-1. Exact-width desktop/print/accessibility visual comparison of the new pages
-   against the legacy site (release gate).
-2. One final squash commit of the whole migration onto `master`, with the
-   pre-cutover SHA and rollback instructions recorded.
-3. Activate GitHub Pages deployment of the generated artifact (CNAME, custom
-   404) and verify deployed routes, assets, HTTPS metadata and rollback.
-4. Remove the Jekyll configuration and Sass once nothing depends on it.
-
-Migration history and planning notes are preserved in the development branch
-history; the published tree carries only product documentation.
+Production serves the generated artifact through the `Deploy Pages` workflow:
+every push to `master` builds, verifies and publishes it to GitHub Pages with
+HTTPS enforced. Rollback is `git revert` of the offending commit (the
+migration landed as squash `28e9b7b` with the pre-migration baseline and
+account-settings restore procedure recorded in its message), followed by a
+redeploy. The legacy Jekyll sources removed in this cleanup remain
+recoverable from that history.

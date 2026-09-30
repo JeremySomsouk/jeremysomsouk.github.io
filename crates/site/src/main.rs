@@ -1,7 +1,7 @@
 use std::{error::Error, path::Path};
 
 use site::output::{Manifest, OutputPath, Route};
-use site_content::{Indexing, PageMetadata};
+use site_content::Indexing;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -54,14 +54,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     ] {
         manifest.add_static_asset(&root.join("public"), OutputPath::new(asset)?)?;
     }
-    let route = Route::new("/leptos-proof/")?;
-    let html = site::render_proof_page(PageMetadata {
-        description: Some(
-            "An isolated build-time rendering proof for the website migration.".into(),
-        ),
-        ..PageMetadata::new("Static Leptos proof")
-    })?;
-    manifest.insert_page(route, html, Indexing::NoIndexNoFollow)?;
     manifest.insert(
         OutputPath::new("assets/main.css")?,
         site::SITE_CSS.as_bytes().to_vec(),
