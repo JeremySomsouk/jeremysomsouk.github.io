@@ -19,8 +19,8 @@ If you have kept up with modern Java, you already like half of Rust.
 Cargo is Maven with the XML and the ceremony removed. A project starts with a
 two-line manifest, dependencies are one line each, and the toolchain handles
 build, test, docs and formatting without a plugin summit. I have spent entire
-afternoons of my life in Gradle configuration. I have never once thought about
-that in Cargo.
+afternoons of my life in Gradle and Maven configuration. I have never once
+thought about that in Cargo.
 
 And the type system rhymes with where Java is heading. Records are Rust
 structs. Sealed interfaces are Rust enums, and Rust enums are fully committed
