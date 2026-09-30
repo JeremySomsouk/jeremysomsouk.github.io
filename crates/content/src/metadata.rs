@@ -129,7 +129,9 @@ impl PageMetadata {
     pub fn homepage() -> Self {
         let profile = &crate::HOMEPAGE.profile;
         Self {
-            description: Some("Just a simple playground".into()),
+            description: Some(
+                "Software engineer at Doctolib building healthcare software, and developing side projects on the web.".into(),
+            ),
             canonical: Some(CanonicalUrl::home()),
             social: Some(SocialMetadata {
                 title: profile.role.into(),

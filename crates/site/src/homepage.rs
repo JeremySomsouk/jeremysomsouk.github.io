@@ -71,7 +71,7 @@ mod tests {
         for text in [
             HOMEPAGE.profile.name,
             HOMEPAGE.profile.email,
-            "<mark>Java</mark>",
+            "<mark>great dad</mark>",
             "Gaming",
             "Photography",
             "Chess",
