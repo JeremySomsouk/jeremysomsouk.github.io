@@ -92,5 +92,6 @@ ever read. Scaffolding helps while you build. Then you take it down.
 Would I recommend it as a weekend project? The migration was the fun part,
 and honestly the last one this site needs. The point of the setup is to never
 have to bother again: with typed content, the compiler and the verifier in
-the loop, changing the site is a prompt away. Describe it, review the diff,
-merge, done. You just read the result.
+the loop, changing the site is a prompt away, and standing up a new one is a
+short conversation. Describe it, review the diff, merge, done. You just read
+the result.
