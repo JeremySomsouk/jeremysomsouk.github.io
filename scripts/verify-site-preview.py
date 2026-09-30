@@ -217,7 +217,7 @@ def verify():
     require("view-transition-name" not in transition_css,
             "The transition must not animate individual page elements")
     require("::view-transition-group(root)" in transition_css
-            and "background: #f4eadb" in transition_css,
+            and "background: #f8f4eb" in transition_css,
             "The root transition must carry the warm doorway veil")
     require("@media (prefers-reduced-motion: reduce)" in transition_css
             and "navigation: none" in transition_css
