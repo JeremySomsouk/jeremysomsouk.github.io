@@ -45,7 +45,8 @@ book's process. It is ours, in their format.
 ## What a feature looks like now
 
 The last feature I scoped went like this. I wrote the QRSPI page, it became a
-proposal after some arguing, the agents worked the task list from there. Then
+proposal after some arguing, I validated the tech scoping with the team, and
+then the agents worked the task list from there. Then
 the amendments arrived, because they always do: scope corrections, things we
 learned halfway through. That used to mean evenings of manual syncing and
 re-reading. Now the maintenance is skills: one keeps the shared schema and
