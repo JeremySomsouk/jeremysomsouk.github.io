@@ -41,10 +41,9 @@ But those three were the contract.
 Two small crates. One holds typed content: my profile, resume entries,
 projects, and articles like this one. Articles are just Markdown files with
 a small TOML header; a bad date or a weird slug fails the build with the file
-path. The
-other renders that content using Leptos's server-side rendering, at build
-time, into complete HTML files. No router, no hydration, no JavaScript on
-ordinary pages. This article ships none.
+path. The other renders that content using Leptos's server-side rendering, at
+build time, into complete HTML files. No router, no hydration, no JavaScript
+on ordinary pages. This article ships none.
 
 A typed manifest owns every output path and refuses collisions, unsafe paths
 and symlinks. Then a separate Python script rebuilds the expected artifact from
@@ -69,20 +68,20 @@ an asset or rebuild the engine wrong, and the build fails before publishing.
 
 ## Was it worth it
 
-For a site this size, honestly, maybe not. Jekyll worked. But I wanted a build
+For a site this size, honestly, maybe not. Jekyll worked. But I got the build
 I trust: typed content where the compiler catches my typos, a real 404, https
 canonicals, and a deploy that builds, verifies and publishes in one pass. The
 whole migration landed as a single commit with a rollback plan I wrote down
-and hope to never use. And the experiment answered its own question: an agent
-can carry a surprising amount of the discipline, byte-identity checks and
-Wasm parsing included, as long as you keep saying no to shortcuts.
+and hope to never use.
 
-There is a second payoff, and it points forward. Future updates are now easy
-to vibe code: adding a project or an article is a small typed diff, the
-compiler complains when a record is wrong, and the verifier rebuilds the
-expected artifact from scratch every run. That loop is exactly what an AI
-agent needs to be useful, so my next change will probably happen with me
-reviewing instead of typing.
+As an experiment, it answered its own question. An agent can carry a surprising
+amount of the discipline, byte-identity checks and Wasm parsing included, as
+long as the human keeps saying no to shortcuts. And there is a payoff that
+points forward: future updates are now easy to vibe code. Adding a project or
+an article is a small typed diff, the compiler complains when a record is
+wrong, and the verifier rebuilds the expected artifact from scratch every run.
+That loop is exactly what an agent needs, so my next change will probably
+happen with me reviewing instead of typing.
 
 One regret: I kept a "proof" page around long past the point where it proved
 anything, and let migration notes pile up in the published tree for weeks.
