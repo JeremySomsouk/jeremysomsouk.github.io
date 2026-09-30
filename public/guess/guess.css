@@ -31,3 +31,20 @@
 @keyframes guess-arrive { from { opacity: 0; transform: translateY(.4rem); } to { opacity: 1; transform: none; } }
 @media (max-width: 420px) { .guess-timers { display: block; } .guess-card { padding: .9rem; } }
 @media (prefers-reduced-motion: reduce) { .guess-reveal { animation: none; } }
+
+/* Active rooms prioritize the shared code and the current action. */
+.guess-game[data-phase] #guess-intro { display: none; }
+.guess-game[data-phase] h2 { font-size: 1rem; color: var(--site-muted); font-weight: 500; margin: 0 0 1.25rem; }
+.guess-invitation { display: grid; justify-items: start; gap: .5rem; margin-bottom: 1.75rem; }
+.guess-invitation .guess-label { margin: 0; font-size: .85rem; }
+.guess-invitation .guess-code { margin: 0 !important; font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.15; letter-spacing: .12em; }
+.guess-invitation button { margin: .5rem 0 0; }
+.guess-invite-link { display: block; max-width: 100%; font-size: .85rem; }
+.guess-player-heading { font-size: 1rem; margin: 0 0 .5rem; }
+.guess-players li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: .85rem; }
+.guess-player-name { color: var(--site-text); min-width: 0; overflow-wrap: anywhere; }
+.guess-player-note { flex-shrink: 0; font-size: .8rem; }
+.guess-start { display: grid; gap: .5rem; margin-top: 1.5rem; }
+.guess-start button { width: 100%; margin: 0; }
+.guess-game .guess-hint { font-size: .85rem; margin: 0; }
+.guess-host { margin-top: 1.5rem !important; font-size: .85rem; }

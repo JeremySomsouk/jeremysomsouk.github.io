@@ -14,9 +14,8 @@ pub fn render_guess() -> Result<String, serde_json::Error> {
             <WebsiteLayout>
                 <nav class="page-trail" aria-label="Breadcrumb"><a href="/">"Home"</a><a href="/projects/">"Projects"</a><span aria-current="page">"Who said that?"</span></nav>
                 <section class="guess-game" aria-labelledby="guess-title">
-                    <p class="guess-eyebrow">"A game for friends · 3–20 players"</p>
                     <h2 id="guess-title">"Who said that?"</h2>
-                    <p>"Answer privately. Guess who wrote each answer. Compare your guesses together."</p>
+                    <p id="guess-intro">"Guess which friend wrote each answer."</p>
                     <p id="guess-connection" role="status"></p>
                     <p id="guess-error" role="alert"></p>
                     <div id="guess-app"><p>"Getting the table ready…"</p></div>

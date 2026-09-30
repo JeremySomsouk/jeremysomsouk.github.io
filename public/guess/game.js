@@ -44,7 +44,7 @@ function begin(intent) {
       }
       render();
     } else if (event.type === 'error') showError(event.message);
-  }, message => { connection.textContent = message; if (/closed|Cannot/.test(message)) pending = false; });
+  }, message => { connection.textContent = message === 'Connected' ? '' : message; if (/closed|Cannot/.test(message)) pending = false; });
   transport.connect(intent);
 }
 function inputField(label, attrs, oninput) {
@@ -82,7 +82,7 @@ function setup() {
     if (draftQuestions.some(q => [...q.text.trim()].length < 3 || [...q.text.trim()].length > 200 || (q.seconds !== null && (!Number.isInteger(q.seconds) || q.seconds < 15 || q.seconds > 300)))) return showError('Check question text and timers (15–300 seconds).');
     begin({ type: 'create_room', name: setupName, questions: draftQuestions });
   } }, el('h3', {}, 'Create a game'), name, questionEditor(), button('+ Add question', () => { draftQuestions.push({ text: '', seconds: 60 }); setup(); }, draftQuestions.length >= 20),
-    el('p', {}, 'Prepare every question now. Once started, questions and timers are locked.'), el('button', { type: 'submit', disabled: !available }, 'Create room'));
+    el('p', {}, 'Questions are locked when the game starts.'), el('button', { type: 'submit', disabled: !available }, 'Create room'));
   const join = el('form', { class: 'guess-card', onsubmit: e => { e.preventDefault(); if (!pending) begin({ type: 'join_room', code: roomCode.trim().toUpperCase(), name: joinName }); } },
     el('h3', {}, 'Join friends'), inputField('Room code', { id: 'room-code', required: true, minlength: 4, maxlength: 8, value: roomCode, autocapitalize: 'characters', pattern: '[23456789ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz]{4,8}' }, e => { roomCode = e.target.value.toUpperCase(); }),
     inputField('Your name', { id: 'join-name', maxlength: 24, required: true, value: joinName, autocomplete: 'nickname' }, e => { joinName = e.target.value; }), el('button', { type: 'submit', disabled: !available }, 'Join room'));
@@ -104,16 +104,33 @@ function render() {
   const active = document.activeElement; const focusId = active?.id; const selection = active?.selectionStart;
   app.replaceChildren();
   const me = state.players.find(p => p.id === state.me);
-  app.append(el('div', { class: 'guess-room-header' }, el('strong', {}, `Room ${state.code}`), el('span', {}, `${state.players.length} players`)));
+  app.closest('.guess-game')?.setAttribute('data-phase', state.phase);
   if (state.phase === 'Lobby') {
-    app.append(el('h3', {}, state.isHost ? 'Gather your friends' : "You’re in!"), el('p', {}, state.isHost ? 'Share this code or link. Nothing starts until you press Start game.' : 'Waiting for the host to start…'));
     const link = `${location.origin}/guess/?room=${state.code}${backendQuery}`;
-    app.append(el('p', { class: 'guess-code' }, state.code), el('a', { href: link }, link),
-      button('Copy invitation', async () => { try { await navigator.clipboard.writeText(link); connection.textContent = 'Invitation copied.'; } catch { showError('Copy the invitation link above.'); } }),
-      el('ul', { class: 'guess-players' }, state.players.map(p => el('li', {}, p.name, p.host ? ' · Host' : '', p.id === state.me ? ' · You' : '', p.connected ? ' · ready' : ' · disconnected'))));
-    if (state.isHost) app.append(el('p', {}, `${state.players.length} players in the room · ${state.total} prepared questions`), button('Start game', () => send({ type: 'start_game' }), state.players.length < 3), state.players.length < 3 ? el('p', {}, 'Need at least 3 players') : null);
+    const invitation = el('div', { class: 'guess-invitation' },
+      el('p', { class: 'guess-label' }, 'Room code'),
+      el('p', { class: 'guess-code' }, state.code),
+      button('Invite friends', async () => {
+        try {
+          if (navigator.share) await navigator.share({ title: 'Who said that?', url: link });
+          else { await navigator.clipboard.writeText(link); connection.textContent = 'Invite link copied.'; }
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+          showError('Copy this link to invite friends.');
+          if (!invitation.querySelector('.guess-invite-link')) invitation.append(el('a', { class: 'guess-invite-link', href: link }, link));
+        }
+      }));
+    app.append(invitation, el('h3', { class: 'guess-player-heading' }, `Players · ${state.players.length}`),
+      el('ul', { class: 'guess-players' }, state.players.map(p => el('li', {},
+        el('span', { class: 'guess-player-name' }, p.name),
+        el('span', { class: 'guess-player-note' }, [p.id === state.me ? 'You' : '', p.host ? 'Host' : '', !p.connected ? 'Offline' : ''].filter(Boolean).join(' · '))))));
+    if (state.isHost) {
+      const missing = Math.max(0, 3 - state.players.length);
+      app.append(el('div', { class: 'guess-start' }, button('Start game', () => send({ type: 'start_game' }), missing > 0),
+        missing ? el('p', { class: 'guess-hint' }, `Invite ${missing} more ${missing === 1 ? 'player' : 'players'} to start.`) : null));
+    } else app.append(el('p', { class: 'guess-hint' }, 'Waiting for the host…'));
   } else if (state.phase === 'Finished') {
-    app.append(leaderboard(true), el('p', {}, 'Thanks for playing. One more game?'), button('New game', () => { transport.close(); location.assign('/guess/'); }));
+    app.append(leaderboard(true), el('p', {}, 'Play again?'), button('New game', () => { transport.close(); location.assign('/guess/'); }));
   } else {
     app.append(el('p', { class: 'guess-eyebrow' }, `Question ${state.current + 1} of ${state.total}`), el('h3', { class: 'guess-question' }, state.question.text));
     if (state.phase === 'Answering') {
@@ -122,12 +139,12 @@ function render() {
       else {
         const answer = el('textarea', { id: 'your-answer', required: true, maxlength: 120, rows: 3, oninput: e => { answerDraft = e.target.value; } }, answerDraft);
         app.append(el('form', { class: 'guess-card', onsubmit: e => { e.preventDefault(); send({ type: 'submit_answer', text: answerDraft }); } }, el('label', { for: 'your-answer' }, 'Your answer', answer), el('button', { type: 'submit' }, me.answered ? 'Update answer' : 'Submit answer')),
-          me.answered ? el('p', {}, 'Answer submitted ✓ You can edit until the round closes.') : null);
+          me.answered ? el('p', {}, 'Answer submitted ✓') : null);
       }
       updateClock();
     } else if (state.phase === 'Guessing') {
-      app.append(el('p', {}, 'Who wrote each answer? Use each name once. Your own answer earns no point.'), el('p', {}, `${state.players.filter(p => p.guessed && !p.excluded).length} / ${state.players.filter(p => !p.excluded).length} guesses submitted`));
-      if (!me.answered) app.append(el('p', {}, 'You skipped answering. You may still guess, but your name is not a possible author.'));
+      app.append(el('p', {}, 'Match each answer to a different friend. Your own earns no point.'), el('p', {}, `${state.players.filter(p => p.guessed && !p.excluded).length} / ${state.players.filter(p => !p.excluded).length} guesses submitted`));
+      if (!me.answered) app.append(el('p', {}, 'No answer this round. You can still guess.'));
       if (me.excluded) app.append(el('p', {}, 'You are watching this round.'));
       else if (state.guesses) app.append(el('p', { class: 'guess-card' }, 'Guesses submitted ✓ Waiting for everyone…'));
       else {
@@ -145,7 +162,6 @@ function render() {
         }
         form.append(el('button', { type: 'submit' }, 'Submit my guesses')); app.append(form); refreshOptions();
       }
-      app.append(el('p', {}, 'Discuss together, then commit to your own guesses.'));
     } else {
       const revealing = state.phase === 'Revealing';
       app.append(el('h3', {}, revealing ? 'The authors revealed' : 'Question complete'));
