@@ -77,6 +77,13 @@ and hope to never use. And the experiment answered its own question: an agent
 can carry a surprising amount of the discipline, byte-identity checks and
 Wasm parsing included, as long as you keep saying no to shortcuts.
 
+There is a second payoff, and it points forward. Future updates are now easy
+to vibe code: adding a project or an article is a small typed diff, the
+compiler complains when a record is wrong, and the verifier rebuilds the
+expected artifact from scratch every run. That loop is exactly what an AI
+agent needs to be useful, so my next change will probably happen with me
+reviewing instead of typing.
+
 One regret: I kept a "proof" page around long past the point where it proved
 anything, and let migration notes pile up in the published tree for weeks.
 Fixtures are for branches. Ship the site.
