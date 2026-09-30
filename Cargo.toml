@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/content", "crates/site"]
+members = ["crates/content", "crates/site", "crates/ripple"]
 exclude = ["games/memory"]
 resolver = "3"
 
@@ -11,3 +11,6 @@ publish = false
 [workspace.dependencies]
 leptos = { version = "=0.8.20", default-features = false, features = ["ssr"] }
 site-content = { path = "crates/content" }
+
+[profile.release.package.ripple-engine]
+opt-level = "s"

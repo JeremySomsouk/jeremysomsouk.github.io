@@ -9,6 +9,8 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
     let home = &HOMEPAGE;
     let body = view! {
         <WebsiteLayout>
+            <div class="ripple-home">
+                <button class="ripple-spark" type="button" aria-label="Investigate the small search pulse"></button>
             <Section id="about-me" title="About Me".to_owned()>
                 <div class="about-layout">
                     <img class="profile-image" src=home.profile.image.src alt=home.profile.image.alt
@@ -22,6 +24,12 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                     {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }).collect_view()}
                 </div>
             </Section>
+                <div class="ripple-discovery" hidden=true>
+                    <p data-ripple-clue="" role="status" aria-live="polite"></p>
+                    <a data-ripple-enter="" href="/ripple/" hidden=true>"Enter Ripple →"</a>
+                    <button data-ripple-reset="" type="button" hidden=true>"Hide & reset"</button>
+                </div>
+            </div>
             {home.resume.iter().map(|section| view! {
                 <Section id=section.kind.id() title=section.kind.title().to_owned()>
                     {section.entries.iter().map(|entry| view! {
@@ -36,13 +44,14 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
             <Section id="a-little-more-about-me" title=home.hobbies_title.to_owned()>
                 <Prose content=home.hobbies.0.to_owned()/>
             </Section>
+            <script type="module" src="/ripple/home.js"></script>
         </WebsiteLayout>
     };
     crate::document::render_document_with_assets(
         site_content::PageMetadata::homepage(),
         body,
         crate::document::DocumentAssets {
-            stylesheets: &["/assets/page-transition.css"],
+            stylesheets: &["/assets/page-transition.css", "/ripple/ripple.css"],
             ..Default::default()
         },
     )
@@ -93,13 +102,7 @@ mod tests {
                 assert!(html.contains(&format!("id=\"{}\"", entry.heading_id)));
             }
         }
-        for forbidden in [
-            "<script src",
-            ".wasm",
-            "modulepreload",
-            "noindex",
-            "href=\"#\"",
-        ] {
+        for forbidden in [".wasm", "modulepreload", "noindex", "href=\"#\""] {
             assert!(!html.contains(forbidden), "Unexpected {forbidden}");
         }
     }

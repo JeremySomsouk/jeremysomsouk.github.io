@@ -26,12 +26,21 @@ jobs:
           persist-credentials: false
       - name: Install pinned Rust toolchain
         run: rustup show active-toolchain
+      - name: Build Ripple engine
+        run: |
+          rustup target add wasm32-unknown-unknown
+          bash scripts/build-ripple.sh
       - name: Rust checks
         run: |
           cargo fmt --check
           cargo check --locked
           cargo clippy --locked --all-targets --all-features -- -D warnings
           cargo test --locked
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ripple runtime tests
+        run: node --test scripts/ripple.test.mjs
       - name: Build static preview
         run: SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
       - name: Verify preview artifact

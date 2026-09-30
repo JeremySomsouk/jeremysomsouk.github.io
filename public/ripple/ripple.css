@@ -1,0 +1,61 @@
+/* Ripple inherits the portfolio's typography and palette. */
+.ripple-game { padding-block: 1rem 3rem; }
+.ripple-intro { max-width: 42rem; margin: 0 auto 2.5rem; text-align: center; }
+.site-shell .ripple-eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .75rem; color: var(--site-lilac); }
+.ripple-intro h2 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 400; letter-spacing: -.055em; margin: .3rem 0; }
+.site-shell .ripple-tagline { font-size: 1.25rem; color: var(--site-text); }
+.ripple-workspace { display: grid; grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); gap: 2rem; align-items: start; }
+.ripple-board { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 5px; padding-block: 1.25rem; }
+.ripple-game button, .ripple-game select, .ripple-discovery button {
+  font: inherit; min-height: 44px; border: 1px solid var(--site-rule); border-radius: 8px;
+  background: transparent; color: var(--site-text); cursor: pointer; padding: .5rem .75rem;
+}
+.ripple-game button:focus-visible, .ripple-game select:focus-visible, .ripple-discovery button:focus-visible, .ripple-spark:focus-visible {
+  outline: 3px solid var(--site-lilac); outline-offset: 3px;
+}
+.ripple-game button:hover:not(:disabled), .ripple-game button[aria-pressed="true"] { background: #302044; border-color: var(--site-lilac); }
+.ripple-game button:disabled { cursor: default; }
+.ripple-game .ripple-cell { position: relative; min-width: 0; height: 58px; padding: 0; font-variant-numeric: tabular-nums; background: #191333; border-radius: 10px; transition: background 120ms, border-color 120ms; }
+.ripple-cell[data-wall="true"] { background: transparent; border-color: transparent; color: #6f648b; }
+.ripple-cell::after { position: absolute; inset: auto 0 1px; text-align: center; font-size: .6rem; }
+.ripple-cell[data-mark="frontier"] { border-style: dashed; border-color: #d0a9fa; }
+.ripple-cell[data-mark="frontier"]::after { content: '○'; }
+.ripple-cell[data-mark="visited"] { background: #302044; }
+.ripple-cell[data-mark="visited"]::after { content: '✓'; }
+.ripple-cell[data-mark="current"] { border: 2px solid #f3efff; }
+.ripple-cell[data-mark="current"]::after { content: '•'; }
+.ripple-cell[data-mark="path"] { background: #d0a9fa; color: #0b0826; border-color: #d0a9fa; }
+.ripple-cell[data-mark="path"]::after { content: '→'; }
+.ripple-cell.changed { box-shadow: inset 0 0 0 2px #d7bc82; }
+.ripple-cell.original { outline: 2px dashed #d7bc82; outline-offset: -5px; }
+.ripple-cell.ripple-point { animation: ripple-change 700ms ease-out; }
+@keyframes ripple-change { from { box-shadow: 0 0 0 0 #d7bc8270; } to { box-shadow: 0 0 0 14px #d7bc8200; } }
+.ripple-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-block: .75rem; }
+.ripple-controls button:disabled { opacity: .5; }
+#ripple-budget { font-size: .85rem; color: var(--site-muted); }
+.site-shell .ripple-legend, .ripple-seed { font-size: .75rem; line-height: 1.8; }
+.ripple-observation { border-left: 1px solid var(--site-rule); padding-left: 1.5rem; }
+.ripple-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-block: 1.5rem; }
+.ripple-metrics dd { text-align: right; margin: 0; font-variant-numeric: tabular-nums; }
+#ripple-feedback h3 { font-size: 1rem; color: var(--site-lilac); }
+#ripple-feedback p { font-size: .875rem; }
+/* Level 0 travels between real landmarks. Only its nodes accept pointer input. */
+.ripple-home { position: relative; }
+.ripple-spark { display: block; position: absolute; top: -1.3rem; right: 0; width: 44px; height: 44px; background: transparent; border: 0; cursor: pointer; color: var(--site-lilac); border-radius: 50%; }
+.ripple-spark::after { content: ''; display: block; width: 5px; height: 5px; border-radius: 50%; margin: auto; background: currentColor; opacity: .45; animation: ripple-hint 5s ease-in-out 3; }
+@keyframes ripple-hint { 50% { opacity: .85; transform: scale(1.6); } }
+.ripple-spark[hidden] { display: none; }
+.ripple-layer { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.ripple-layer line { stroke: #d0a9fa; stroke-width: 1; opacity: .16; }
+.ripple-layer line.traced { opacity: .85; stroke-width: 2; }
+.ripple-home-node { position: absolute; width: 44px; height: 44px; border: none; background: transparent; color: #d0a9fa; pointer-events: auto; border-radius: 50%; transform: translate(-50%,-50%); font: inherit; font-size: .7rem; cursor: pointer; }
+.ripple-home-node span { display: inline-grid; place-items: center; min-width: 17px; min-height: 17px; background: #0b0826; border: 1px solid #d0a9fa; border-radius: 50%; }
+.ripple-home-node[data-active="true"] span { background: #d0a9fa; color: #0b0826; }
+.ripple-home-node:focus-visible { outline: 3px solid #d0a9fa; outline-offset: 2px; }
+.ripple-discovery { padding-block: .5rem; font-size: .875rem; }
+.ripple-discovery p { margin: 0 0 .5rem; }
+.ripple-discovery[hidden] { display: none; }
+@media (max-width: 800px) { .ripple-workspace { grid-template-columns: 1fr; gap: 1rem; } .ripple-observation { border-left: 0; border-top: 1px solid var(--site-rule); padding: 1rem 0 0; } }
+@media (max-width: 450px) { .ripple-board { gap: 2px; margin-inline: -.5rem; } .ripple-game .ripple-cell { height: 48px; border-radius: 6px; font-size: .75rem; } }
+@media (prefers-reduced-motion: reduce) { .ripple-cell, .ripple-spark::after, .ripple-cell.ripple-point { animation: none; transition: none; } }
+@media print { .ripple-home, .ripple-discovery { display: none; } }

@@ -5,6 +5,10 @@ on:
     paths:
       - 'docs/**'
       - 'games/**'
+      - 'crates/ripple/**'
+      - 'public/ripple/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
       - 'scripts/**'
       - '.github/workflows/cabane-checks.yml'
   push:
@@ -12,6 +16,10 @@ on:
     paths:
       - 'docs/**'
       - 'games/**'
+      - 'crates/ripple/**'
+      - 'public/ripple/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
       - 'scripts/**'
       - '.github/workflows/cabane-checks.yml'
 
@@ -26,11 +34,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Build Ripple engine
+        run: |
+          rustup target add wasm32-unknown-unknown
+          bash scripts/build-ripple.sh
       - name: JavaScript tests
         run: node --test scripts/*.test.mjs
       - name: JavaScript syntax and whitespace
         run: |
           for file in docs/cabane/lumiere/*.mjs docs/cabane/river/*.mjs; do node --check "$file"; done
+          for file in public/ripple/*.js; do node --check "$file"; done
           git diff --check
       - name: Rust tests and Wasm build
         run: |

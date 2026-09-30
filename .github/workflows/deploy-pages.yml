@@ -32,6 +32,10 @@ jobs:
           persist-credentials: false
       - name: Install pinned Rust toolchain
         run: rustup show active-toolchain
+      - name: Build Ripple engine
+        run: |
+          rustup target add wasm32-unknown-unknown
+          bash scripts/build-ripple.sh
       - name: Rust checks
         run: |
           cargo fmt --check

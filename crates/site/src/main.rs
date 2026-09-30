@@ -23,6 +23,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         site::render_projects()?,
         Indexing::Index,
     )?;
+    manifest.insert_page(
+        Route::new("/ripple/")?,
+        site::render_ripple()?,
+        Indexing::Index,
+    )?;
+    manifest.add_static_asset(&root.join("target"), OutputPath::new("ripple/engine.wasm")?)?;
     for project in site_content::HOMEPAGE.projects {
         manifest.insert_page(
             Route::new(&project.presentation_path())?,
@@ -40,6 +46,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     for asset in [
         "assets/page-transition.css",
+        "ripple/engine.js",
+        "ripple/game.js",
+        "ripple/home.js",
+        "ripple/ripple.css",
         "fonts/inter/inter-latin-wght-italic.woff2",
         "fonts/inter/inter-latin-wght-normal.woff2",
         "fonts/inter/inter-vietnamese-wght-italic.woff2",
