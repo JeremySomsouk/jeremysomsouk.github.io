@@ -55,9 +55,9 @@ question the type system answers.
 
 Here is the concrete story, and the honest reason it exists: I have no
 history with JavaScript whatsoever. The choice was never Rust versus
-JavaScript. It was learn JavaScript properly, or write the game in the
-language I already know and compile it to the browser. WebAssembly settled
-that question.
+JavaScript. It was learn JavaScript properly, or start learning Rust, a
+language I wanted to learn anyway, and compile it to the browser. WebAssembly
+settled that question.
 
 The memory game on this site has its logic in a Rust crate: 183 lines that
 shuffle a deck, track flips, score matches. That
