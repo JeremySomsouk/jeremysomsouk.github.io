@@ -87,5 +87,8 @@ One regret: I kept a "proof" page around long past the point where it proved
 anything, and let migration notes pile up in the published tree for weeks.
 Fixtures are for branches. Ship the site.
 
-If you have a small static site and a free weekend, it's a fun project. You
-just read the result.
+Would I recommend it as a weekend project? The migration was the fun part,
+and honestly the last one this site needs. The point of the setup is to never
+have to bother again: with typed content, the compiler and the verifier in
+the loop, changing the site is a prompt away. Describe it, review the diff,
+merge, done. You just read the result.
