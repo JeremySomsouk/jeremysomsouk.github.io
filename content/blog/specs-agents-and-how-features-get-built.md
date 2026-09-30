@@ -61,13 +61,15 @@ button. That is the whole feature, from my side of the keyboard.
 
 ## One repository
 
-The boring part holds it all together. Everything lives in a single repository
-the team shares, spec changes are committed and pushed to main directly, and
-everyone is expected to do it. No specification stranded in a chat thread, no
-truth living in slides. If the spec is wrong, you fix the spec, on main, and
-the next person starts from something real. My personal website runs the same
-shape in miniature: ideas in a vault, one branch per article, a verifier that
-rebuilds expectations from scratch, and me saying no to shortcuts.
+The boring part holds it all together: everything lives in a single repository
+the team shares. The lead owns the specs, writes the updates, and pushes them
+straight to main. The rest of us challenge, and we are expected to, but we do
+it by opening PRs the lead orchestrates, not by editing around each other. No
+specification stranded in a chat thread, no truth living in slides. When a
+spec is wrong it gets fixed on main, and the next person starts from something
+real. My personal website runs the same shape in miniature, with me as the
+lead of a team of one: ideas in a vault, one branch per article, a verifier
+that rebuilds expectations from scratch, and me saying no to shortcuts.
 
 ## The catch
 
