@@ -139,7 +139,11 @@ mod tests {
     fn generated_blog_excludes_unpublished_content_and_preserves_metadata() {
         let root = Fixture(std::env::temp_dir().join(format!("site-blog-{}", std::process::id())));
         fs::create_dir(&root.0).expect("test dir");
-        let content = root.0.join("content");
+        // macOS resolves the system temporary directory through symlinked
+        // components such as /var; canonicalize so the output guard validates
+        // the real filesystem layout instead of rejecting the host's aliases.
+        let root = fs::canonicalize(&root.0).expect("canonical test dir");
+        let content = root.join("content");
         fs::create_dir(&content).expect("content dir");
         let fixture = include_str!("../../content/tests/fixtures/articles/first-note.md");
         for (slug, date, draft) in [
@@ -170,7 +174,7 @@ mod tests {
             )
             .expect("image");
         add_blog(&mut manifest, &articles, date).expect("generate");
-        let output = root.0.join("output");
+        let output = root.join("output");
         manifest.write_new(&output).expect("write");
         assert!(!output.join("blog/draft").exists());
         assert!(!output.join("blog/future").exists());

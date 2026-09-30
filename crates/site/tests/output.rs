@@ -18,6 +18,10 @@ impl Fixture {
             NEXT.fetch_add(1, Ordering::Relaxed)
         ));
         fs::create_dir(&path)?;
+        // macOS exposes the system temporary directory through symlinked
+        // components such as /var; canonicalize so the symlink guards below
+        // validate the real filesystem layout instead of rejecting host aliases.
+        let path = fs::canonicalize(&path)?;
         Ok(Self(path))
     }
 }
