@@ -36,7 +36,8 @@ artifact to `target/site-preview/`. The generator:
 - enforces route ownership, path safety and artifact completeness, verified
   independently by `scripts/verify-site-preview.py`.
 
-Ordinary pages contain no JavaScript or Wasm. The Cabane games keep their
+Ordinary content pages contain no JavaScript or Wasm. The homepage has a dormant
+Ripple discovery controller; it fetches the Rust/Wasm engine only on interaction. The Cabane games keep their
 self-contained controllers; the generator must not rewrite, rename or import
 their internals (see `crates/site/tests/output.rs` and the artifact verifier
 for the enforced boundary). A gentle CSS cross-document transition between the
@@ -49,12 +50,31 @@ and licenses live in `public/`. The site's own GPL-3.0 notice is
 Cabane game runtime (copied byte-identical into the artifact), registered
 images, `CNAME` and the license.
 
+## Ripple
+
+`/ripple/` is a pathfinding puzzle: change cell costs or block a cell with a
+budget of two interventions to make the search pass through the lower waypoint.
+Undo, reset, replay, step and Dijkstra/A* comparison use the same deterministic
+input (seed `7F93A2`). Numbers are entry costs; the start costs zero. A* uses an
+admissible Manhattan heuristic on unit grid edges and falls back to zero on
+arbitrary graphs. Before/after feedback shows the original path, changed costs,
+exploration counts and the first different node selection.
+
+`crates/ripple` owns graphs, validated level definitions, interventions and pure
+search events. Leptos renders the static page; `public/ripple` plays the Rust/Wasm
+events through a small raw ABI, following the existing Memory integration.
+The homepage hides a six-node version along its actual section and project
+landmarks. Discovery loads the engine; solving reveals an optional entrance.
+No backend or client router is required. The Wasm build is generated into
+`target/ripple/` and registered explicitly in the publication manifest.
+
 ## Build and preview
 
 The checked-in `rust-toolchain.toml` selects Rust 1.96.0.
 
 ```sh
 rm -rf target/site-preview          # disposable generated output only
+bash scripts/build-ripple.sh        # requires wasm32-unknown-unknown target
 SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
 python3 -m http.server 8766 --directory target/site-preview
 ```

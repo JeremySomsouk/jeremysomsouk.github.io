@@ -40,6 +40,10 @@ pub fn render_projects() -> Result<String, Box<dyn Error>> {
                     <div class="project-grid">
                         {HOMEPAGE.projects.iter().map(|project| view! { <ProjectCard project=project.clone() show_details=true/> }).collect_view()}
                     </div>
+                    <article class="ripple-project-summary">
+                        <h3>"Ripple"</h3><p>"An experiment in cause and effect. Change a cost, watch a pathfinding algorithm decide differently."</p>
+                        <a href="/ripple/">"Explore Ripple →"</a>
+                    </article>
                 </Section>
             </WebsiteLayout>
         },

@@ -126,7 +126,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("ripple/index.html"), Path("ripple/engine.wasm")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -267,7 +267,16 @@ def verify():
     home = Document()
     home_html = (PREVIEW / "index.html").read_text()
     home.feed(home_html)
-    require(not home.runtime and ".wasm" not in home_html, "Homepage must render without a client runtime")
+    require(home_html.count('<script type="module" src="/ripple/home.js">') == 1
+            and ".wasm" not in home_html, "Homepage must defer the Ripple engine")
+    require('href="/ripple/" hidden' in home_html, "Ripple entrance must be hidden until solved")
+    ripple = (PREVIEW / "ripple/index.html").read_text()
+    require('href="https://www.somsouk.fr/ripple/"' in ripple and ripple.count('data-node=') == 35,
+            "Ripple route must have canonical metadata and a static board")
+    require('<noscript>' in ripple and 'id="ripple-status"' in ripple, "Ripple needs a failure fallback")
+    ripple_exports = parse_wasm_boundaries((PREVIEW / "ripple/engine.wasm").read_bytes())
+    require({"init", "change", "undo", "reset", "algorithm", "info", "node", "event"} <= ripple_exports,
+            "Ripple engine ABI mismatch")
     require(home_html.count('class="profile-icon-link"') == 3, "Missing profile icon links")
     require('class="cabane-entrance" href="/cabane/"' in home_html,
             "Named Cabane entrance must stay on the current origin")
