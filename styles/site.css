@@ -197,3 +197,18 @@ body.site-page { margin: 0; }
 /* Cabane uses the shared landmarks with its existing project theme. */
 .cabane-landing { --site-ink: #f8f4eb; }
 .cabane-content { min-width: 0; }
+
+.site-shell .project-invitation {
+  --project-accent: #276858;
+  background: #f8f4eb;
+  border: 1px solid #e6d9c2;
+  border-radius: 1.5rem;
+}
+.site-shell .project-invitation .project-preview { background: #f8f4eb; }
+.site-shell .project-invitation .project-body { padding: 1.75rem; }
+.site-shell .project-invitation h3 { font-family: ui-rounded, "Avenir Next", system-ui, sans-serif; font-size: 1.875rem; }
+.site-shell .project-invitation p { color: #243e3a; }
+.site-shell .project-invitation .project-link { color: #fff; border-radius: 999px; }
+.site-shell .project-invitation .project-link:hover { background: #1e5144; }
+.site-page-links a.cabane-entrance { background: #f8f4eb; color: #276858; gap: .3rem; }
+.site-page-links a.cabane-entrance:hover { background: #e6d9c2; color: #243e3a; }

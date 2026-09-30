@@ -78,15 +78,16 @@ pub fn ResumeEntry(
 pub fn ProjectCard(
     project: site_content::ProjectMetadata,
     #[prop(optional)] show_details: bool,
+    #[prop(optional)] invitation: bool,
 ) -> impl IntoView {
     view! {
-        <article class="project-card" data-project=project.slug aria-labelledby=project.heading_id>
+        <article class="project-card" class:project-invitation=invitation data-project=project.slug aria-labelledby=project.heading_id>
             <img class="project-preview" src=project.image.src alt=project.image.alt
                 width=project.image.width height=project.image.height loading="lazy" decoding="async"/>
             <div class="project-body">
                 <h3 id=project.heading_id>{project.title}</h3>
                 {show_details.then(|| view! { <a class="project-details-link" href=project.presentation_path()>"About this project →"</a> })}
-                <ProjectDescription project=project.clone()/>
+                <ProjectDescription project=project.clone() show_tags=!invitation/>
             </div>
         </article>
     }
@@ -94,13 +95,16 @@ pub fn ProjectCard(
 
 /// Shared project copy and application destination for cards and presentation pages.
 #[component]
-pub fn ProjectDescription(project: site_content::ProjectMetadata) -> impl IntoView {
+pub fn ProjectDescription(
+    project: site_content::ProjectMetadata,
+    #[prop(default = true)] show_tags: bool,
+) -> impl IntoView {
     view! { <div class="project-description">
                 <p class="project-tagline">{project.tagline}</p>
                 <p>{project.description}</p>
-                <ul class="project-tags" aria-label=project.tags_label>
+                {show_tags.then(|| view! { <ul class="project-tags" aria-label=project.tags_label>
                     {project.tags.iter().map(|tag| view! { <li>{*tag}</li> }).collect_view()}
-                </ul>
+                </ul> })}
                 {project.note.map(|note| view! { <p class="project-note">{note}</p> })}
                 <a class="project-link" href=project.destination.url>{project.destination.label}</a>
     </div> }
@@ -115,14 +119,14 @@ pub fn WebsiteLayout(children: Children) -> impl IntoView {
             <Header title=home.profile.name.to_owned() subtitle=home.profile.role.to_owned()
                 logo="/images/js-icon.webp">
                 <div class="profile-links">
-                    {home.profile.links.iter().map(|link| view! {
+                    {home.profile.links.iter().filter(|link| !matches!(link.kind, site_content::ProfileLinkKind::Home)).map(|link| view! {
                         <a class="profile-icon-link" href=link.url title=link.label>
                             <img src=profile_icon(link.kind) alt="" width="24" height="24"/>
                             <span class="profile-icon-label">{link.label}</span>
                         </a>
                     }).collect_view()}
                 </div>
-                <div class="site-page-links"><a href="/projects/">"Projects"</a><a href="/blog/">"Blog"</a></div>
+                <div class="site-page-links"><a href="/projects/">"Projects"</a><a href="/blog/">"Blog"</a><a class="cabane-entrance" href="/cabane/">"Cabane"<span aria-hidden="true">" →"</span></a></div>
                 <p class="profile-contact">"Email: "<a href=format!("mailto:{}", home.profile.email)>{home.profile.email}</a></p>
             </Header>
         }.into_any())

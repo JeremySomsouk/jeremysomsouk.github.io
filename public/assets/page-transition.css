@@ -2,29 +2,31 @@
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
 
-  /* Entering feels like stepping through the doorway: the leaving page
-     dissolves into warm lamplight and the arriving page rises out of it.
-     Only the arriving snapshot moves, and only upward from below: the
-     leaving page is a pure fade so no edge ever shifts or crops, and
-     nothing in either document changes position. */
+  /* The arriving snapshot stays invisible until the departure has finished. */
   ::view-transition-old(root) {
-    animation: page-exit 240ms ease-out both;
+    animation: page-exit 140ms ease-in both;
   }
   ::view-transition-new(root) {
-    animation: page-enter 480ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+    animation: page-enter 180ms ease-out 140ms both;
   }
   ::view-transition-group(root) {
-    animation-duration: 480ms;
-    background: #f4eadb;
+    animation: none;
+    background: #f8f4eb;
+  }
+  :root:has(body.site-page)::view-transition-group(root) { background: #0b0826; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
   }
 }
 
 @keyframes page-exit {
+  from { opacity: 1; }
   to { opacity: 0; }
 }
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
