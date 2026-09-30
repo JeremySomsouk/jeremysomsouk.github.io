@@ -11,8 +11,11 @@ theme I never pinned, a Sass pipeline I never opened, and a Ruby toolchain I
 only saw when something broke. For clarity about the stakes: this is a
 personal site, the most demanding visitors are my kids coming for the games,
 and nobody ever filed a bug. I rewrote it anyway, in Rust, with
-[Leptos](https://book.leptos.dev/) doing the rendering. Mostly because I
-wanted to. The games did not get rewritten. More on that.
+[Leptos](https://book.leptos.dev/) doing the rendering. Three honest reasons:
+it sounded fun, I wanted to vibe code it with an AI agent doing the typing,
+and I wanted to know where the limits of that were. How far can an agent
+take a migration like this before a human has to actually care? The games
+did not get rewritten. More on that.
 
 ## What I wanted
 
@@ -70,7 +73,9 @@ For a site this size, honestly, maybe not. Jekyll worked. But I wanted a build
 I trust: typed content where the compiler catches my typos, a real 404, https
 canonicals, and a deploy that builds, verifies and publishes in one pass. The
 whole migration landed as a single commit with a rollback plan I wrote down
-and hope to never use.
+and hope to never use. And the experiment answered its own question: an agent
+can carry a surprising amount of the discipline, byte-identity checks and
+Wasm parsing included, as long as you keep saying no to shortcuts.
 
 One regret: I kept a "proof" page around long past the point where it proved
 anything, and let migration notes pile up in the published tree for weeks.
