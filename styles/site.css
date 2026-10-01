@@ -246,9 +246,9 @@ body.site-page { margin: 0; }
 @keyframes project-signal { to { box-shadow: 0 0 12px #e3abd3; background: #e3abd3; } }
 @media (max-width: 850px) {
   .project-explorer.is-enhanced { grid-template-columns: 1fr; gap: .5rem; }
-  .project-tree { display: flex; overflow-x: auto; gap: .5rem; padding: .25rem; }
+  .project-tree { display: flex; flex-wrap: wrap; gap: .5rem; padding: .25rem; min-width: 0; }
   .project-tree::before, .project-tree-root, .project-tree button::before { display: none; }
-  .project-tree button { width: auto; white-space: nowrap; padding: .65rem; margin: 0; min-height: 44px; }
+  .project-tree button { flex: 1 1 auto; width: auto; gap: .5rem; padding: .65rem .75rem; margin: 0; min-height: 44px; border-color: #53405f; background: #19132b; border-radius: 999px; }
   .site-shell .project-explorer.is-enhanced .project-grid { display: flex; max-height: none; overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
   .site-shell .project-explorer.is-enhanced .project-card { flex: 0 0 88%; min-width: 0; scroll-snap-align: start; }
 }
