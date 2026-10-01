@@ -166,8 +166,8 @@ pub fn GuessrProjectCard() -> impl IntoView {
         image: site_content::Image {
             src: "/guessr/banner.webp",
             alt: "Guessr: anonymous answer cards and player tags in green",
-            width: 960,
-            height: 640,
+            width: 1200,
+            height: 600,
         },
     };
     view! { <ProjectCard project/> }
