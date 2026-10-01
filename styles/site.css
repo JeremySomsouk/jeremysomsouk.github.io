@@ -214,3 +214,48 @@ body.site-page { margin: 0; }
 .site-shell .project-invitation .project-link:hover { background: #1e5144; }
 .site-page-links a.cabane-entrance { background: #f8f4eb; color: #276858; gap: .3rem; }
 .site-page-links a.cabane-entrance:hover { background: #e6d9c2; color: #243e3a; }
+
+/* Homepage project explorer: a branching index beside a bounded, visible gallery. */
+.project-explorer { margin-block: 1.5rem 2.5rem; }
+.project-explorer.is-enhanced { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1.5rem; }
+.project-explorer-content { min-width: 0; }
+.project-explorer-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; margin-bottom: 1rem; font-size: .875rem; }
+.project-explorer-heading p { margin: 0; }
+.project-tree { position: relative; padding: 1rem 0; align-self: start; }
+.project-tree::before { content: ""; position: absolute; left: .75rem; top: 3.5rem; bottom: 2.75rem; width: 1px; background: #665078; }
+.project-tree-root { display: block; padding: 0 0 1.5rem .25rem; color: #bbaacb; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+.project-tree button { position: relative; display: flex; align-items: center; gap: .65rem; width: 100%; min-height: 52px; padding: .65rem .65rem .65rem 1.8rem; margin: .5rem 0; border: 1px solid transparent; border-radius: .75rem; color: inherit; background: transparent; font: inherit; font-size: .875rem; text-align: left; cursor: pointer; }
+.project-tree button::before { content: ""; position: absolute; left: .75rem; width: .8rem; height: 1px; background: #665078; }
+.topic-dot { width: .45rem; height: .45rem; flex-shrink: 0; border-radius: 50%; background: #89749a; }
+.topic-count { margin-left: auto; color: #bbaacb; font-size: .75rem; }
+.project-tree button[aria-pressed="true"] { background: #30213f; border-color: #89669b; }
+.project-tree button[aria-pressed="true"] .topic-dot { background: #e3abd3; box-shadow: 0 0 12px #e3abd366; }
+.project-tree button:hover .topic-dot { animation: project-signal .8s ease-in-out infinite alternate; }
+.project-tree button:hover { background: #30213f; }
+.project-tree button:focus-visible, .project-explorer .project-grid:focus-visible { outline: 2px solid #e3abd3; outline-offset: 4px; }
+.site-shell .project-explorer.is-enhanced .project-grid { max-height: 38rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #89669b #19132b; padding: .25rem .65rem .75rem .25rem; margin: 0; align-items: stretch; }
+.site-shell .project-explorer .project-card[hidden] { display: none; }
+.site-shell .project-explorer .project-preview { aspect-ratio: 2 / 1; }
+.site-shell .project-explorer .project-body { padding: 1rem; }
+.site-shell .project-explorer .project-body h3 { font-size: 1.25rem; }
+.site-shell .project-explorer .project-tags, .site-shell .project-explorer .project-note { display: none; }
+.site-shell .project-explorer .project-invitation { grid-column: auto; }
+.ripple-project-art { display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding: 2rem; aspect-ratio: 2 / 1; background: radial-gradient(circle at 80% 20%, #6c978833, transparent 55%), repeating-radial-gradient(circle at 75% 50%, transparent 0 22px, #8bb2a422 23px 24px), #172c2a; color: #c7e4d9; }
+.ripple-project-art span:first-child { font-size: 2rem; font-weight: 700; }
+.ripple-project-art span:last-child { font-size: .8rem; }
+@keyframes project-signal { to { box-shadow: 0 0 12px #e3abd3; background: #e3abd3; } }
+@media (max-width: 850px) {
+  .project-explorer.is-enhanced { grid-template-columns: 1fr; gap: .5rem; }
+  .project-tree { display: flex; overflow-x: auto; gap: .5rem; padding: .25rem; }
+  .project-tree::before, .project-tree-root, .project-tree button::before { display: none; }
+  .project-tree button { width: auto; white-space: nowrap; padding: .65rem; margin: 0; min-height: 44px; }
+  .site-shell .project-explorer.is-enhanced .project-grid { display: flex; max-height: none; overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
+  .site-shell .project-explorer.is-enhanced .project-card { flex: 0 0 88%; min-width: 0; scroll-snap-align: start; }
+}
+@media (prefers-reduced-motion: reduce) { .project-tree button:hover .topic-dot { animation: none; } }
+@media print {
+  .project-tree { display: none; }
+  .project-explorer.is-enhanced { display: block; }
+  .site-shell .project-explorer.is-enhanced .project-grid { display: grid; max-height: none; overflow: visible; }
+  .site-shell .project-explorer .project-card[hidden] { display: flex; }
+}
