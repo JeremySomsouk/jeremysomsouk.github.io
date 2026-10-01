@@ -277,12 +277,12 @@ def verify():
     ripple_exports = parse_wasm_boundaries((PREVIEW / "ripple/engine.wasm").read_bytes())
     require({"init", "change", "undo", "reset", "algorithm", "info", "node", "event"} <= ripple_exports,
             "Ripple engine ABI mismatch")
-    require(home_html.count('class="profile-icon-link"') == 3, "Missing profile icon links")
+    require(home_html.count('class="profile-icon-link"') == 2, "Missing profile icon links")
     require('class="cabane-entrance" href="/cabane/"' in home_html,
             "Named Cabane entrance must stay on the current origin")
     require('href="https://www.somsouk.fr/cabane/"' not in home_html,
             "Cabane navigation escaped to production")
-    require(home_html.count('class="profile-icon-label"') == 3, "Missing accessible icon labels")
+    require(home_html.count('class="profile-icon-label"') == 2, "Missing accessible icon labels")
     require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
     require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
              "experience", "doctolib", "blablacar", "streamroot-lumen", "happn", "education", "epita",
