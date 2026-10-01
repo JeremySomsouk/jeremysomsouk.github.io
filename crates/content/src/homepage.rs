@@ -32,11 +32,6 @@ pub const HOMEPAGE: Homepage = Homepage {
                 label: "La cabane à découvertes",
                 url: "/cabane/",
             },
-            ProfileLink {
-                kind: ProfileLinkKind::Website,
-                label: "You're never gonna believe me",
-                url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            },
         ],
     },
     projects_title: "Things I’m building",
