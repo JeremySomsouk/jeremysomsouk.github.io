@@ -86,6 +86,26 @@ pub const HOMEPAGE: Homepage = Homepage {
                 height: 800,
             },
         },
+        ProjectMetadata {
+            slug: "prctrl",
+            heading_id: "prctrl-title",
+            title: "PRCtrl",
+            tagline: "Pull requests. Under control.",
+            description: "A Rust command-line tool for managing GitHub pull requests. Browse reviews in an interactive terminal UI, filter across repositories and teams, and keep track of what needs your attention.",
+            tags: &["Rust", "Terminal UI", "GitHub"],
+            tags_label: "PRCtrl technologies and integrations",
+            note: None,
+            destination: Link {
+                label: "Explore on GitHub →",
+                url: "https://github.com/JeremySomsouk/prctrl",
+            },
+            image: Image {
+                src: "/images/prctrl-banner.webp",
+                alt: "PRCtrl banner with a terminal prompt and a green pull request symbol",
+                width: 2172,
+                height: 724,
+            },
+        },
     ],
     resume: &[
         ResumeSection {
