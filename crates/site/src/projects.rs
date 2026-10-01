@@ -7,7 +7,8 @@ use site_content::{
 };
 
 use crate::ui::{
-    GuessrProjectCard, ProjectCard, ProjectDescription, RippleProjectCard, Section, WebsiteLayout,
+    GuessrProjectCard, NuanceProjectCard, ProjectCard, ProjectDescription, RippleProjectCard,
+    Section, WebsiteLayout,
 };
 
 fn metadata(
@@ -33,7 +34,7 @@ pub fn render_projects() -> Result<String, Box<dyn Error>> {
         "Personal software projects: music, learning, and play.",
         "/projects/",
     )?;
-    Ok(crate::document::render_document(
+    Ok(crate::document::render_document_with_assets(
         head,
         view! {
             <WebsiteLayout>
@@ -43,9 +44,14 @@ pub fn render_projects() -> Result<String, Box<dyn Error>> {
                         {HOMEPAGE.projects.iter().map(|project| view! { <ProjectCard project=project.clone() show_details=true/> }).collect_view()}
                         <GuessrProjectCard/>
                         <RippleProjectCard/>
+                            <NuanceProjectCard/>
                     </div>
                 </Section>
             </WebsiteLayout>
+        },
+        crate::document::DocumentAssets {
+            stylesheets: &["/assets/page-transition.css"],
+            ..Default::default()
         },
     )?)
 }

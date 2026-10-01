@@ -126,7 +126,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "prctrl-banner.webp", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("projects/prctrl/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("guessr/index.html"), Path("ripple/engine.wasm")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("projects/prctrl/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("guessr/index.html"), Path("ripple/engine.wasm"), Path("nuance/index.html"), Path("nuance/engine.wasm")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -202,15 +202,15 @@ def verify():
     require({"start", "card", "flip", "is_matched", "hide_mismatch"} <= wasm_exports,
             "Memory Wasm is missing a controller export")
 
-    # Both documents must opt in; games and ordinary pages must not participate.
+    # Only the four explicit entrances participate; game pages remain independent.
     transition_pages = {
         path for path in actual if path.suffix == ".html"
         and 'href="/assets/page-transition.css"' in (PREVIEW / path).read_text()
     }
-    require(transition_pages == {Path("index.html"), Path("cabane/index.html")},
+    require(transition_pages == {Path("index.html"), Path("cabane/index.html"), Path("projects/index.html"), Path("nuance/index.html")},
             f"Unexpected transition participants: {transition_pages}")
 
-    # The transition is a pure-CSS contract: exactly two participants, a warm
+    # The transition is a pure-CSS contract with an explicit allowlist and a warm
     # doorway veil between the two pages, no element-level animation, a motion
     # budget, and a reduced-motion opt-out. No script or router is involved.
     transition_css = (PREVIEW / "assets/page-transition.css").read_text()
@@ -274,6 +274,16 @@ def verify():
     require('href="https://www.somsouk.fr/ripple/"' in ripple and ripple.count('data-node=') == 35,
             "Ripple route must have canonical metadata and a static board")
     require('<noscript>' in ripple and 'id="ripple-status"' in ripple, "Ripple needs a failure fallback")
+    nuance = (PREVIEW / "nuance/index.html").read_text()
+    require('href="https://www.somsouk.fr/nuance/"' in nuance and 'class="nuance-page"' in nuance,
+            "Nuance must own its standalone static route")
+    require('data-lang="en"' in nuance and 'data-lang="fr"' in nuance and '<dialog' in nuance,
+            "Nuance needs both languages and deliberate burn confirmation")
+    for listing in [home_html, (PREVIEW / "projects/index.html").read_text()]:
+        require('data-project="nuance"' in listing and 'src="/nuance/banner.webp"' in listing
+                and 'href="/nuance/"' in listing, "Nuance invitation missing")
+    require({"input", "analyze", "output", "clear", "memory"} <= parse_wasm_boundaries((PREVIEW / "nuance/engine.wasm").read_bytes()),
+            "Nuance engine ABI mismatch")
     ripple_exports = parse_wasm_boundaries((PREVIEW / "ripple/engine.wasm").read_bytes())
     require({"init", "change", "undo", "reset", "algorithm", "info", "node", "event"} <= ripple_exports,
             "Ripple engine ABI mismatch")

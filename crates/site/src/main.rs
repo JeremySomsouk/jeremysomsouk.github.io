@@ -38,6 +38,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         site::render_guess_redirect()?,
         Indexing::NoIndex,
     )?;
+    manifest.insert_page(
+        Route::new("/nuance/")?,
+        site::render_nuance()?,
+        Indexing::Index,
+    )?;
+    manifest.add_static_asset(&root.join("target"), OutputPath::new("nuance/engine.wasm")?)?;
     manifest.add_static_asset(&root.join("target"), OutputPath::new("ripple/engine.wasm")?)?;
     for project in site_content::HOMEPAGE.projects {
         manifest.insert_page(
@@ -65,6 +71,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         "guessr/transport.js",
         "guessr/config.js",
         "guessr/guessr.css",
+        "nuance/banner.webp",
+        "nuance/app.js",
+        "nuance/copy.js",
+        "nuance/storage.js",
+        "nuance/engine.js",
+        "nuance/nuance.css",
         "ripple/banner.webp",
         "ripple/engine.js",
         "ripple/lessons.js",
