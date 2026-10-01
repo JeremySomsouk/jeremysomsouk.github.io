@@ -3,7 +3,9 @@ use crate::prose::Prose;
 use leptos::prelude::*;
 use site_content::HOMEPAGE;
 
-use crate::ui::{GuessrProjectCard, ProjectCard, ResumeEntry, Section, WebsiteLayout};
+use crate::ui::{
+    GuessrProjectCard, ProjectCard, ResumeEntry, RippleProjectCard, Section, WebsiteLayout,
+};
 
 pub fn render_homepage() -> Result<String, serde_json::Error> {
     let home = &HOMEPAGE;
@@ -82,15 +84,7 @@ fn ProjectExplorer() -> impl IntoView {
                         <div class="project-grid" id=home.projects_id tabindex="0" aria-label="Projects">
                             {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }.into_any()).collect_view()}
                             <GuessrProjectCard/>
-                            <article class="project-card" data-project="ripple" aria-labelledby="ripple-project-title">
-                                <img class="project-preview" src="/ripple/banner.webp" alt="A mint spark bends mysterious branching paths and concentric waves" width="1200" height="600" loading="lazy" decoding="async"/>
-                                <div class="project-body">
-                                    <h3 id="ripple-project-title">"Ripple"</h3>
-                                    <p class="project-tagline">"Change the rules. Follow the ripple."</p>
-                                    <p>"An experiment in cause and effect. Change a cost, watch a pathfinding algorithm decide differently."</p>
-                                    <a class="project-link" href="/ripple/">"Explore Ripple →"</a>
-                                </div>
-                            </article>
+                            <RippleProjectCard/>
                         </div>
                     </div>
                 </div>
