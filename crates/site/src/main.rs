@@ -65,6 +65,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "guessr/transport.js",
         "guessr/config.js",
         "guessr/guessr.css",
+        "ripple/banner.webp",
         "ripple/engine.js",
         "ripple/lessons.js",
         "ripple/game.js",
