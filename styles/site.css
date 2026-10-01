@@ -236,7 +236,7 @@ body.site-page { margin: 0; }
 .site-shell .project-explorer.is-enhanced .project-grid { max-height: 38rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #89669b #19132b; padding: .25rem .65rem .75rem .25rem; margin: 0; align-items: stretch; }
 .site-shell .project-explorer .project-card[hidden] { display: none; }
 .site-shell .project-explorer .project-preview { aspect-ratio: 2 / 1; }
-.site-shell [data-project="guessr"] .project-preview, .site-shell [data-project="ripple"] .project-preview { aspect-ratio: 2 / 1; object-fit: cover; }
+.site-shell [data-project="guessr"] .project-preview, .site-shell [data-project="ripple"] .project-preview, .site-shell [data-project="nuance"] .project-preview { aspect-ratio: 2 / 1; object-fit: cover; }
 .site-shell .project-explorer .project-body { padding: 1rem; }
 .site-shell .project-explorer .project-body h3 { font-size: 1.25rem; }
 .site-shell .project-explorer .project-tags, .site-shell .project-explorer .project-note { display: none; }

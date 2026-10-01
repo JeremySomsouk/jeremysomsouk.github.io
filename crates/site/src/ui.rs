@@ -194,7 +194,7 @@ pub fn RippleProjectCard() -> impl IntoView {
 pub fn NuanceProjectCard() -> impl IntoView {
     view! {
         <article class="project-card" data-project="nuance" aria-labelledby="nuance-project-title">
-            <img class="project-preview" src="/nuance/banner.webp" alt="Warm paper fragments, two pencilled choices and a softly erased connection" width="1200" height="600" loading="lazy" decoding="async"/>
+            <img class="project-preview" src="/nuance/banner.webp" alt="Nuance in terracotta ink on cream paper, with two crossing pencil lines" width="1200" height="600" loading="lazy" decoding="async"/>
             <div class="project-body"><h3 id="nuance-project-title">"Nuance"</h3>
                 <p class="project-tagline">"See what matters before you choose."</p>
                 <p>"A private space for untangling difficult decisions and understanding the trade-offs behind them."</p>

@@ -6,7 +6,7 @@ pub fn render_nuance() -> Result<String, serde_json::Error> {
         PageMetadata {
             description: Some("See what matters before you choose. A private space for untangling difficult decisions.".into()),
             canonical: Some(CanonicalUrl::from_site_path("/nuance/").expect("fixed route")),
-            social: Some(SocialMetadata { title: "Nuance".into(), site_name: None, image: Some(SocialImage { url: CanonicalUrl::from_site_path("/nuance/banner.webp").expect("fixed asset"), alt: "Warm paper fragments connected by pencil lines".into() }) }),
+            social: Some(SocialMetadata { title: "Nuance".into(), site_name: None, image: Some(SocialImage { url: CanonicalUrl::from_site_path("/nuance/banner.webp").expect("fixed asset"), alt: "Nuance in terracotta ink on cream paper, with two crossing pencil lines".into() }) }),
             ..PageMetadata::new("Nuance — See what matters before you choose")
         },
         view! {
