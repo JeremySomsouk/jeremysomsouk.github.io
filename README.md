@@ -172,16 +172,19 @@ migration landed as squash `28e9b7b` with the pre-migration baseline and
 account-settings restore procedure recorded in its message), followed by a
 redeploy. The legacy Jekyll sources removed in this cleanup remain
 recoverable from that history.
-## Who said that?
+## Guessr
 
-`/guess/` is a social game for 3–20 friends. The host prepares all questions and
+`/guessr/` is a guessing game for 3–20 players. The host prepares all questions and
 individual timers, shares a room code, and starts from the lobby. Players answer
 privately, independently match anonymous answers to authors, and compare their
 scores. Self-identification earns no points. The host advances through the
 prepared rounds. Rooms expire after 24 hours; there are no accounts or histories.
 
-The page follows the site's static Leptos rendering and small browser-controller
-pattern. The authoritative rules live in `services/guess/engine.mjs`, shared by
+The page has its own visual identity and a discreet link to the homepage,
+while retaining static Leptos rendering and a small browser controller. Names
+are matched by touch/mouse drag-and-drop or keyboard/tap placement, with swaps
+and undoing placements before submission. Old `/guess/` room links redirect
+while preserving their query string and reconnect identity. The authoritative rules live in `services/guess/engine.mjs`, shared by
 the local WebSocket server and the Cloudflare Durable Object. Only sanitized,
 per-player views reach browsers. Clients display server deadlines and never
 calculate scores. The host can excuse disconnected participants from readiness
@@ -197,7 +200,7 @@ npm test
 npm start
 ```
 
-Open `http://localhost:8787/guess/` in four tabs. Create five questions in one tab
+Open `http://localhost:8787/guessr/` in four tabs. Create five questions in one tab
 and join its code with three different names in the others. Identity is stored
 per tab in session storage so refreshing reconnects without duplicating players.
 Local rooms are in memory and disappear if the server restarts. A reconnect in
@@ -206,11 +209,11 @@ The local server binds to loopback by default.
 
 To use the real local Cloudflare runtime instead, run `npm run dev` in
 `services/guess`, serve `target/site-preview` on port 8787, and open
-`http://localhost:8787/guess/?backend=worker`. That selects the local Worker at
+`http://localhost:8787/guessr/?backend=worker`. That selects the local Worker at
 port 8788; shared invitations retain the transport selection.
 
-Shared links use `/guess/?room=CODE`, compatible with GitHub Pages without a
-client router. The local server additionally accepts `/guess/CODE`. The game is
+Shared links use `/guessr/?room=CODE`, compatible with GitHub Pages without a
+client router. The local server additionally accepts `/guessr/CODE`. The game is
 listed on the projects page. Production uses `https://somsouk-games-api.jh-somsouk.workers.dev`;
 localhost keeps using the local transport.
 
@@ -236,7 +239,7 @@ npx wrangler deploy
 
 `GET /` and `GET /health` are neutral health checks. WebSocket `/create` creates a room;
 `/room?room=CODE` joins/reconnects. There are no public room-state endpoints.
-`public/guess/config.js` centralizes the public production API origin. Publishing
+`public/guessr/config.js` centralizes the public production API origin. Publishing
 the frontend follows the existing GitHub Pages workflow; no Cloudflare Pages
 migration is involved. No credentials or account IDs belong in this repository.
 Apply Cloudflare edge rate limits before opening creation broadly (per-socket

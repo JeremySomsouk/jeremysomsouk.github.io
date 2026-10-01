@@ -126,7 +126,7 @@ def verify():
     actual = files_under(PREVIEW)
     home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("ripple/engine.wasm")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("guessr/index.html"), Path("ripple/engine.wasm")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -240,8 +240,8 @@ def verify():
     for path in public_assets:
         if path.suffix == ".svg":
             svg = ET.fromstring((PREVIEW / path).read_text())
-            require(svg.attrib.get("viewBox") == "0 0 24 24", "Unexpected icon dimensions")
-            require(all(element.tag.rsplit("}", 1)[-1] in {"svg", "path"} for element in svg.iter()), "Unexpected SVG element")
+            require(svg.attrib.get("viewBox") == ("0 0 64 64" if str(path) == "guessr/icon.svg" else "0 0 24 24"), "Unexpected icon dimensions")
+            require(all(element.tag.rsplit("}", 1)[-1] in ({"svg", "path", "rect", "circle"} if str(path) == "guessr/icon.svg" else {"svg", "path"}) for element in svg.iter()), "Unexpected SVG element")
             require(all(not key.startswith("on") and "href" not in key for element in svg.iter() for key in element.attrib), "Active SVG content")
 
     require((PREVIEW / "CNAME").read_bytes() == (ROOT / "docs/CNAME").read_bytes(), "Changed custom domain")
@@ -255,7 +255,7 @@ def verify():
     locations = [node.text for node in sitemap.findall(ns + "url/" + ns + "loc")]
     expected_locations = set()
     for path in actual:
-        if path.suffix != ".html" or path == Path("404.html"):
+        if path.suffix != ".html" or path in {Path("404.html"), Path("guess/index.html")}:
             continue
         url = path.as_posix()
         if path.name == "index.html":

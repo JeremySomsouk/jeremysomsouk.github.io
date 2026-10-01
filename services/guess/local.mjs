@@ -11,7 +11,7 @@ const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
 const server = createServer(async (req, res) => {
   try {
     let path = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    if (/^\/guess\/[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4,8}\/?$/i.test(path)) path = '/guess/';
+    if (/^\/(?:guessr|guess)\/[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{4,8}\/?$/i.test(path)) path = '/guessr/';
     let file = resolve(root, '.' + path);
     if (file !== root && !file.startsWith(root + '/')) throw Error();
     if ((await stat(file)).isDirectory()) file = resolve(file, 'index.html');
@@ -74,4 +74,4 @@ setInterval(() => {
     } else { const before = room.phase; room.tick(); if (before !== room.phase) broadcast(room); }
   }
 }, 250).unref();
-server.listen(port, '127.0.0.1', () => console.log(`Guess locally: http://localhost:${port}/guess/`));
+server.listen(port, '127.0.0.1', () => console.log(`Guess locally: http://localhost:${port}/guessr/`));

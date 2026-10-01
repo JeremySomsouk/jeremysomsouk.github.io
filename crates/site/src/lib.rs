@@ -23,4 +23,4 @@ mod ripple;
 pub use ripple::render_ripple;
 
 mod guess;
-pub use guess::render_guess;
+pub use guess::{render_guess, render_guess_redirect};
