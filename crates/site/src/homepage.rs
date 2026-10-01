@@ -3,7 +3,7 @@ use crate::prose::Prose;
 use leptos::prelude::*;
 use site_content::HOMEPAGE;
 
-use crate::ui::{ProjectCard, ResumeEntry, Section, WebsiteLayout};
+use crate::ui::{GuessrProjectCard, ProjectCard, ResumeEntry, Section, WebsiteLayout};
 
 pub fn render_homepage() -> Result<String, serde_json::Error> {
     let home = &HOMEPAGE;
@@ -22,6 +22,7 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                 <p><a href="/projects/">"All projects →"</a></p>
                 <div class="project-grid" id=home.projects_id>
                     {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }).collect_view()}
+                    <GuessrProjectCard/>
                 </div>
             </Section>
                 <div class="ripple-discovery" hidden=true>

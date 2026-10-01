@@ -6,7 +6,7 @@ use site_content::{
     CanonicalUrl, HOMEPAGE, PageMetadata, ProjectMetadata, SocialImage, SocialMetadata,
 };
 
-use crate::ui::{ProjectCard, ProjectDescription, Section, WebsiteLayout};
+use crate::ui::{GuessrProjectCard, ProjectCard, ProjectDescription, Section, WebsiteLayout};
 
 fn metadata(
     title: &str,
@@ -39,11 +39,8 @@ pub fn render_projects() -> Result<String, Box<dyn Error>> {
                 <Section id="projects" title="Projects".to_owned()>
                     <div class="project-grid">
                         {HOMEPAGE.projects.iter().map(|project| view! { <ProjectCard project=project.clone() show_details=true/> }).collect_view()}
+                        <GuessrProjectCard/>
                     </div>
-                    <article class="ripple-project-summary">
-                        <h3>"Guessr"</h3><p>"Guess who wrote each answer."</p>
-                        <a href="/guessr/">"Play Guessr →"</a>
-                    </article>
                     <article class="ripple-project-summary">
                         <h3>"Ripple"</h3><p>"An experiment in cause and effect. Change a cost, watch a pathfinding algorithm decide differently."</p>
                         <a href="/ripple/">"Explore Ripple →"</a>
