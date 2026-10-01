@@ -41,8 +41,8 @@ pub fn render_projects() -> Result<String, Box<dyn Error>> {
                         {HOMEPAGE.projects.iter().map(|project| view! { <ProjectCard project=project.clone() show_details=true/> }).collect_view()}
                     </div>
                     <article class="ripple-project-summary">
-                        <h3>"Who said that?"</h3><p>"A question, anonymous answers, and your friends. Match the answers to their authors and compare your guesses."</p>
-                        <a href="/guess/">"Play with friends →"</a>
+                        <h3>"Guessr"</h3><p>"Guess who wrote each answer."</p>
+                        <a href="/guessr/">"Play Guessr →"</a>
                     </article>
                     <article class="ripple-project-summary">
                         <h3>"Ripple"</h3><p>"An experiment in cause and effect. Change a cost, watch a pathfinding algorithm decide differently."</p>

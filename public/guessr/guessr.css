@@ -1,0 +1,83 @@
+/* Guessr's own space: paper, conversation cards and movable name tags. */
+body.guessr-page { margin: 0; background: #f5f0e8; color: #243c34; font: 1rem/1.5 'Inter Variable', Arial, sans-serif; }
+.guessr-page *, .guessr-page *::before, .guessr-page *::after { box-sizing: border-box; }
+.guessr-shell { --paper: #fffcf7; --ink: #243c34; --muted: #5d7064; --rule: #d3dacd; --accent: #287963; --tag: #e9a98c; min-height: 100dvh; background: radial-gradient(ellipse at 100% 0, #ece9d8 0, transparent 32rem), #f5f0e8; padding: 0 1rem 2rem; }
+.guessr-topbar { display: flex; align-items: center; justify-content: space-between; width: min(100%, 68rem); margin: auto; padding-block: 1.25rem; }
+.guessr-home { color: var(--muted); font-size: .8rem; text-decoration: none; }
+.guessr-home:hover { color: var(--accent); }
+.guessr-mark { background: var(--tag); color: var(--ink); padding: .15rem .6rem; border-radius: .7rem .7rem .7rem 0; font-weight: 800; transform: rotate(5deg); }
+.guess-game { max-width: 46rem; margin: 1.5rem auto 3rem; }
+.guess-game h1 { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -.07em; font-weight: 800; line-height: 1; margin: 0 0 .75rem; }
+.guess-game h1 span { color: #bc6547; }
+.guess-game h2, .guess-game h3 { line-height: 1.2; overflow-wrap: anywhere; }
+.guess-game h3 { font-weight: 650; }
+.guess-game p { margin: 0 0 1rem; color: var(--muted); }
+.guess-game a { color: var(--accent); overflow-wrap: anywhere; text-underline-offset: .2em; }
+#guess-intro { font-size: 1.05rem; margin-bottom: 2rem; }
+.guess-game[data-phase] #guess-intro { display: none; }
+.guess-game[data-phase] h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+.guess-eyebrow { font-size: .8rem; letter-spacing: .04em; }
+.guess-game form, .guess-game details { margin-block: 1rem; }
+.guess-game summary { cursor: pointer; padding-block: .65rem; }
+.guess-card { border: 1px solid var(--rule); border-radius: 1.1rem; background: var(--paper); padding: 1.15rem; margin-block: 1rem; min-width: 0; }
+.guess-game fieldset { box-shadow: 0 3px 0 #d3dacd66; }
+.guess-game legend { padding-inline: .5rem; font-size: .85rem; font-weight: 650; }
+.guess-game label { display: grid; gap: .4rem; margin-block: .8rem; font-size: .9rem; }
+.guess-game input, .guess-game textarea, .guess-game select { font: inherit; font-size: 1rem; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: .7rem; padding: .8rem; width: 100%; min-height: 2.9rem; }
+.guess-game textarea { resize: vertical; }
+.guess-game button { font: 600 .95rem 'Inter Variable', Arial, sans-serif; background: var(--accent); color: #fffaf2; border: 1px solid transparent; border-radius: .85rem; padding: .8rem 1rem; min-height: 2.9rem; cursor: pointer; margin: .3rem .3rem .3rem 0; }
+.guess-game button:hover:not(:disabled) { filter: brightness(.96); }
+.guess-game button:disabled { opacity: .45; cursor: default; }
+.guessr-page :is(button,input,select,textarea,summary,a):focus-visible { outline: 3px solid #bc6547; outline-offset: 3px; }
+.guess-setup-tabs { display: flex; gap: .4rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.5rem; }
+.guess-game .guess-setup-tabs button { background: transparent; color: var(--muted); border-radius: .7rem .7rem 0 0; margin: 0; }
+.guess-game .guess-setup-tabs button[aria-pressed="true"] { color: var(--ink); border-bottom: 3px solid var(--accent); }
+.guess-actions { display: flex; align-items: center; gap: .25rem; }
+.guess-game .guess-actions button { background: transparent; color: var(--muted); border: 1px solid var(--rule); padding: .5rem .75rem; min-height: 2.75rem; }
+.guess-invitation { display: grid; justify-items: start; gap: .6rem; margin-bottom: 1.75rem; }
+.guess-game .guess-label { margin: 0; font-size: .85rem; }
+.guess-game .guess-code { margin: 0; font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.15; letter-spacing: .12em; font-weight: 750; color: var(--ink); }
+.guess-invitation button { margin: .35rem 0 0; }
+.guess-invite-link { display: block; max-width: 100%; font-size: .85rem; }
+.guess-player-heading { font-size: 1rem; margin: 0 0 .5rem; }
+.guess-players { list-style: none; padding: 0; margin: 0; }
+.guess-players li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: .85rem; border-bottom: 1px solid var(--rule); }
+.guess-player-name { color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
+.guess-player-note { flex-shrink: 0; font-size: .8rem; color: var(--muted); }
+.guess-start { display: grid; gap: .5rem; margin-top: 1.5rem; }
+.guess-start button { width: 100%; margin: 0; }
+.guess-game .guess-hint { font-size: .85rem; margin: 0; }
+.guess-host { margin-top: 1.5rem !important; font-size: .85rem; color: var(--muted); }
+.guess-clock { font-size: 2rem; font-variant-numeric: tabular-nums; color: var(--accent) !important; }
+.guess-clock-low { color: #a64f31 !important; }
+.guess-question { font-size: clamp(1.5rem,4vw,2.1rem); margin-block: .75rem 1.5rem; }
+.guess-match > p, .guess-reveal > p:first-child { font-size: 1.15rem; color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
+.guess-leaderboard { list-style: none; padding: 0; margin: 0; }
+.guess-leaderboard li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: .7rem; border-bottom: 1px solid var(--rule); }
+.guess-leaderboard strong { white-space: nowrap; }
+#guess-error { color: #a4442f; }
+#guess-error:empty, #guess-connection:empty { display: none; }
+.guess-reveal { animation: guess-arrive .18s ease-out; }
+@keyframes guess-arrive { from { opacity: 0; transform: translateY(.4rem); } to { opacity: 1; transform: none; } }
+.guess-matching-form { display: grid; grid-template-columns: minmax(0, 1fr) 13rem; align-items: start; gap: 1rem; }
+#guess-answer-list { min-width: 0; }
+#guess-answer-list .guess-card:first-child { margin-top: 0; }
+.guess-name-bank { position: sticky; top: 1rem; padding: 1rem; border: 1px solid var(--rule); border-radius: 1rem; background: #eee6d9; z-index: 3; }
+.guess-game .guess-bank-title { font-size: .85rem; margin-bottom: .75rem; }
+.guess-names { display: flex; flex-wrap: wrap; gap: .5rem; max-height: 10rem; overflow: auto; padding: .2rem; }
+.guess-game .guess-name-chip { margin: 0; color: var(--ink); background: var(--tag); box-shadow: 0 2px 0 #b8755566; touch-action: none; user-select: none; cursor: grab; border-radius: .7rem; overflow-wrap: anywhere; max-width: 100%; }
+.guess-game .guess-name-chip.is-picked { outline: 3px solid var(--accent); outline-offset: 2px; }
+.guess-dropzone { display: flex; align-items: center; gap: .5rem; min-height: 4rem; padding: .5rem; border: 1px dashed #a9baac; border-radius: .75rem; }
+.guess-drop-hover { border-color: var(--accent); background: #dce9dd; }
+.guess-game .guess-empty-match { width: 100%; margin: 0; background: transparent; color: var(--muted); font-weight: 400; text-align: left; }
+.guess-game .guess-unmatch { margin: 0 0 0 auto; background: transparent; color: var(--muted); min-width: 2.75rem; flex-shrink: 0; }
+#guess-submit { grid-column: 1 / -1; margin: 0; }
+.guess-drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -110%); background: #e9a98c; color: #243c34; border-radius: .7rem; padding: .8rem 1rem; font: 600 1rem 'Inter Variable', Arial, sans-serif; max-width: 16rem; overflow-wrap: anywhere; box-shadow: 0 .5rem 2rem #243c3440; }
+@media (max-width: 700px) {
+  .guess-game { margin-top: 1rem; }
+  .guess-matching-form { display: flex; flex-direction: column; }
+  #guess-answer-list, .guess-name-bank, #guess-submit { width: 100%; }
+  .guess-name-bank { top: auto; bottom: 4.25rem; box-shadow: 0 -.5rem 2rem #243c3420; }
+  #guess-submit { position: sticky; bottom: .5rem; z-index: 3; }
+}
+@media (prefers-reduced-motion: reduce) { .guess-reveal { animation: none; } }
