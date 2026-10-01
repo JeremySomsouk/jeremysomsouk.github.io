@@ -4,6 +4,7 @@ const error = document.querySelector('#guess-error');
 const connection = document.querySelector('#guess-connection');
 const append = (...children) => app.append(...children.flat(Infinity).filter(x => x !== null && x !== undefined));
 let transport, state, pending = false, clockOffset = 0, answerDraft = '', assignments = {}, roundKey = '', selectedPlayer = null, drag = null;
+let screenKey = '', screenAnimation;
 let draftQuestions = [{ text: 'What would you bring to a desert island?', seconds: 60 }];
 const params = new URLSearchParams(location.search);
 const backendQuery = params.get('backend') === 'worker' ? '&backend=worker' : '';
@@ -183,6 +184,17 @@ function render() {
     }
   }
   append(hostControls());
+  const nextScreen = `${state.code}:${state.current}:${state.phase}`;
+  if (nextScreen !== screenKey) {
+    screenKey = nextScreen;
+    screenAnimation?.cancel();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && app.animate) {
+      screenAnimation = app.animate(
+        [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 220, easing: 'cubic-bezier(.2,.7,.3,1)' },
+      );
+    }
+  }
   if (focusId) { const node = document.getElementById(focusId); node?.focus(); if (selection !== null && node?.setSelectionRange) node.setSelectionRange(selection, selection); }
 }
 function placeName(answerId, playerId) {

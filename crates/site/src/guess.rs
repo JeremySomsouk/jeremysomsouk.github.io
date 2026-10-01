@@ -7,7 +7,7 @@ fn assets() -> crate::document::DocumentAssets {
         body_class: "guessr-page",
         icon: "/guessr/icon.svg",
         stylesheets: &["/guessr/guessr.css"],
-        theme_color: Some("#f5f0e8"),
+        theme_color: Some("#dceee2"),
     }
 }
 

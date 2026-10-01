@@ -8,6 +8,9 @@ test('participant controller waits, preserves private drafts, guesses and restor
   const dom = new JSDOM('<div id="guess-app"></div><p id="guess-error"></p><p id="guess-connection"></p>', { url: 'http://localhost/guessr/', runScripts: 'outside-only' });
   const w = dom.window; w.matchMedia = () => ({ matches: false }); w.cancelAnimationFrame = () => {}; w.requestAnimationFrame = () => 1;
   w.HTMLElement.prototype.setPointerCapture = () => {}; w.HTMLElement.prototype.releasePointerCapture = () => {};
+  let animations = 0, reducedMotion = false;
+  w.matchMedia = () => ({ matches: reducedMotion });
+  w.HTMLElement.prototype.animate = () => { animations++; return { cancel() {} }; };
   let pointerTarget=null; w.document.elementFromPoint = () => pointerTarget;
   const pointer=(node,type,props={})=> { const event=new w.Event(type,{bubbles:true,cancelable:true});Object.assign(event,{pointerId:1,pointerType:'touch',button:0,clientX:10,clientY:20,...props});node.dispatchEvent(event); };
   let room, connection;
@@ -38,19 +41,25 @@ test('participant controller waits, preserves private drafts, guesses and restor
     const timer=w.document.querySelector('#timer-1'); timer.value=''; timer.dispatchEvent(new w.Event('change')); assert.equal(w.document.querySelector('#custom-1'),null);
     click('Create room'); assert.equal(room.phase,'Lobby'); assert.equal(room.questions[1].seconds,null);
     assert.ok([...w.document.querySelectorAll('button')].find(b=>b.textContent==='Start game').disabled);
+    assert.equal(animations, 1);
     room.join('Alice');room.join('Bob'); connection.emit();
+    assert.equal(animations, 1, 'lobby readiness must not restart the transition');
     assert.equal(room.phase,'Lobby'); assert.ok(!w.document.body.textContent.includes('null'));
     connection.token=room.players[1].token;connection.emit();assert.ok(!w.document.body.textContent.includes('null'));
     connection.token=room.players[0].token;connection.emit();click('Start game');
     assert.ok(!w.document.body.textContent.includes('null'));
+    assert.equal(animations, 2, 'starting the question transitions the screen');
     type('#your-answer','<script>private</script>');
     const answer=w.document.querySelector('#your-answer'); answer.focus(); answer.setSelectionRange(4,4);
     command(room.players[1],'submit_answer',{text:'Other private answer'});connection.emit();
     assert.equal(w.document.querySelector('#your-answer').value,'<script>private</script>'); assert.equal(w.document.activeElement.id,'your-answer');
     assert.ok(!w.document.body.textContent.includes('Other private answer'));
+    assert.equal(animations, 2, 'answer readiness must not animate while typing');
     click('Submit answer'); assert.equal(room.answers.length,2);
     command(room.players[2],'submit_answer',{text:'Third answer'});connection.emit();
     assert.equal(room.phase,'Guessing'); assert.equal(w.document.querySelectorAll('script').length,0);
+    assert.equal(animations, 3, 'guessing transitions the screen');
+    reducedMotion = true;
     const [first,second]=room.answers;
     const slot=id=>w.document.querySelector(`[data-answer-id="${id}"]`);
     const chipOwner=id=>slot(id).querySelector('[data-player-id]')?.dataset.playerId;
@@ -80,5 +89,6 @@ test('participant controller waits, preserves private drafts, guesses and restor
     connection.emit();assert.equal(w.document.querySelectorAll('.guess-reveal').length,3);
     click('Finish round');click('Next question');assert.equal(room.current,1);assert.equal(room.deadline,null);
     assert.ok(w.document.querySelector('#guess-clock').textContent.includes('No timer'));
+    assert.equal(animations, 3, 'reduced motion skips subsequent screen transitions');
   } finally { dom.window.close(); }
 });
