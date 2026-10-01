@@ -78,6 +78,13 @@ fn DocumentHead(
     };
     let canonical = metadata.canonical.map(|url| url.as_str().to_owned());
     let description = metadata.description;
+    // Change the URL whenever CSS changes, including for returning mobile visitors.
+    let css_version = crate::SITE_CSS
+        .bytes()
+        .fold(0xcbf29ce484222325_u64, |hash, byte| {
+            (hash ^ u64::from(byte)).wrapping_mul(0x100000001b3)
+        });
+    let stylesheet = format!("/assets/main.css?v={css_version:016x}");
     view! {
         <head>
             <meta charset="utf-8"/>
@@ -110,7 +117,7 @@ fn DocumentHead(
                 }
             })}
             {structured.map(|json| view! { <script type="application/ld+json">{json}</script> })}
-            <link rel="stylesheet" href="/assets/main.css"/>
+            <link rel="stylesheet" href=stylesheet/>
             <link rel="icon" href=assets.icon/>
             {assets.stylesheets.iter().map(|href| view! { <link rel="stylesheet" href=*href/> }).collect_view()}
             {assets.theme_color.map(|color| view! { <meta name="theme-color" content=color/> })}
