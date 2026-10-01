@@ -57,6 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     for asset in [
         "assets/page-transition.css",
+        "assets/project-explorer.js",
         "guessr/game.js",
         "guessr/banner.webp",
         "guessr/redirect.js",
