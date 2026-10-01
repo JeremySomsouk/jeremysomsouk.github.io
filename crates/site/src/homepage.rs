@@ -4,7 +4,8 @@ use leptos::prelude::*;
 use site_content::HOMEPAGE;
 
 use crate::ui::{
-    GuessrProjectCard, ProjectCard, ResumeEntry, RippleProjectCard, Section, WebsiteLayout,
+    GuessrProjectCard, NuanceProjectCard, ProjectCard, ResumeEntry, RippleProjectCard, Section,
+    WebsiteLayout,
 };
 
 pub fn render_homepage() -> Result<String, serde_json::Error> {
@@ -69,6 +70,7 @@ fn ProjectExplorer() -> impl IntoView {
                             ("games", "Games & play"),
                             ("tools", "Developer tools"),
                             ("experiments", "Experiments"),
+                            ("reflection", "Space to think"),
                         ].into_iter().map(|(topic, label)| view! {
                             <button type="button" data-topic=topic data-topic-label=label aria-pressed=if topic == "all" { "true" } else { "false" } aria-controls=home.projects_id>
                                 <span class="topic-dot" aria-hidden="true"></span>{label}
@@ -85,6 +87,7 @@ fn ProjectExplorer() -> impl IntoView {
                             {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }.into_any()).collect_view()}
                             <GuessrProjectCard/>
                             <RippleProjectCard/>
+                            <NuanceProjectCard/>
                         </div>
                     </div>
                 </div>

@@ -78,7 +78,8 @@ The checked-in `rust-toolchain.toml` selects Rust 1.96.0.
 
 ```sh
 rm -rf target/site-preview          # disposable generated output only
-bash scripts/build-ripple.sh        # requires wasm32-unknown-unknown target
+bash scripts/build-ripple.sh
+bash scripts/build-nuance.sh        # requires wasm32-unknown-unknown target
 SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
 python3 -m http.server 8766 --directory target/site-preview
 ```
@@ -267,3 +268,20 @@ For an immediate backend test before merging, choose `feat/social-guess` as the
 Cloudflare production build branch temporarily, then return it to `master` once
 merged. This deploys the same existing Worker. The frontend still publishes only
 through the established GitHub Pages workflow.
+
+## Nuance
+
+`/nuance/` is a quiet English/French space for thinking through a decision.
+The standalone Leptos page uses a small Rust/Wasm model in `crates/nuance`:
+bounded priority comparisons, adaptive option comparisons, and descriptive
+relationships, including equality, uncertainty, unexplored pairs and cycles.
+There is no overall option score or chosen answer.
+
+`public/nuance` owns the paper interface and browser boundary. One active page
+is kept in `localStorage`; no writing enters URLs or network requests. Burning
+removes that page before the short disappearing-ink gesture and clears other
+open tabs. Language preference is kept separately. A plain-text copy can be
+saved locally; burning cannot remove an already downloaded copy. Reduced
+motion, keyboard controls and mobile layouts are supported. Build the engine
+with `bash scripts/build-nuance.sh`; test it with `cargo test -p nuance-engine`
+and `node --test scripts/nuance.test.mjs`.

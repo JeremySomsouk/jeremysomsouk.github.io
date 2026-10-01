@@ -24,3 +24,6 @@ pub use ripple::render_ripple;
 
 mod guess;
 pub use guess::{render_guess, render_guess_redirect};
+
+mod nuance;
+pub use nuance::render_nuance;
