@@ -146,3 +146,29 @@ fn profile_icon(kind: site_content::ProfileLinkKind) -> &'static str {
         ProfileLinkKind::Website => "/icons/tabler/world.svg",
     }
 }
+
+/// Shared game invitation in the homepage and projects grid.
+#[component]
+pub fn GuessrProjectCard() -> impl IntoView {
+    let project = site_content::ProjectMetadata {
+        slug: "guessr",
+        heading_id: "guessr-project-title",
+        title: "Guessr",
+        tagline: "Guess who wrote each answer.",
+        description: "Write an answer, match anonymous responses to players, and compare your scores.",
+        tags: &["Multiplayer", "Browser game"],
+        tags_label: "Guessr features",
+        note: None,
+        destination: site_content::Link {
+            label: "Play Guessr →",
+            url: "/guessr/",
+        },
+        image: site_content::Image {
+            src: "/guessr/banner.webp",
+            alt: "Guessr: anonymous answer cards and player tags in green",
+            width: 960,
+            height: 640,
+        },
+    };
+    view! { <ProjectCard project/> }
+}

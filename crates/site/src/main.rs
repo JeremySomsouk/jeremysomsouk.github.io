@@ -50,7 +50,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         "images/profile.webp",
         "images/js-icon.webp",
         "images/melimo-player.png",
-        "images/prctrl-banner.webp",
         "images/favicon.ico",
     ] {
         manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;
@@ -58,6 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     for asset in [
         "assets/page-transition.css",
         "guessr/game.js",
+        "guessr/banner.webp",
         "guessr/redirect.js",
         "guessr/icon.svg",
         "guessr/transport.js",
