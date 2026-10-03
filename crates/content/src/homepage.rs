@@ -52,9 +52,9 @@ pub const HOMEPAGE: Homepage = Homepage {
             },
             image: Image {
                 src: "/images/tessera-banner.webp",
-                alt: "Tessera banner with terminal panes gathered into a mosaic",
-                width: 2172,
-                height: 724,
+                alt: "Illustration of Tessera terminal panes and a shared Overview of Claude Code and Codex sessions",
+                width: 1774,
+                height: 887,
             },
         },
         ProjectMetadata {
