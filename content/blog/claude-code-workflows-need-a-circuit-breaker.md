@@ -44,18 +44,16 @@ request goes to Haiku.
 
 That is the model split in my workflow:
 
-| Work | Model |
-| --- | --- |
-| Initial implementation | Opus 5.5 |
-| Security, correctness, and architecture review | Opus 5.5 |
-| Implementing agreed fixes | Sonnet |
-| Checking and reviewing the fixes | Opus 5.5 |
-| Checking against the specs | Sonnet |
-| Writing and publishing the result in the PR | Haiku |
+- **Initial implementation:** Opus 5.5.
+- **Security, correctness, and architecture review:** Opus 5.5.
+- **Implementing agreed fixes:** Sonnet.
+- **Checking and reviewing the fixes:** Opus 5.5.
+- **Checking against the specs:** Sonnet.
+- **Writing and publishing the result in the PR:** Haiku.
 
 Claude Code supports selecting models for subagents; its
 [model configuration docs](https://code.claude.com/docs/en/model-config)
-describe the available choices. The table is my allocation of those models
+describe the available choices. This is my allocation of those models
 to jobs, not a claim that every project should use the same split.
 
 ## Why the split helps
