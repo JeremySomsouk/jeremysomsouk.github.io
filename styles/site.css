@@ -116,6 +116,7 @@ body.site-page { margin: 0; }
 .site-shell .project-preview { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; background: #201923; }
 .site-shell [data-project="cabane"] .project-preview { background: #f4eadb; }
 .site-shell .project-card .project-preview { aspect-ratio: 2 / 1; }
+.site-shell .project-card[data-project="tessera"] .project-preview { object-fit: cover; object-position: center; }
 .site-shell .project-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1.5rem; overflow-wrap: anywhere; }
 .site-shell .project-body h3 { margin: 0 0 .75rem; font-size: 1.5rem; font-weight: 700; color: var(--project-accent); }
 .site-shell .project-tagline { font-weight: 600; }
