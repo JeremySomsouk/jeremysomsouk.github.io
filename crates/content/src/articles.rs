@@ -47,6 +47,31 @@ pub struct ArticleDate {
     day: u8,
 }
 
+impl ArticleDate {
+    pub fn readable(self) -> String {
+        const MONTHS: [&str; 12] = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        format!(
+            "{} {}, {}",
+            MONTHS[usize::from(self.month - 1)],
+            self.day,
+            self.year
+        )
+    }
+}
+
 impl TryFrom<toml::value::Datetime> for ArticleDate {
     type Error = &'static str;
     fn try_from(value: toml::value::Datetime) -> Result<Self, Self::Error> {

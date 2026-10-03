@@ -192,8 +192,8 @@ body.site-page { margin: 0; }
 .article-list li { padding-block: 1.5rem; border-bottom: 1px solid var(--site-rule); }
 .article-list h3 { margin-block: 0 .5rem; }
 .blog-article { max-width: 48rem; margin-inline: auto; overflow-wrap: anywhere; }
-.blog-article time, .article-list time { color: var(--site-muted); }
-.article-description { margin-top: 1rem; }
+.article-date { display: block; margin-bottom: .75rem; color: var(--site-muted); font-size: .8125rem; line-height: 1.5; letter-spacing: .02em; }
+.site-shell .article-description { margin-top: 1rem; }
 .article-cover, .blog-article .prose img { display: block; max-width: 100%; height: auto; margin-block: 1.5rem; }
 .blog-article pre { max-width: 100%; overflow-x: auto; padding: 1rem; border: 1px solid var(--site-rule); }
 

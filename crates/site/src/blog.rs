@@ -40,7 +40,7 @@ fn render_index(articles: &[Article], as_of: ArticleDate) -> Result<String, Box<
                             view! { <ul class="article-list">
                                 {entries.into_iter().map(|article| view! { <li>
                                     <h3><a href=article.metadata.slug.path()>{article.metadata.title}</a></h3>
-                                    <time datetime=article.metadata.date.to_string()>{article.metadata.date.to_string()}</time>
+                                    <time class="article-date" datetime=article.metadata.date.to_string()>{article.metadata.date.readable()}</time>
                                     <p>{article.metadata.description}</p>
                                 </li> }).collect_view()}
                             </ul> }.into_any()
@@ -76,7 +76,7 @@ fn render_article(article: Article) -> Result<String, Box<dyn Error>> {
                 <nav class="page-trail" aria-label="Breadcrumb"><a href="/">"Home"</a><a href="/blog/">"Blog"</a><span aria-current="page">{article.metadata.title.clone()}</span></nav>
                 <Section id="article-title" title=article.metadata.title.clone()>
                     <article class="blog-article" aria-labelledby="article-title">
-                        <time datetime=article.metadata.date.to_string()>{article.metadata.date.to_string()}</time>
+                        <time class="article-date" datetime=article.metadata.date.to_string()>{article.metadata.date.readable()}</time>
                         <p class="article-description">{article.metadata.description}</p>
                         {article.metadata.image.map(|image| view! { <img class="article-cover" src=image.src alt=image.alt decoding="async"/> })}
                         {(!article.metadata.tags.is_empty()).then(|| view! { <ul class="project-tags" aria-label="Article tags">
@@ -189,6 +189,7 @@ mod tests {
             "BlogPosting",
             "datePublished",
             "2024-02-29",
+            "February 29, 2024",
             "content=\"article\"",
         ] {
             assert!(page.contains(expected), "Missing {expected}");
