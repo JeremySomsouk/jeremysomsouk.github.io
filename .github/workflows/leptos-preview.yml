@@ -31,6 +31,8 @@ jobs:
           rustup target add wasm32-unknown-unknown
           bash scripts/build-ripple.sh
           bash scripts/build-nuance.sh
+      - name: Political matching engine checks
+        run: node --test scripts/political.test.mjs
       - name: Nuance browser checks
         run: node --test scripts/nuance.test.mjs
       - name: Rust checks
