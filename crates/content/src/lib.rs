@@ -194,7 +194,8 @@ mod tests {
     fn projects_preserve_metadata_and_have_unique_safe_identifiers_and_assets() {
         let mut slugs = BTreeSet::new();
         let mut ids = BTreeSet::new();
-        assert_eq!(HOMEPAGE.projects.len(), 3);
+        assert_eq!(HOMEPAGE.projects.len(), 4);
+        assert_eq!(HOMEPAGE.projects[0].slug, "tessera");
         for project in HOMEPAGE.projects {
             assert!(slugs.insert(project.slug));
             assert!(ids.insert(project.heading_id));
@@ -217,7 +218,7 @@ mod tests {
             .into_iter()
             .chain(project.tags.iter().copied())
             {
-                if project.slug != "prctrl" {
+                if !matches!(project.slug, "prctrl" | "tessera") {
                     assert!(LEGACY.contains(&value.replace('&', "&amp;")), "{value}");
                 }
             }

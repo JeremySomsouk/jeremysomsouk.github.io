@@ -38,6 +38,26 @@ pub const HOMEPAGE: Homepage = Homepage {
     projects_id: "personal-projects",
     projects: &[
         ProjectMetadata {
+            slug: "tessera",
+            heading_id: "tessera-title",
+            title: "Tessera",
+            tagline: "Your terminals. Your agents. One Overview.",
+            description: "A desktop terminal workspace built in Rust. Arrange real terminals in resizable splits and gather Claude Code and Codex sessions in a single Overview. Follow activity, find sessions that need attention, and jump back into your work.",
+            tags: &["Rust", "macOS", "Claude Code & Codex"],
+            tags_label: "Tessera technologies and integrations",
+            note: Some("Version 0.2.2 · Intel and Apple Silicon · Automatic macOS updates."),
+            destination: Link {
+                label: "Explore on GitHub →",
+                url: "https://github.com/JeremySomsouk/tessera",
+            },
+            image: Image {
+                src: "/images/tessera-banner.webp",
+                alt: "Tessera banner with terminal panes gathered into a mosaic",
+                width: 2172,
+                height: 724,
+            },
+        },
+        ProjectMetadata {
             slug: "melimo",
             heading_id: "melimo-title",
             title: "Mélimo",
