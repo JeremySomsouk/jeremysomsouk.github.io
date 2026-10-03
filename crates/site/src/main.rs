@@ -57,6 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "images/js-icon.webp",
         "images/melimo-player.png",
         "images/prctrl-banner.webp",
+        "images/tessera-banner.webp",
         "images/favicon.ico",
     ] {
         manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;

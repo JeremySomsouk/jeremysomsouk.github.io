@@ -5,7 +5,7 @@ if (root) {
   const panel = root.querySelector('.project-grid');
   const cards = [...panel.querySelectorAll('[data-project]')];
   const buttons = [...tree.querySelectorAll('[data-topic]')];
-  const topics = { cabane: ['games'], guessr: ['games'], melimo: ['tools'], prctrl: ['tools'], ripple: ['games', 'experiments'], nuance: ['reflection', 'experiments'] };
+  const topics = { tessera: ['tools'], cabane: ['games'], guessr: ['games'], melimo: ['tools'], prctrl: ['tools'], ripple: ['games', 'experiments'], nuance: ['reflection', 'experiments'] };
   const matches = (card, topic) => topic === 'all' || (topics[card.dataset.project] ?? ['experiments']).includes(topic);
   for (const button of buttons) {
     button.querySelector('.topic-count').textContent = cards.filter(card => matches(card, button.dataset.topic)).length;
