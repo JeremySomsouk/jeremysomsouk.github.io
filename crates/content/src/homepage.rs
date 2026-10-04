@@ -42,10 +42,10 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "tessera-title",
             title: "Tessera",
             tagline: "Your terminals. Your agents. One Overview.",
-            description: "A desktop terminal workspace built in Rust. Arrange real terminals in resizable splits and gather Claude Code and Codex sessions in a single Overview. Follow activity, find sessions that need attention, and jump back into your work.",
-            tags: &["Rust", "macOS", "Claude Code & Codex"],
+            description: "A native terminal workspace built in Rust for Claude Code and Codex. Arrange shells in resizable panes, search workspaces and commands, and use Overview to see what’s running, what needs attention, and what’s ready to review. Jump straight back into the live terminal to act.",
+            tags: &["Rust", "macOS & Linux", "Claude Code & Codex"],
             tags_label: "Tessera technologies and integrations",
-            note: Some("Version 0.2.2 · Intel and Apple Silicon · Automatic macOS updates."),
+            note: Some("Version 0.3.0 · Intel and ARM64 · One-command installation."),
             destination: Link {
                 label: "Explore on GitHub →",
                 url: "https://github.com/JeremySomsouk/tessera",
