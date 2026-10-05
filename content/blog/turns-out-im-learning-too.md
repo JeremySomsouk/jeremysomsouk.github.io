@@ -4,7 +4,6 @@ description = "Watching my kids grow up, learning to give them time, and thinkin
 slug = "turns-out-im-learning-too"
 date = 2026-10-05
 draft = false
-tags = ["Parenthood", "Learning", "Education"]
 +++
 I was thinking about everything my kids are learning at the moment, and honestly it's a lot.
 
