@@ -49,6 +49,43 @@ jobs:
         run: SITE_BUILD_DATE="$(date -u +%F)" cargo run --locked --release -p site
       - name: Verify artifact
         run: python3 scripts/verify-site-preview.py
+      - name: Add Cloudflare Web Analytics to every page
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import json
+
+          beacon = """<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ffbd671a3e1b4161b9ce8247b1b6faf6"}'></script><!-- End Cloudflare Web Analytics -->"""
+          source = "https://static.cloudflareinsights.com/beacon.min.js"
+
+          class Analytics(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.beacons = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == "script" and attrs.get("src") == source:
+                      self.beacons.append(attrs)
+
+          pages = list(Path("target/site-preview").rglob("*.html"))
+          assert pages, "No generated pages found"
+          for page in pages:
+              html = page.read_text(encoding="utf-8")
+              parser = Analytics()
+              parser.feed(html)
+              if not parser.beacons:
+                  position = html.rfind("</body>")
+                  assert position >= 0, f"Missing closing body: {page}"
+                  html = html[:position] + beacon + "\n" + html[position:]
+                  parser = Analytics()
+                  parser.feed(html)
+              assert len(parser.beacons) == 1, f"Duplicate beacons: {page}"
+              assert json.loads(parser.beacons[0]["data-cf-beacon"]) == {"token": "ffbd671a3e1b4161b9ce8247b1b6faf6"}, f"Wrong analytics token: {page}"
+              page.write_text(html, encoding="utf-8")
+          print(f"Verified Cloudflare Web Analytics on {len(pages)} pages")
+          PY
       - uses: actions/upload-pages-artifact@v3
         with:
           path: target/site-preview
