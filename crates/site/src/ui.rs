@@ -31,7 +31,12 @@ pub fn Header(
 ) -> impl IntoView {
     view! {
         <header class="site-header site-container">
-            <div class="site-identity"><h1>{logo.map(|src| view! { <img class="identity-logo" src=src alt="" width="50" height="50"/> })}{title}</h1><p>{subtitle}</p></div>
+            <div class="site-identity">
+                <h1><a class="site-home-link" href="/" aria-label="Homepage">
+                    {logo.map(|src| view! { <img class="identity-logo" src=src alt="" width="50" height="50"/> })}{title}
+                </a></h1>
+                <p>{subtitle}</p>
+            </div>
             <nav class="site-navigation" aria-label="Main navigation">{children()}</nav>
         </header>
     }
