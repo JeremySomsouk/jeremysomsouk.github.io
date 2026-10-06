@@ -61,6 +61,7 @@ body.site-page { margin: 0; }
 .site-shell p, .site-shell ul { margin: 0 0 1rem; color: var(--site-muted); }
 .site-shell h1, .site-shell h2, .site-shell h3 { line-height: 1.15; overflow-wrap: anywhere; }
 .site-header { display: flex; align-items: start; justify-content: space-between; gap: 2rem; padding-block: 3rem 1.5rem; }
+.site-shell .site-home-link { color: inherit; text-decoration: none; }
 .site-identity { min-width: 0; }
 .site-identity h1 { font-size: 2.5rem; font-weight: 500; margin: 0; }
 .site-identity p { font-size: 1.25rem; font-weight: 300; margin: 0; }
