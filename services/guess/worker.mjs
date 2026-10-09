@@ -1,4 +1,4 @@
-import { Room, code } from './engine.mjs';
+import { Room, code, MAX_MESSAGE_BYTES } from './engine.mjs';
 
 // One Durable Object per room; persistence and websocket hibernation survive eviction.
 export default {
@@ -54,17 +54,25 @@ export class GuessRoom {
     if (!this.room || Date.now() >= this.room.expiresAt) return;
     for (const ws of this.ctx.getWebSockets()) {
       const a = ws.deserializeAttachment();
-      if (a?.token) ws.send(JSON.stringify({ type: 'state', state: this.room.view(a.token) }));
+      if (a?.token) {
+        const state = this.room.view(a.token), version = this.room.bannerVersion ?? 0;
+        if (a.bannerVersion === version) delete state.banner;
+        ws.send(JSON.stringify({ type: 'state', state }));
+        if (a.bannerVersion !== version) { a.bannerVersion = version; ws.serializeAttachment(a); }
+      }
     }
   }
   async webSocketMessage(ws, raw) {
     try {
-      if (typeof raw !== 'string' || new TextEncoder().encode(raw).byteLength > 16384) throw Error('Invalid message.');
+      if (typeof raw !== 'string') throw Error('Invalid message.');
+      const messageBytes = new TextEncoder().encode(raw).byteLength;
+      if (messageBytes > MAX_MESSAGE_BYTES) throw Error('Invalid message.');
       const a = ws.deserializeAttachment();
       if (Date.now() - a.window > 1000) { a.count = 0; a.window = Date.now(); }
       if (++a.count > 20) throw Error('Slow down a moment.');
       ws.serializeAttachment(a);
       const m = JSON.parse(raw);
+      if (m?.type !== 'set_banner' && messageBytes > 16384) throw Error('Invalid message.');
       if (!a.token) {
         let credentials;
         if (a.creating && m.type === 'create_room' && !this.room) {

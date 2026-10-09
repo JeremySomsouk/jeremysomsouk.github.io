@@ -20,6 +20,22 @@ test('creation validates all questions and bounded independent timers', () => {
   assert.throws(() => lobby([{ text: 'x', seconds: 30 }]));
   assert.throws(() => new Room('K9F4', '', [{ text: 'Okay?', seconds: null }], t));
 });
+test('banner is host-only, bounded, shared and locked when play starts', () => {
+  const r = lobby(), host = r.players[0], banner = 'data:image/jpeg;base64,/9j/2Q==';
+  assert.throws(() => command(r,r.players[1],'set_banner',{banner}), /host/);
+  assert.throws(() => r.command(r.players[1].token,r.hostToken,{type:'set_banner',banner},t), /host/);
+  for (const invalid of [undefined, {}, 'https://example.com/image.jpg', 'data:image/svg+xml;base64,PHN2Zz4=', 'data:image/jpeg;base64,/9j/!', 'data:image/jpeg;base64,/9j/' + 'A'.repeat(32768)]) {
+    assert.throws(() => command(r,host,'set_banner',{banner:invalid}));
+    assert.equal(r.banner,null);
+  }
+  command(r,host,'set_banner',{banner});
+  assert.ok(r.players.every(p=>r.view(p.token,t).banner===banner));
+  command(r,host,'set_banner',{banner:null});assert.equal(r.banner,null);
+  command(r,host,'set_banner',{banner});start(r);
+  assert.throws(() => command(r,host,'set_banner',{banner:null}), /before starting/);
+  answerAll(r);r.players.forEach(p=>command(r,p,'submit_guesses',{assignments:guesses(r,p)}));
+  assert.equal(r.view(host.token,t).banner,banner);
+});
 test('lobby requires explicit host start, minimum players and unique names', () => {
   const r = lobby(); assert.equal(r.phase, 'Lobby');
   assert.throws(() => r.join('alice', t), /taken/);

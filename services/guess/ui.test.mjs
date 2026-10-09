@@ -26,7 +26,8 @@ test('participant controller waits, preserves private drafts, guesses and restor
     close() {}
   }
   w.transportClass=MockTransport; w.available=true;
-  const source=(await readFile(new URL('../../public/guessr/game.js',import.meta.url),'utf8')).replace(/^import .*;\n/, '');
+  w.prepareBanner=async () => 'data:image/jpeg;base64,/9j/2Q==';
+  const source=(await readFile(new URL('../../public/guessr/game.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm, '');
   const click = label => {
     const button=[...w.document.querySelectorAll('button')].find(b=>b.textContent===label);
     assert.ok(button,`Missing button ${label}`); button.click();
@@ -40,12 +41,25 @@ test('participant controller waits, preserves private drafts, guesses and restor
     assert.ok([...w.document.querySelector('#timer-1').options].some(o=>o.value==='15'));
     const timer=w.document.querySelector('#timer-1'); timer.value=''; timer.dispatchEvent(new w.Event('change')); assert.equal(w.document.querySelector('#custom-1'),null);
     click('Create room'); assert.equal(room.phase,'Lobby'); assert.equal(room.questions[1].seconds,null);
+    const upload=w.document.querySelector('#guess-banner-upload');
+    Object.defineProperty(upload,'files',{value:[new w.File(['image'],'banner.png',{type:'image/png'})]});
+    upload.dispatchEvent(new w.Event('change'));
+    await new Promise(resolve=>setTimeout(resolve,0));
+    assert.equal(room.banner,'data:image/jpeg;base64,/9j/2Q==');
+    assert.equal(w.document.querySelector('.guess-room-banner').getAttribute('src'),room.banner);
+    click('Remove banner'); assert.equal(room.banner,null);
+    assert.equal(w.document.querySelector('.guess-room-banner'),null);
+    room.command(room.players[0].token,room.hostToken,{type:'set_banner',banner:'data:image/jpeg;base64,/9j/2Q=='});connection.emit();
+    const unchanged=room.view(connection.token);delete unchanged.banner;
+    connection.onEvent({type:'state',state:unchanged});assert.ok(w.document.querySelector('.guess-room-banner'));
     assert.ok([...w.document.querySelectorAll('button')].find(b=>b.textContent==='Start game').disabled);
     assert.equal(animations, 1);
     room.join('Alice');room.join('Bob'); connection.emit();
     assert.equal(animations, 1, 'lobby readiness must not restart the transition');
     assert.equal(room.phase,'Lobby'); assert.ok(!w.document.body.textContent.includes('null'));
     connection.token=room.players[1].token;connection.emit();assert.ok(!w.document.body.textContent.includes('null'));
+    assert.equal(w.document.querySelector('#guess-banner-upload'),null);
+    assert.ok(w.document.querySelector('.guess-room-banner'));
     connection.token=room.players[0].token;connection.emit();click('Start game');
     assert.ok(!w.document.body.textContent.includes('null'));
     assert.equal(animations, 2, 'starting the question transitions the screen');
@@ -92,8 +106,17 @@ test('participant controller waits, preserves private drafts, guesses and restor
     click('Reveal next answer');click('Reveal next answer');assert.ok(w.document.body.textContent.includes('Overall'));
     connection.emit();assert.equal(w.document.querySelectorAll('.guess-reveal').length,3);
     assert.equal(w.document.querySelectorAll('.guess-reveal-guesses li').length,9);
-    click('Finish round');click('Next question');assert.equal(room.current,1);assert.equal(room.deadline,null);
+    click('Finish round');assert.equal(w.document.querySelector('.guess-confetti'),null);
+    // Replaying an ordinary state must not celebrate. A fresh completion does.
+    reducedMotion=false;connection.emit();assert.equal(w.document.querySelector('.guess-confetti'),null);
+    room.phase='Revealing';connection.emit();room.phase='QuestionComplete';connection.emit();
+    assert.equal(w.document.querySelectorAll('.guess-confetti i').length,28);
+    const burst=w.document.querySelector('.guess-confetti');connection.emit();assert.equal(w.document.querySelector('.guess-confetti'),burst);
+    burst.remove();room.phase='Revealing';connection.emit();room.phase='QuestionComplete';
+    connection.onEvent({type:'welcome',code:room.code,playerToken:connection.token,hostToken:room.hostToken});connection.emit();
+    assert.equal(w.document.querySelector('.guess-confetti'),null,'reconnect must not replay celebrations');
+    reducedMotion=true;click('Next question');assert.equal(room.current,1);assert.equal(room.deadline,null);
     assert.ok(w.document.querySelector('#guess-clock').textContent.includes('No timer'));
-    assert.equal(animations, 3, 'reduced motion skips subsequent screen transitions');
+    assert.equal(animations, 7, 'only the extra phase changes animate with motion enabled');
   } finally { dom.window.close(); }
 });

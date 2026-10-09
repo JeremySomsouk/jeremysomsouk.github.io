@@ -2,6 +2,8 @@
 import { webcrypto } from 'node:crypto';
 const cryptoApi = globalThis.crypto ?? webcrypto;
 export const TTL = 24 * 60 * 60 * 1000;
+export const MAX_MESSAGE_BYTES = 49152;
+export const MAX_BANNER_BYTES = 24576;
 export const alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
 export const id = () => cryptoApi.randomUUID();
 export const code = () => Array.from(cryptoApi.getRandomValues(new Uint8Array(6)), n => alphabet[n % alphabet.length]).join('');
@@ -25,6 +27,7 @@ export class Room {
     this.code = roomCode; this.createdAt = now; this.expiresAt = now + TTL;
     this.questions = questions(input); this.players = []; this.hostToken = id();
     this.phase = 'Lobby'; this.current = 0; this.deadline = null;
+    this.banner = null;
     this.answers = []; this.guesses = {}; this.rounds = []; this.excluded = []; this.revealCount = 0;
     const host = this.join(name, now); this.hostId = host.playerId;
   }
@@ -77,9 +80,21 @@ export class Room {
     if (!intent || typeof intent.type !== 'string') fail('Invalid message.');
     this.tick(now);
     const p = this.player(token);
-    if (['start_game', 'advance_reveal', 'finish_reveal', 'next_question', 'exclude_player', 'end_game'].includes(intent.type)) this.host(hostToken);
+    if (['set_banner', 'start_game', 'advance_reveal', 'finish_reveal', 'next_question', 'exclude_player', 'end_game'].includes(intent.type)) this.host(hostToken);
     if (['submit_answer', 'update_answer', 'submit_guesses', 'advance_reveal', 'finish_reveal', 'next_question', 'exclude_player'].includes(intent.type) && intent.questionId !== this.questions[this.current].id) fail('This question has changed. Refresh your view.');
     switch (intent.type) {
+      case 'set_banner': {
+        if (p.id !== this.hostId) fail('Only the host can do that.');
+        if (this.phase !== 'Lobby') fail('Change the banner before starting the game.');
+        const banner = intent.banner;
+        if (banner !== null) {
+          if (typeof banner !== 'string' || !/^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(banner)) fail('Choose a JPEG banner.');
+          const encoded = banner.slice('data:image/jpeg;base64,'.length);
+          const bytes = encoded.length / 4 * 3 - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0);
+          if (encoded.length % 4 || bytes > MAX_BANNER_BYTES) fail('The banner must be 24 KB or smaller.');
+        }
+        this.banner = banner; this.bannerVersion = (this.bannerVersion ?? 0) + 1; break;
+      }
       case 'start_game':
         this.host(hostToken);
         if (this.phase !== 'Lobby') fail('The game has already started.');
@@ -135,6 +150,7 @@ export class Room {
     const ordered = [...this.players].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
     return {
       code: this.code, phase: this.phase, serverNow: now, expiresAt: this.expiresAt,
+      banner: this.banner ?? null,
       current: this.current, total: this.questions.length,
       question: this.questions[this.current], deadline: this.deadline, revealCount: this.revealCount,
       me: me.id, isHost: me.id === this.hostId,

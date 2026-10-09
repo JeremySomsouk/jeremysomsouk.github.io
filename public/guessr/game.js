@@ -1,10 +1,13 @@
 import { transportClass, available } from './transport.js';
+import { prepareBanner } from './banner.js';
 const app = document.querySelector('#guess-app');
 const error = document.querySelector('#guess-error');
 const connection = document.querySelector('#guess-connection');
 const append = (...children) => app.append(...children.flat(Infinity).filter(x => x !== null && x !== undefined));
 let transport, state, pending = false, clockOffset = 0, answerDraft = '', assignments = {}, roundKey = '', selectedPlayer = null, drag = null;
 let screenKey = '', screenAnimation;
+let bannerBusy = false;
+let initialConnectionState = true;
 let draftQuestions = [{ text: 'What would you bring to a desert island?', seconds: 60 }];
 const params = new URLSearchParams(location.search);
 const backendQuery = params.get('backend') === 'worker' ? '&backend=worker' : '';
@@ -31,13 +34,14 @@ function begin(intent) {
   transport = new transportClass(event => {
     pending = false;
     if (event.type === 'welcome') {
+      initialConnectionState = true;
       roomCode = event.code;
       const old = saved(roomCode) ?? {};
       write(roomCode, { ...old, playerToken: event.playerToken, hostToken: event.hostToken ?? old.hostToken });
       history.replaceState(null, '', `/guessr/?room=${roomCode}${backendQuery}`);
     } else if (event.type === 'state') {
       const previous = state;
-      state = event.state; clockOffset = state.serverNow - Date.now();
+      state = { ...event.state, banner: Object.hasOwn(event.state, 'banner') ? event.state.banner : previous?.banner ?? null }; clockOffset = state.serverNow - Date.now();
       if (roundKey !== `${state.code}:${state.current}`) {
         roundKey = `${state.code}:${state.current}`; answerDraft = state.ownAnswer; assignments = {}; selectedPlayer = null;
       }
@@ -45,6 +49,8 @@ function begin(intent) {
         showError('');
       }
       render();
+      if (!initialConnectionState && previous?.phase === 'Revealing' && previous.current === state.current && ['QuestionComplete', 'Finished'].includes(state.phase)) celebrateRound();
+      initialConnectionState = false;
     } else if (event.type === 'error') showError(event.message);
   }, message => { connection.textContent = message === 'Connected' ? '' : message; if (/closed|Cannot/.test(message)) pending = false; });
   transport.connect(intent);
@@ -104,6 +110,39 @@ function hostControls() {
     ['Answering','Guessing'].includes(state.phase) ? state.players.filter(p => !p.connected && !p.host && !p.excluded).map(p => button(`Excuse ${p.name} this round`, () => send({ type: 'exclude_player', playerId: p.id }))) : null,
     button('End game', () => { if (confirm('End this game and show final scores?')) send({ type: 'end_game' }); }));
 }
+function bannerControls() {
+  const upload = el('input', { id: 'guess-banner-upload', type: 'file', accept: 'image/jpeg,image/png,image/webp', disabled: bannerBusy, onchange: async e => {
+    const file = e.target.files?.[0];
+    if (!file || bannerBusy) return;
+    const code = state.code;
+    bannerBusy = true; showError(''); render();
+    try {
+      const banner = await prepareBanner(file);
+      if (state.code !== code || state.phase !== 'Lobby') throw Error('Change the banner before starting the game.');
+      send({ type: 'set_banner', banner });
+    } catch (error) { showError(error.message); }
+    finally { bannerBusy = false; render(); }
+  } });
+  return el('div', { class: 'guess-banner-controls' },
+    el('label', { for: upload.id }, state.banner ? 'Replace banner' : 'Add a banner', upload),
+    el('p', { class: 'guess-hint', role: 'status' }, bannerBusy ? 'Preparing banner…' : 'JPEG, PNG or WebP · cropped to a wide banner'),
+    state.banner ? button('Remove banner', () => send({ type: 'set_banner', banner: null }), bannerBusy) : null);
+}
+function celebrateRound() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelector('.guess-confetti')?.remove();
+  const burst = el('div', { class: 'guess-confetti', 'aria-hidden': true });
+  for (let i = 0; i < 28; i++) {
+    const piece = el('i');
+    piece.style.setProperty('--x', `${(Math.random() - .5) * 90}vw`);
+    piece.style.setProperty('--y', `${15 + Math.random() * 60}vh`);
+    piece.style.setProperty('--turn', `${180 + Math.random() * 540}deg`);
+    piece.style.setProperty('--delay', `${Math.random() * 100}ms`);
+    burst.append(piece);
+  }
+  document.body.append(burst);
+  setTimeout(() => burst.remove(), 1600);
+}
 function render() {
   cancelDrag();
   // Retain in-progress input and focus across readiness updates from other players.
@@ -111,6 +150,7 @@ function render() {
   app.replaceChildren();
   const me = state.players.find(p => p.id === state.me);
   app.closest('.guess-game')?.setAttribute('data-phase', state.phase);
+  if (state.banner) append(el('img', { class: 'guess-room-banner', src: state.banner, alt: '', width: 1200, height: 400 }));
   if (state.phase === 'Lobby') {
     const link = `${location.origin}/guessr/?room=${state.code}${backendQuery}`;
     const invitation = el('div', { class: 'guess-invitation' },
@@ -131,8 +171,9 @@ function render() {
         el('span', { class: 'guess-player-name' }, p.name),
         el('span', { class: 'guess-player-note' }, [p.id === state.me ? 'You' : '', p.host ? 'Host' : '', !p.connected ? 'Offline' : ''].filter(Boolean).join(' · '))))));
     if (state.isHost) {
+      append(bannerControls());
       const missing = Math.max(0, 3 - state.players.length);
-      append(el('div', { class: 'guess-start' }, button('Start game', () => send({ type: 'start_game' }), missing > 0),
+      append(el('div', { class: 'guess-start' }, button('Start game', () => send({ type: 'start_game' }), missing > 0 || bannerBusy),
         missing ? el('p', { class: 'guess-hint' }, `Invite ${missing} more ${missing === 1 ? 'player' : 'players'} to start.`) : null));
     } else append(el('p', { class: 'guess-hint' }, 'Waiting for the host…'));
   } else if (state.phase === 'Finished') {

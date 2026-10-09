@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { WebSocketServer } from 'ws';
-import { Room, code } from './engine.mjs';
+import { Room, code, MAX_MESSAGE_BYTES } from './engine.mjs';
 
 const rooms = new Map(), peers = new Map();
 const root = resolve('../../target/site-preview');
@@ -18,14 +18,18 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': types[extname(file)] ?? 'application/octet-stream', 'Cache-Control': 'no-store' }); res.end(await readFile(file));
   } catch { res.writeHead(404); res.end('Not found. Build the site preview first.'); }
 });
-const wss = new WebSocketServer({ noServer: true, maxPayload: 16384 });
+const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_MESSAGE_BYTES });
 server.on('upgrade', (req, socket, head) => {
   // Same-origin browser connections only. Bind locally by default.
   if (req.url !== '/api/guess' || (req.headers.origin && new URL(req.headers.origin).host !== req.headers.host)) return socket.destroy();
   wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws));
 });
 function broadcast(room) {
-  for (const [ws, peer] of peers) if (peer.room === room && ws.readyState === 1) ws.send(JSON.stringify({ type: 'state', state: room.view(peer.token) }));
+  for (const [ws, peer] of peers) if (peer.room === room && ws.readyState === 1) {
+    const state = room.view(peer.token), version = room.bannerVersion ?? 0;
+    if (peer.bannerVersion === version) delete state.banner;
+    ws.send(JSON.stringify({ type: 'state', state })); peer.bannerVersion = version;
+  }
 }
 wss.on('connection', ws => {
   let rate = 0;
@@ -34,6 +38,7 @@ wss.on('connection', ws => {
     try {
       if (++rate > 20) throw Error('Slow down a moment.');
       const message = JSON.parse(raw.toString());
+      if (message?.type !== 'set_banner' && raw.byteLength > 16384) throw Error('Invalid message.');
       let peer = peers.get(ws);
       if (!peer) {
         let room, credentials;

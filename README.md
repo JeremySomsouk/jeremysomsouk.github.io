@@ -181,6 +181,11 @@ privately, independently match anonymous answers to authors, and compare their
 scores. Each revealed answer shows everyone's guesses and their results; guesses
 stay private until that answer is revealed. Self-identification earns no points. The host advances through the
 prepared rounds. Rooms expire after 24 hours; there are no accounts or histories.
+The host can upload, replace or remove a room banner in the lobby. JPEG, PNG and
+WebP files up to 10 MB are cropped to 3:1 and compressed to a JPEG of at most
+24 KB in the browser. The banner is stored with the temporary room, shared only
+when changed or reconnecting, and deleted when the room expires. Completing a
+round triggers a short confetti burst, respecting reduced-motion preferences.
 
 The page has its own visual identity and a discreet link to the homepage,
 while retaining static Leptos rendering and a small browser controller. Names

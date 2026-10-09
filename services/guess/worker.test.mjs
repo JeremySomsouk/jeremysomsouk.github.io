@@ -71,6 +71,22 @@ test('alarms expire answering and clean up old temporary rooms', async () => {
   saved.roomObject.room.expiresAt=Date.now()-1;await saved.roomObject.alarm();
   assert.equal(saved.storage.size,0);assert.equal(saved.ctx.alarm,null);assert.ok(peer.closed);
 });
+test('banner persists, is sent only when changed, and expires with the room', async () => {
+  const room=new Room('K9F4','Host',[{text:'Question?',seconds:null}]);
+  const peer=socket({token:room.players[0].token,hostToken:room.hostToken,count:0,window:Date.now()});
+  let saved=await object({...room},[peer]);
+  const banner='data:image/jpeg;base64,/9j/'+'A'.repeat(24000)+'2Q==';
+  await saved.roomObject.webSocketMessage(peer,JSON.stringify({type:'set_banner',banner}));
+  assert.equal(saved.storage.get('room').banner,banner);
+  assert.equal(peer.messages.at(-1).state.banner,banner);
+  saved.roomObject.broadcast();assert.ok(!Object.hasOwn(peer.messages.at(-1).state,'banner'));
+  const returning=socket({token:room.players[0].token});
+  saved=await object(saved.storage.get('room'),[returning]);saved.roomObject.broadcast();
+  assert.equal(returning.messages.at(-1).state.banner,banner);
+  await saved.roomObject.webSocketMessage(peer,JSON.stringify({type:'set_banner',banner:null}));
+  assert.equal(returning.messages.at(-1).state.banner,null);
+  saved.roomObject.room.expiresAt=Date.now()-1;await saved.roomObject.alarm();assert.equal(saved.storage.size,0);
+});
 test('malformed, oversized and unauthorized websocket commands do not mutate state', async () => {
   const room=new Room('K9F4','Host',[{text:'Question?',seconds:30}]);room.join('Alice');room.join('Bob');
   const peer=socket({token:room.players[1].token,count:0,window:Date.now()});
