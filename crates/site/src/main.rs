@@ -66,6 +66,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "assets/page-transition.css",
         "assets/project-explorer.js",
         "guessr/game.js",
+        "guessr/banner.js",
         "guessr/banner.webp",
         "guessr/redirect.js",
         "guessr/icon.svg",
