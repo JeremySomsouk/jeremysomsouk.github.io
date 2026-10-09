@@ -59,6 +59,9 @@ body.guessr-page { margin: 0; background: #dceee2; color: #163e32; font: 1rem/1.
 #guess-error { color: #922543; }
 #guess-error:empty, #guess-connection:empty { display: none; }
 .guess-reveal { border-left: 4px solid var(--accent); animation: guess-arrive .18s ease-out; }
+.guess-reveal-guesses { list-style: none; padding: 0; margin: .75rem 0 0; color: var(--ink); overflow-wrap: anywhere; }
+.guess-reveal-guesses li { padding-block: .35rem; }
+.guess-reveal-guesses span { color: var(--muted); font-size: .9rem; }
 @keyframes guess-arrive { from { opacity: 0; transform: translateY(.4rem); } to { opacity: 1; transform: none; } }
 .guess-matching-form { display: grid; grid-template-columns: minmax(0, 1fr) 13rem; align-items: start; gap: 1rem; }
 #guess-answer-list { min-width: 0; }

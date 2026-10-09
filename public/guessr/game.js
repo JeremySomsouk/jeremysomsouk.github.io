@@ -171,9 +171,10 @@ function render() {
       append(el('h3', {}, revealing ? 'The authors revealed' : 'Question complete'));
       const count = revealing ? state.revealCount : state.answers.length;
       for (const a of state.answers.slice(0, count)) {
-        const guessed = state.guesses?.find(g => g.answerId === a.id)?.playerId;
         append(el('article', { class: 'guess-card guess-reveal' }, el('p', {}, a.text), el('strong', {}, `Actually: ${playerName(a.owner)}`),
-          el('p', {}, guessed ? `You guessed ${playerName(guessed)} · ${a.owner === state.me ? 'Your answer · no point' : guessed === a.owner ? 'Correct! +1' : 'Not this time'}` : 'No guess submitted')));
+          el('ul', { class: 'guess-reveal-guesses', 'aria-label': 'Everyone’s guesses' }, (a.guesses ?? []).map(g =>
+            el('li', {}, `${g.playerId === state.me ? 'You' : playerName(g.playerId)} → ${g.guessedPlayerId ? playerName(g.guessedPlayerId) : 'No guess submitted'}`,
+              g.guessedPlayerId ? el('span', {}, ` · ${a.owner === g.playerId ? 'Own answer · no point' : g.guessedPlayerId === a.owner ? 'Correct! +1' : 'Not this time'}`) : null)))));
       }
       if (revealing && count < state.answers.length) append(state.isHost ? button('Reveal next answer', () => send({ type: 'advance_reveal' })) : el('p', {}, 'Waiting for the host to reveal the next answer…'));
       else {

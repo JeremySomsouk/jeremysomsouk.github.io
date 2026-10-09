@@ -178,7 +178,8 @@ recoverable from that history.
 `/guessr/` is a guessing game for 3–20 players. The host prepares all questions and
 individual timers, shares a room code, and starts from the lobby. Players answer
 privately, independently match anonymous answers to authors, and compare their
-scores. Self-identification earns no points. The host advances through the
+scores. Each revealed answer shows everyone's guesses and their results; guesses
+stay private until that answer is revealed. Self-identification earns no points. The host advances through the
 prepared rounds. Rooms expire after 24 hours; there are no accounts or histories.
 
 The page has its own visual identity and a discreet link to the homepage,

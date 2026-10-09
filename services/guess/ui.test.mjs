@@ -85,8 +85,13 @@ test('participant controller waits, preserves private drafts, guesses and restor
     click('Submit my guesses');assert.ok(w.document.body.textContent.includes('Guesses submitted'));
     for(const p of room.players.slice(1)) command(p,'submit_guesses',{assignments:room.answers.map(a=>({answerId:a.id,playerId:a.owner}))});connection.emit();
     assert.equal(room.phase,'Revealing');
+    assert.equal(w.document.querySelectorAll('.guess-reveal-guesses li').length,3);
+    assert.ok(w.document.querySelector('.guess-reveal-guesses').textContent.includes('Alice →'));
+    assert.ok(w.document.querySelector('.guess-reveal-guesses').textContent.includes('Bob →'));
+    assert.ok(w.document.querySelector('.guess-reveal-guesses').textContent.includes('Own answer · no point'));
     click('Reveal next answer');click('Reveal next answer');assert.ok(w.document.body.textContent.includes('Overall'));
     connection.emit();assert.equal(w.document.querySelectorAll('.guess-reveal').length,3);
+    assert.equal(w.document.querySelectorAll('.guess-reveal-guesses li').length,9);
     click('Finish round');click('Next question');assert.equal(room.current,1);assert.equal(room.deadline,null);
     assert.ok(w.document.querySelector('#guess-clock').textContent.includes('No timer'));
     assert.equal(animations, 3, 'reduced motion skips subsequent screen transitions');

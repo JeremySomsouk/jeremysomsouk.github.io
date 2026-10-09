@@ -139,7 +139,10 @@ export class Room {
       question: this.questions[this.current], deadline: this.deadline, revealCount: this.revealCount,
       me: me.id, isHost: me.id === this.hostId,
       players: this.players.map(p => ({ id: p.id, name: p.name, score: p.score, connected: p.connected, host: p.id === this.hostId, answered: this.answers.some(a => a.owner === p.id), guessed: Object.hasOwn(this.guesses, p.id), excluded: this.excluded.includes(p.id) })),
-      answers: visible ? this.answers.map((a, i) => ({ id: a.id, text: a.text, ...(revealed && (this.phase !== 'Revealing' || i < this.revealCount) ? { owner: a.owner } : {}) })) : [],
+      answers: visible ? this.answers.map((a, i) => ({ id: a.id, text: a.text, ...(revealed && (this.phase !== 'Revealing' || i < this.revealCount) ? {
+        owner: a.owner,
+        guesses: this.players.map(p => ({ playerId: p.id, guessedPlayerId: this.guesses[p.id]?.find(g => g.answerId === a.id)?.playerId ?? null })),
+      } : {}) })) : [],
       authors: visible ? this.players.filter(p => this.answers.some(a => a.owner === p.id)).map(p => p.id) : [],
       ownAnswer: this.answers.find(a => a.owner === me.id)?.text ?? '',
       guesses: this.guesses[me.id] ?? null,

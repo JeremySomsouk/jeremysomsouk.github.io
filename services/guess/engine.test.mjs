@@ -94,6 +94,27 @@ test('server scoring excludes self, accumulates and final ranks handle ties', ()
   command(r,r.players[0],'finish_reveal'); assert.equal(r.phase,'Finished');
   assert.throws(()=>command(r,r.players[0],'next_question'),/first/);
 });
+test('everyone’s guesses become public only for revealed answers', () => {
+  const r = lobby(); start(r); answerAll(r);
+  r.players.forEach((p, i) => {
+    assert.ok(r.view(p.token,t).answers.every(a => !Object.hasOwn(a, 'guesses')));
+    command(r,p,'submit_guesses',{ assignments: guesses(r,p,i % 2) });
+  });
+  const view = r.view(r.players[1].token,t);
+  assert.deepEqual(view.answers[0].guesses, r.players.map(p => ({ playerId: p.id, guessedPlayerId: r.guesses[p.id].find(g => g.answerId === view.answers[0].id).playerId })));
+  assert.ok(view.answers.slice(1).every(a => !Object.hasOwn(a, 'guesses')));
+  while(r.revealCount < r.answers.length) command(r,r.players[0],'advance_reveal');
+  assert.ok(r.view(r.players[0].token,t).answers.every(a => a.guesses.length === r.players.length));
+  command(r,r.players[0],'finish_reveal');
+  assert.ok(r.view(r.players[0].token,t).answers.every(a => a.guesses.length === r.players.length));
+  command(r,r.players[0],'next_question');
+  assert.deepEqual(r.view(r.players[0].token,t).answers, []);
+});
+test('reveal includes players who did not submit guesses', () => {
+  const r = lobby(); start(r); answerAll(r);
+  command(r,r.players[0],'end_game');
+  assert.ok(r.view(r.players[0].token,t).answers.every(a => a.guesses.every(g => g.guessedPlayerId === null)));
+});
 test('disconnected answered players stay candidates; host can waive readiness', () => {
   const r=lobby(); start(r); answerAll(r);
   const absent=r.players[3]; absent.connected=false;
