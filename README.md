@@ -54,10 +54,9 @@ images, `CNAME` and the license.
 
 Bientôt appears first on the homepage and projects index, with its generated
 presentation at `/projects/bientot/` and public destination <https://bientotanous.app/>.
-It is a collaborative preparation checklist for expectant and new parents,
-designed first for France. The application is still in development and privately
-tested; the public website presents it. The existing brand sharing image is copied
-unchanged.
+It is a collaborative preparation checklist for expectant and new parents. The application is still in development and privately
+tested; the public website presents it. The portfolio banner adds a coral accent to “Ensemble.” and the logo’s center,
+with a pale blush tile behind the mark. Its French copy and composition are retained.
 
 ## Ripple
 
