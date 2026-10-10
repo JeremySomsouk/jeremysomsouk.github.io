@@ -124,9 +124,9 @@ def verify():
             require(not (PREVIEW / route).exists(), f"Unpublished article leaked: {route}")
             require(f'/blog/{meta["slug"]}/' not in index_html, "Unpublished listing leaked")
     actual = files_under(PREVIEW)
-    home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "prctrl-banner.webp", "tessera-banner.webp", "favicon.ico")}
+    home_assets = {Path("images") / name for name in ("profile.webp", "js-icon.webp", "melimo-player.png", "prctrl-banner.webp", "tessera-banner.webp", "bientot-banner.png", "favicon.ico")}
     public_assets = files_under(ROOT / "public")
-    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("projects/prctrl/index.html"), Path("projects/tessera/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("guessr/index.html"), Path("ripple/engine.wasm"), Path("nuance/index.html"), Path("nuance/engine.wasm")}
+    expected = {Path("cabane/index.html")} | legacy | home_assets | public_assets | blog_pages | {Path("sitemap.xml"), Path("robots.txt"), Path("CNAME"), Path(".nojekyll"), Path("LICENSE")} | {Path("index.html"), Path("404.html"), Path("assets/main.css"), Path("projects/index.html"), Path("projects/cabane/index.html"), Path("projects/melimo/index.html"), Path("projects/prctrl/index.html"), Path("projects/tessera/index.html"), Path("projects/bientot/index.html"), Path("ripple/index.html"), Path("guess/index.html"), Path("guessr/index.html"), Path("ripple/engine.wasm"), Path("nuance/index.html"), Path("nuance/engine.wasm")}
     require(actual == expected, f"Artifact mismatch: missing={expected - actual}, extra={actual - expected}")
     for path in legacy | home_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "docs" / path).read_bytes(), f"Changed legacy bytes: {path}")
@@ -315,9 +315,11 @@ def verify():
             destination += "index.html"
         require(Path(destination) in actual, f"Broken local homepage link: {href}")
 
-    require(home_html.index('data-project="tessera"') < home_html.index('data-project="melimo"'), "Tessera must be the first homepage project")
+    for listing in [home_html, (PREVIEW / "projects/index.html").read_text()]:
+        require(re.findall(r'data-project="([^"]+)"', listing)[0] == "bientot", "Bientôt must be the first project")
+        require('href="https://bientotanous.app/"' in listing, "Bientôt must link to the public website")
     require("/projects/" in home.links, "Homepage must expose project index")
-    for route in ["projects", "projects/cabane", "projects/melimo", "projects/prctrl", "projects/tessera"]:
+    for route in ["projects", "projects/cabane", "projects/melimo", "projects/prctrl", "projects/tessera", "projects/bientot"]:
         page_html = (PREVIEW / route / "index.html").read_text()
         page = Document()
         page.feed(page_html)
