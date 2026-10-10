@@ -42,7 +42,7 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "bientot-title",
             title: "Bientôt",
             tagline: "Bientôt, à nous.",
-            description: "A collaborative checklist for expectant and new parents, designed first for France. Prepare practical steps, organize everyday tasks, and get ready for your child together. Baby registries and product links will complement the preparation.",
+            description: "A collaborative checklist for expectant and new parents. Prepare practical steps, organize everyday tasks, and get ready for your child together. Baby registries and product links will complement the preparation.",
             tags: &["Family preparation", "Android & web", "Rust & TypeScript"],
             tags_label: "Bientôt purpose and technologies",
             note: Some(
