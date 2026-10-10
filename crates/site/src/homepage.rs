@@ -69,6 +69,7 @@ fn ProjectExplorer() -> impl IntoView {
                             ("all", "All projects"),
                             ("games", "Games & play"),
                             ("tools", "Developer tools"),
+                            ("family", "Family & everyday life"),
                             ("experiments", "Experiments"),
                             ("reflection", "Space to think"),
                         ].into_iter().map(|(topic, label)| view! {

@@ -50,6 +50,15 @@ and licenses live in `public/`. The site's own GPL-3.0 notice is
 Cabane game runtime (copied byte-identical into the artifact), registered
 images, `CNAME` and the license.
 
+## Bientôt
+
+Bientôt appears first on the homepage and projects index, with its generated
+presentation at `/projects/bientot/` and public destination <https://bientotanous.app/>.
+It is a collaborative preparation checklist for expectant and new parents,
+designed first for France. The application is still in development and privately
+tested; the public website presents it. The existing brand sharing image is copied
+unchanged.
+
 ## Ripple
 
 `/ripple/` starts with a spark that chooses the route needing the least energy.

@@ -38,6 +38,28 @@ pub const HOMEPAGE: Homepage = Homepage {
     projects_id: "personal-projects",
     projects: &[
         ProjectMetadata {
+            slug: "bientot",
+            heading_id: "bientot-title",
+            title: "Bientôt",
+            tagline: "Bientôt, à nous.",
+            description: "A collaborative checklist for expectant and new parents, designed first for France. Prepare practical steps, organize everyday tasks, and get ready for your child together. Baby registries and product links will complement the preparation.",
+            tags: &["Family preparation", "Android & web", "Rust & TypeScript"],
+            tags_label: "Bientôt purpose and technologies",
+            note: Some(
+                "In development and privately tested. The public website introduces the project; the application is not yet publicly available.",
+            ),
+            destination: Link {
+                label: "Discover Bientôt →",
+                url: "https://bientotanous.app/",
+            },
+            image: Image {
+                src: "/images/bientot-banner.png",
+                alt: "Bientôt’s existing symbol with the words Faire une place. Ensemble. on a warm porcelain background",
+                width: 1200,
+                height: 630,
+            },
+        },
+        ProjectMetadata {
             slug: "tessera",
             heading_id: "tessera-title",
             title: "Tessera",
