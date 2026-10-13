@@ -42,7 +42,6 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
         site_content::PageMetadata::homepage(),
         body,
         crate::document::DocumentAssets {
-            stylesheets: &["/assets/page-transition.css"],
             ..Default::default()
         },
     )

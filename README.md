@@ -47,9 +47,7 @@ Meme images are sourced from Imgflip: [Surprised Pikachu](https://imgflip.com/me
 Ordinary pages contain no JavaScript or Wasm. The surprise page and Cabane games keep their
 self-contained controllers; the generator must not rewrite, rename or import
 their internals (see `crates/site/tests/output.rs` and the artifact verifier
-for the enforced boundary). A gentle CSS cross-document transition between the
-homepage and the Cabane landing is progressive enhancement only, disabled for
-reduced motion.
+for the enforced boundary).
 
 Site styling lives in `styles/site.css`; self-hosted Inter fonts, Tabler icons
 and licenses live in `public/`. The site's own GPL-3.0 notice is

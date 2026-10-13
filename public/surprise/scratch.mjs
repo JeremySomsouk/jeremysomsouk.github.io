@@ -1,6 +1,3 @@
-import { createMusic } from './music.mjs';
-
-const music = createMusic();
 const revealThreshold = .42;
 const area = document.querySelector('#scratch-area');
 const canvas = document.querySelector('#coating');
@@ -50,7 +47,6 @@ function celebrate() {
 function reveal(withConfetti = true) {
   if (revealed) return;
   revealed = true;
-  music.reveal();
   pointer = null;
   area.classList.add('revealed');
   secret.hidden = false;
@@ -110,7 +106,6 @@ function checkProgress() {
     }
   }
   if (total) {
-    music.progress(cleared / total / revealThreshold);
     if (cleared / total >= revealThreshold) reveal();
   }
 }
@@ -131,9 +126,6 @@ function scratch(event) {
   ctx.arc(point.x, point.y, 24 * scale, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalCompositeOperation = 'source-over';
-  if (previous && Math.hypot(point.x - previous.x, point.y - previous.y) > scale) {
-    music.sparkle(point.x / canvas.width);
-  }
   previous = point;
   if (performance.now() - lastCheck > 120) {
     lastCheck = performance.now();
@@ -142,7 +134,6 @@ function scratch(event) {
 }
 
 revealButton.addEventListener('click', () => {
-  music.start();
   reveal();
 });
 
@@ -154,7 +145,6 @@ if (ctx) {
   label.hidden = false;
   canvas.addEventListener('pointerdown', event => {
     if (revealed || pointer !== null || event.button !== 0) return;
-    music.start();
     pointer = event.pointerId;
     previous = null;
     canvas.setPointerCapture(pointer);

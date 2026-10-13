@@ -202,31 +202,6 @@ def verify():
     require({"start", "card", "flip", "is_matched", "hide_mismatch"} <= wasm_exports,
             "Memory Wasm is missing a controller export")
 
-    # Both documents must opt in; games and ordinary pages must not participate.
-    transition_pages = {
-        path for path in actual if path.suffix == ".html"
-        and 'href="/assets/page-transition.css"' in (PREVIEW / path).read_text()
-    }
-    require(transition_pages == {Path("index.html"), Path("cabane/index.html")},
-            f"Unexpected transition participants: {transition_pages}")
-
-    # The transition is a pure-CSS contract: exactly two participants, a warm
-    # doorway veil between the two pages, no element-level animation, a motion
-    # budget, and a reduced-motion opt-out. No script or router is involved.
-    transition_css = (PREVIEW / "assets/page-transition.css").read_text()
-    require("view-transition-name" not in transition_css,
-            "The transition must not animate individual page elements")
-    require("::view-transition-group(root)" in transition_css
-            and "background: #f8f4eb" in transition_css,
-            "The root transition must carry the warm doorway veil")
-    require("@media (prefers-reduced-motion: reduce)" in transition_css
-            and "navigation: none" in transition_css
-            and "animation: none !important" in transition_css,
-            "Missing reduced-motion opt-out")
-    durations = [int(value) for value in re.findall(r"(\d+)ms", transition_css)]
-    require(durations and all(value <= 600 for value in durations),
-            f"Transition durations exceed the motion budget: {durations}")
-
     for path in public_assets:
         require((PREVIEW / path).read_bytes() == (ROOT / "public" / path).read_bytes(), f"Changed public asset: {path}")
     css = (PREVIEW / "assets/main.css").read_text()
