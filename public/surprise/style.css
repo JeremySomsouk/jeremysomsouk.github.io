@@ -24,6 +24,7 @@ h1 { margin: 0; font-family: Georgia, serif; font-size: clamp(31px, 8.5vw, 43px)
 .secret, .no-script { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #fff8f5, #f1d6e1); }
 .secret p, .no-script p { margin: 9px 8px 0; font-size: 12px; color: #755163; }
 h2 { margin: 3px 0; font-family: Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(42px, 12vw, 62px); letter-spacing: -.045em; color: #944464; }
+.secret .name-ideas, .no-script .name-ideas { max-width: 260px; margin: 14px 16px 0; font-size: 12px; line-height: 1.6; }
 canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
 .scratch-label { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 11px; pointer-events: none; color: #55515c; transition: opacity .25s; }
 .scratch-label strong { font-family: Georgia, serif; font-size: clamp(18px, 5vw, 24px); font-weight: 400; }
