@@ -64,6 +64,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;
     }
     for asset in [
+        "surprise/index.html",
+        "surprise/memes/cheers.jpg",
+        "surprise/memes/pikachu.jpg",
+        "surprise/memes/success-kid.jpg",
+        "surprise/memes/this-is-fine.jpg",
+        "surprise/scratch.mjs",
+        "surprise/style.css",
         "assets/page-transition.css",
         "assets/project-explorer.js",
         "guessr/game.js",

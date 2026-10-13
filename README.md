@@ -80,6 +80,14 @@ landmarks. Discovery loads the engine; solving reveals an optional entrance.
 No backend or client router is required. The Wasm build is generated into
 `target/ripple/` and registered explicitly in the publication manifest.
 
+The unlisted `/surprise/` page is a mobile-first family announcement with a
+scratch card, confetti and meme reactions. Its source lives in
+`public/surprise/`; it has no homepage link and stays out of the sitemap.
+Meme images are sourced from Imgflip: [Surprised Pikachu](https://imgflip.com/memetemplate/160693769/Surprised-Pikachu),
+[Success Kid](https://imgflip.com/memetemplate/61544/Success-Kid),
+[This Is Fine](https://imgflip.com/memetemplate/55311130/This-Is-Fine), and
+[Leonardo DiCaprio Cheers](https://imgflip.com/memetemplate/5496396/Leonardo-Dicaprio-Cheers).
+
 ## Build and preview
 
 The checked-in `rust-toolchain.toml` selects Rust 1.96.0.

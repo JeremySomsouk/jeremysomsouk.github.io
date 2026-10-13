@@ -255,13 +255,17 @@ def verify():
     locations = [node.text for node in sitemap.findall(ns + "url/" + ns + "loc")]
     expected_locations = set()
     for path in actual:
-        if path.suffix != ".html" or path in {Path("404.html"), Path("guess/index.html")}:
+        if path.suffix != ".html" or path in {Path("404.html"), Path("guess/index.html"), Path("surprise/index.html")}:
             continue
         url = path.as_posix()
         if path.name == "index.html":
             url = url.removesuffix("index.html")
         expected_locations.add("https://www.somsouk.fr/" + url)
     require(len(locations) == len(set(locations)) and set(locations) == expected_locations, "Wrong sitemap routes or duplicate aliases")
+    surprise = Document()
+    surprise.feed((PREVIEW / "surprise/index.html").read_text())
+    require(surprise.metadata.get("robots") == "noindex, nofollow", "Surprise must stay unindexed")
+    require("/surprise/" not in (PREVIEW / "index.html").read_text(), "Surprise must stay unlisted")
     require((PREVIEW / "robots.txt").read_text() == "User-agent: *\nAllow: /\n\nSitemap: https://www.somsouk.fr/sitemap.xml\n", "Wrong robots policy")
 
     home = Document()
