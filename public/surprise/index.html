@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf7f0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Un petit secret de famille à découvrir du bout des doigts.">
+  <title>Une petite surprise · Famille Cussigh-Somsouk</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./scratch.mjs"></script>
+</head>
+<body>
+  <main class="shell">
+    <p class="eyebrow">La famille Cussigh-Somsouk</p>
+    <div class="family" aria-hidden="true"><span>01</span><span>02</span><span class="third">03<sup>?</sup></span></div>
+    <header>
+      <p class="overline">Deux enfants, et bientôt…</p>
+      <h1>Un petit secret.<br>Un grand bonheur.</h1>
+      <p class="intro">Une nouvelle aventure commence.<br>Et on avait envie de la partager avec vous.</p>
+    </header>
+    <section class="ticket" aria-label="Carte surprise à gratter">
+      <div class="ticket-top"><span>Un bonheur de plus</span><span>N° 003</span></div>
+      <div class="scratch-area" id="scratch-area">
+        <div class="secret" id="secret" hidden aria-hidden="true" tabindex="-1">
+          <div class="flower" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+          <p>Notre troisième enfant est</p>
+          <h2>une fille !</h2>
+          <p class="name-ideas">À vos claviers pour des idées de prénoms, et pas Sakura !</p>
+        </div>
+        <canvas id="coating" aria-hidden="true" hidden></canvas>
+        <div class="scratch-label" id="scratch-label" hidden aria-hidden="true"><span class="sparkle">✧</span><strong>Le bonheur est juste ici</strong></div>
+        <noscript><div class="no-script"><p>Notre troisième enfant est</p><h2>une fille !</h2><p class="name-ideas">À vos claviers pour des idées de prénoms, et pas Sakura !</p></div></noscript>
+      </div>
+    </section>
+    <button id="reveal" type="button" hidden>Révéler la surprise</button>
+    <aside class="meme-wall" id="memes" aria-label="Nos réactions en memes" hidden>
+      <figure class="meme">
+        <img src="./memes/pikachu.jpg" alt="Pikachu surpris" width="1354" height="784" decoding="async">
+        <figcaption>Notre réaction.</figcaption>
+      </figure>
+      <figure class="meme">
+        <img src="./memes/success-kid.jpg" alt="Success Kid, le poing de la victoire" width="500" height="500" decoding="async">
+        <figcaption>Bonheur débloqué.</figcaption>
+      </figure>
+      <figure class="meme">
+        <img src="./memes/this-is-fine.jpg" alt="This is fine, le chien prend son café au milieu des flammes" width="580" height="282" decoding="async">
+        <figcaption>Nous, très calmes.</figcaption>
+      </figure>
+      <figure class="meme">
+        <img src="./memes/cheers.jpg" alt="Leonardo DiCaprio lève son verre pour célébrer" width="600" height="400" decoding="async">
+        <figcaption>À notre nouvelle aventure !</figcaption>
+      </figure>
+    </aside>
+    <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+</body>
+</html>

@@ -36,7 +36,15 @@ artifact to `target/site-preview/`. The generator:
 - enforces route ownership, path safety and artifact completeness, verified
   independently by `scripts/verify-site-preview.py`.
 
-Ordinary pages contain no JavaScript or Wasm. The Cabane games keep their
+The unlisted `/surprise/` page is a mobile-first family announcement with a
+scratch card, confetti and meme reactions. Its source lives in
+`public/surprise/`; it has no homepage link and stays out of the sitemap.
+Meme images are sourced from Imgflip: [Surprised Pikachu](https://imgflip.com/memetemplate/160693769/Surprised-Pikachu),
+[Success Kid](https://imgflip.com/memetemplate/61544/Success-Kid),
+[This Is Fine](https://imgflip.com/memetemplate/55311130/This-Is-Fine), and
+[Leonardo DiCaprio Cheers](https://imgflip.com/memetemplate/5496396/Leonardo-Dicaprio-Cheers).
+
+Ordinary pages contain no JavaScript or Wasm. The surprise page and Cabane games keep their
 self-contained controllers; the generator must not rewrite, rename or import
 their internals (see `crates/site/tests/output.rs` and the artifact verifier
 for the enforced boundary). A gentle CSS cross-document transition between the
