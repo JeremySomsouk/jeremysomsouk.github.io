@@ -42,11 +42,11 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "bientot-title",
             title: "Bientôt",
             tagline: "Bientôt, à nous.",
-            description: "A collaborative checklist for expectant and new parents. Prepare practical steps, organize everyday tasks, and get ready for your child together. Baby registries and product links will complement the preparation.",
+            description: "A collaborative checklist for expectant and new parents in France. Share practical preparations and responsibilities with your partner, and explore tasks and short readings along a personalized monthly journey.",
             tags: &["Family preparation", "Android & web", "Rust & TypeScript"],
             tags_label: "Bientôt purpose and technologies",
             note: Some(
-                "In development and privately tested. The public website introduces the project; the application is not yet publicly available.",
+                "In development and currently tested privately on Android. The presentation site is live; public Android and web access are still to come.",
             ),
             destination: Link {
                 label: "Discover Bientôt →",
@@ -64,10 +64,12 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "tessera-title",
             title: "Tessera",
             tagline: "Your terminals. Your specs. Your agents.",
-            description: "A native terminal workspace built in Rust for Claude Code and Codex. Arrange shells in resizable panes, group agent sessions around work items, and use Work to see what needs your attention. Choose each stage from Define to Deliver, prepare specifications, save revisions, and launch an agent with the scope you chose. Work items and linked history stay saved locally when terminals close or the app restarts.",
+            description: "A native terminal workspace built in Rust for Claude Code and Codex. Arrange shells in resizable panes and group agent sessions around work items. The improved Work panel offers searchable cards, attention and activity counts, clearer next actions, and focused details. Open attached terminals and create or reuse specifications directly from a work item. Choose each stage from Define to Deliver; work items and linked history stay saved locally across restarts.",
             tags: &["Rust", "macOS & Linux", "Claude Code & Codex"],
             tags_label: "Tessera technologies and integrations",
-            note: Some("Version 0.6.0 · Intel and ARM64 · One-command installation."),
+            note: Some(
+                "Version 0.9.0 · Alpha for macOS and Linux · Intel and ARM64 · One-command installation.",
+            ),
             destination: Link {
                 label: "Explore on GitHub →",
                 url: "https://github.com/JeremySomsouk/tessera",
