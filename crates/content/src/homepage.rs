@@ -64,7 +64,7 @@ pub const HOMEPAGE: Homepage = Homepage {
             heading_id: "tessera-title",
             title: "Tessera",
             tagline: "Your terminals. Your specs. Your agents.",
-            description: "A native terminal workspace built in Rust for Claude Code and Codex. Find your work quickly with searchable cards in the redesigned Work panel. See attention and activity counts, clear next actions, and focused details for each work item. Arrange shells in resizable panes and keep related agent sessions together. Open attached terminals and create or reuse specifications directly from a work item. Choose each stage from Define to Deliver; work items and linked history stay saved locally across restarts.",
+            description: "A native terminal workspace for Claude Code and Codex, with split panes and searchable work cards to keep your projects organized.",
             tags: &["Rust", "macOS & Linux", "Claude Code & Codex"],
             tags_label: "Tessera technologies and integrations",
             note: Some(
