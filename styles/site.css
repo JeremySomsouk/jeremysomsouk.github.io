@@ -36,18 +36,15 @@
 
 /* Site-only rules: Cabane keeps its existing independent stylesheet. */
 .site-shell {
-  --site-ink: #0b0826;
-  --site-violet: #9864fa;
-  --site-lilac: #d0a9fa;
-  --site-text: #f3efff;
-  --site-muted: #c9c2df;
-  --site-rule: rgba(152, 100, 250, .32);
+  --site-ink: #141418;
+  --site-violet: #c4a3ff;
+  --site-lilac: #e0ceff;
+  --site-text: #f5f4f7;
+  --site-muted: #c9c8d0;
+  --site-rule: rgba(196, 163, 255, .24);
   min-height: 100dvh;
   color: var(--site-text);
-  background:
-    radial-gradient(circle at 12% 0%, rgba(86, 36, 242, .16), transparent 34rem),
-    radial-gradient(circle at 88% 18%, rgba(152, 100, 250, .10), transparent 28rem),
-    var(--site-ink);
+  background: var(--site-ink);
   font-family: "Inter Variable", Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.5;
@@ -68,11 +65,11 @@ body.site-page { margin: 0; }
 .site-navigation { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; }
 .site-navigation a { display: inline-flex; align-items: center; min-height: 44px; }
 .site-section { margin-block: 1rem 3rem; }
-.site-section > h2 { font-size: 1.875rem; font-weight: 300; color: var(--site-lilac); text-align: center; padding-bottom: .75rem; border-bottom: 2px dashed var(--site-rule); margin: 0 0 2rem; scroll-margin-top: 1rem; }
+.site-section > h2 { font-size: 1.875rem; font-weight: 500; color: var(--site-text); text-align: left; padding-bottom: .75rem; border-bottom: 1px solid var(--site-rule); margin: 0 0 2rem; scroll-margin-top: 1rem; }
 .site-section-content { min-width: 0; }
 .resume-entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 2rem; margin-block: 2rem; }
 .resume-details { text-align: right; }
-.resume-details h3 { color: var(--site-violet); font-size: 1.5rem; font-weight: 500; margin: 0 0 .5rem; }
+.resume-details h3 { color: var(--site-text); font-size: 1.5rem; font-weight: 500; margin: 0 0 .5rem; }
 .resume-details .resume-subtitle { font-weight: 600; margin-bottom: .25rem; }
 .resume-details .resume-period { font-style: italic; font-size: .875rem; }
 .resume-description { min-width: 0; overflow-wrap: anywhere; }
@@ -105,12 +102,12 @@ body.site-page { margin: 0; }
 .site-shell .profile-contact { flex-basis: 100%; text-align: right; margin: 0; }
 .site-shell .profile-contact a { min-height: 0; }
 .site-shell .about-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 2rem; }
-.site-shell .profile-image { display: block; width: min(100%, 12.5rem); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; justify-self: center; box-shadow: 0 0 0 2px rgba(152, 100, 250, .65), 0 0 28px rgba(86, 36, 242, .28); }
+.site-shell .profile-image { display: block; width: min(100%, 12.5rem); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; justify-self: center; box-shadow: 0 0 0 2px rgba(196, 163, 255, .65); }
 .site-shell .prose { min-width: 0; overflow-wrap: anywhere; }
-.site-shell mark { color: var(--site-ink); background: linear-gradient(135deg, var(--site-lilac), var(--site-violet)); border-radius: .15625rem; padding: .05em .3em; }
+.site-shell mark { color: var(--site-ink); background: var(--site-lilac); border-radius: .15625rem; padding: .05em .3em; }
 .site-shell .projects-jump { display: inline-block; margin-top: .625rem; font-weight: 600; }
 .site-shell .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin: 1.25rem 0 2.5rem; scroll-margin-top: 1.25rem; }
-.site-shell .project-card { --project-accent: #e3abd3; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #53405f; border-top: 4px solid var(--project-accent); border-radius: 1rem; background: #19132b; text-align: left; }
+.site-shell .project-card { --project-accent: #e3abd3; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #41414e; border-top: 4px solid var(--project-accent); border-radius: .5rem; background: #1e1e25; text-align: left; }
 .site-shell [data-project="tessera"] { --project-accent: #91d0bd; }
 .site-shell [data-project="tessera"] .project-preview { object-fit: cover; object-position: left center; background: #12171e; }
 .site-shell [data-project="prctrl"] { --project-accent: #95bc91; }
@@ -124,7 +121,7 @@ body.site-page { margin: 0; }
 .site-shell .project-body h3 { margin: 0 0 .75rem; font-size: 1.5rem; font-weight: 700; color: var(--project-accent); }
 .site-shell .project-tagline { font-weight: 600; }
 .site-shell .project-tags { display: flex; flex-wrap: wrap; gap: .375rem; padding: 0; margin: .625rem 0 1rem; list-style: none; }
-.site-shell .project-tags li { padding: .1875rem .5rem; border: 1px solid #53405f; border-radius: .375rem; font-size: .8125rem; }
+.site-shell .project-tags li { padding: .1875rem .5rem; border: 1px solid #41414e; border-radius: .375rem; font-size: .8125rem; }
 .site-shell .project-note { font-size: .8125rem; }
 .site-shell a.project-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: auto; padding: .625rem .875rem; border-radius: .5rem; background: var(--project-accent); color: #19132b; font-weight: 600; }
 .site-shell a.project-link:hover { text-decoration: underline; }
@@ -251,7 +248,7 @@ body.site-page { margin: 0; }
   .project-explorer.is-enhanced { grid-template-columns: 1fr; gap: .5rem; }
   .project-tree { display: flex; flex-wrap: wrap; gap: .5rem; padding: .25rem; min-width: 0; }
   .project-tree::before, .project-tree-root, .project-tree button::before { display: none; }
-  .project-tree button { flex: 1 1 auto; width: auto; gap: .5rem; padding: .65rem .75rem; margin: 0; min-height: 44px; border-color: #53405f; background: #19132b; border-radius: 999px; }
+  .project-tree button { flex: 1 1 auto; width: auto; gap: .5rem; padding: .65rem .75rem; margin: 0; min-height: 44px; border-color: #53405f; background: #1e1e25; border-radius: 999px; }
   .site-shell .project-explorer.is-enhanced .project-grid { display: flex; max-height: none; overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
   .site-shell .project-explorer.is-enhanced .project-card { flex: 0 0 88%; min-width: 0; scroll-snap-align: start; }
 }

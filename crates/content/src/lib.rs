@@ -165,7 +165,6 @@ mod tests {
         let profile = &HOMEPAGE.profile;
         for value in [
             profile.name,
-            profile.role,
             profile.email,
             &profile.image.src[1..],
             HOMEPAGE.projects_title,

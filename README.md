@@ -103,6 +103,16 @@ python3 -m http.server 8766 --directory target/site-preview
 Open `http://localhost:8766/`. The generator refuses an existing preview
 directory; remove it before rebuilding, including after a failed write.
 
+On macOS, if linking reports `unknown architecture arm64e.x1` in the macOS
+27 SDK, the selected SDK is newer than the installed linker supports. Select
+an installed compatible SDK for the build shell, then rerun the commands above:
+
+```sh
+export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
+```
+
+This is a local toolchain workaround; no repository-wide SDK override is needed.
+
 The Memory engine builds independently:
 
 ```sh
