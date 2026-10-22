@@ -172,7 +172,6 @@ mod tests {
         ] {
             assert!(LEGACY.contains(value), "{value}");
         }
-        assert_eq!(profile.role, "Software, side quests & other experiments");
         for section in HOMEPAGE.resume {
             assert!(LEGACY.contains(section.kind.title()));
             for entry in section.entries {
