@@ -165,7 +165,6 @@ mod tests {
         let profile = &HOMEPAGE.profile;
         for value in [
             profile.name,
-            profile.role,
             profile.email,
             &profile.image.src[1..],
             HOMEPAGE.projects_title,
@@ -173,6 +172,7 @@ mod tests {
         ] {
             assert!(LEGACY.contains(value), "{value}");
         }
+        assert_eq!(profile.role, "Software, side quests & other experiments");
         for section in HOMEPAGE.resume {
             assert!(LEGACY.contains(section.kind.title()));
             for entry in section.entries {

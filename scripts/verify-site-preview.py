@@ -300,7 +300,7 @@ def verify():
     require(all(fragment in home.ids for fragment in home.fragments), "Broken homepage anchor")
     require('href="https://www.somsouk.fr/"' in home_html, "Missing HTTPS canonical")
 
-    for name, value in {"description": "Software engineer at Doctolib building healthcare software, and developing side projects on the web.", "og:title": "Software engineer",
+    for name, value in {"description": "Software engineer at Doctolib building healthcare software, and developing side projects on the web.", "og:title": "Software, side quests & other experiments",
                         "og:url": "https://www.somsouk.fr/", "twitter:card": "summary"}.items():
         require(home.metadata.get(name) == value, f"Wrong homepage metadata: {name}")
     structured = re.findall(r'<script type="application/ld\+json">(.*?)</script>', home_html, re.S)

@@ -7,7 +7,7 @@ use crate::{
 pub const HOMEPAGE: Homepage = Homepage {
     profile: Profile {
         name: "Jeremy Somsouk",
-        role: "Software engineer",
+        role: "Software, side quests & other experiments",
         email: "jeremy@somsouk.fr",
         image: Image {
             src: "/images/profile.webp",
