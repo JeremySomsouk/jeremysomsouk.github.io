@@ -186,7 +186,9 @@ A **`Publish scheduled blog`** workflow runs every day at 00:00 UTC. It finds
 open pull requests whose blog article front matter is dated today or earlier
 with `draft = false`, waits for green checks, marks the pull request ready for
 review if it is still a draft, squash-merges it, and dispatches `Deploy Pages`
-(a merge made with the workflow token does not fire the push event). It can be
+(a merge made with the workflow token does not fire the push event). The deployment
+runs even when no PR is merged: the daily rebuild publishes articles already on
+`master` once their UTC publication date arrives, and catches up after missed runs. It can be
 rehearsed by hand: `DRY_RUN=1 PUBLISH_DATE=YYYY-MM-DD
 bash scripts/publish-scheduled-blog.sh`.
 

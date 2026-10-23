@@ -7,7 +7,8 @@
 # confirms the article's checks passed, marks the pull request ready for review
 # when it is still a draft, and squash-merges it. Merging with the workflow
 # token does not trigger the push-based Deploy Pages workflow, so it dispatches
-# that workflow once at the end.
+# that workflow once at the end, even when no PR was merged. This daily rebuild
+# publishes future-dated articles already on master and catches up after missed runs.
 #
 # Run by .github/workflows/publish-scheduled-blog.yml every day at 00:00 UTC.
 # DRY_RUN=1 reports what would merge without changing anything; PUBLISH_DATE
@@ -124,15 +125,10 @@ while IFS= read -r number; do
   fi
 done < <(gh pr list --state open --limit 100 --json number --jq '.[].number')
 
-if [ "$merged" -eq 0 ]; then
-  echo "Nothing to publish."
-  exit 0
-fi
-
 echo "Merged $merged pull request(s)."
 if [ "$dry_run" = "1" ]; then
   exit 0
 fi
 
-echo "Dispatching Deploy Pages (the token merge suppressed the push event)."
+echo "Dispatching Deploy Pages to refresh the UTC publication cutoff, including already merged articles."
 gh workflow run deploy-pages.yml --ref master
