@@ -29,6 +29,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         Indexing::Index,
     )?;
     manifest.insert_page(
+        Route::new("/qui-a-dit/")?,
+        site::render_political()?,
+        Indexing::NoIndex,
+    )?;
+    manifest.insert_page(
         Route::new("/guessr/")?,
         site::render_guess()?,
         Indexing::Index,
@@ -73,6 +78,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         "surprise/style.css",
         "assets/page-transition.css",
         "assets/project-explorer.js",
+        "qui-a-dit/app.js",
+        "qui-a-dit/engine.js",
+        "qui-a-dit/edition.json",
+        "qui-a-dit/style.css",
         "guessr/game.js",
         "guessr/banner.js",
         "guessr/banner.webp",
