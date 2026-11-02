@@ -156,7 +156,7 @@ mod tests {
                 .0
                 .contains("href=\"#personal-projects\"")
         );
-        assert_eq!(HOMEPAGE.resume[0].entries.len(), 4);
+        assert_eq!(HOMEPAGE.resume[0].entries.len(), 3);
         assert_eq!(HOMEPAGE.resume[1].entries.len(), 1);
     }
 

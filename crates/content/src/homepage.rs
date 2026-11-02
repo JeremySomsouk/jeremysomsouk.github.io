@@ -167,16 +167,6 @@ pub const HOMEPAGE: Homepage = Homepage {
                     description: Markdown(include_str!("../../../content/home/blablacar.md")),
                 },
                 ResumeEntry {
-                    heading_id: "streamroot-lumen",
-                    title: "Streamroot Lumen",
-                    subtitle: "Software engineer",
-                    period: "2022",
-                    url: Some("https://streamroot.io"),
-                    description: Markdown(include_str!(
-                        "../../../content/home/streamroot-lumen.md"
-                    )),
-                },
-                ResumeEntry {
                     heading_id: "happn",
                     title: "Happn",
                     subtitle: "Software engineer",

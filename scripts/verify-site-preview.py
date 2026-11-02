@@ -299,7 +299,7 @@ def verify():
     require(home_html.count('class="profile-icon-label"') == 2, "Missing accessible icon labels")
     require(home_html.count("<h1>") == 1, "Homepage requires one primary heading")
     require({"about-me", "things-i-m-building", "personal-projects", "melimo-title", "cabane-title",
-             "experience", "doctolib", "blablacar", "streamroot-lumen", "happn", "education", "epita",
+             "experience", "doctolib", "blablacar", "happn", "education", "epita",
              "a-little-more-about-me"} <= home.ids, "Missing legacy homepage anchor")
     require(all(fragment in home.ids for fragment in home.fragments), "Broken homepage anchor")
     require('href="https://www.somsouk.fr/"' in home_html, "Missing HTTPS canonical")
