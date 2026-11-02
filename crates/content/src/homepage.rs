@@ -188,6 +188,4 @@ pub const HOMEPAGE: Homepage = Homepage {
             }],
         },
     ],
-    hobbies_title: "A Little More About Me",
-    hobbies: Markdown(include_str!("../../../content/home/hobbies.md")),
 };

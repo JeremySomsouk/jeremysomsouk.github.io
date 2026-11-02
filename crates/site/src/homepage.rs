@@ -41,9 +41,6 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                     }).collect_view()}
                 </Section>
             }).collect_view()}
-            <Section id="a-little-more-about-me" title=home.hobbies_title.to_owned()>
-                <Prose content=home.hobbies.0.to_owned()/>
-            </Section>
             <script type="module" src="/assets/project-explorer.js"></script>
             <script type="module" src="/ripple/home.js"></script>
         </WebsiteLayout>
@@ -119,12 +116,12 @@ mod tests {
             HOMEPAGE.profile.name,
             HOMEPAGE.profile.email,
             "<mark>great dad</mark>",
-            "Gaming",
-            "Photography",
-            "Chess",
+            "gaming, photography, and chess",
         ] {
             assert!(html.contains(text), "Missing {text}");
         }
+        assert!(html.contains(r#"id="a-little-more-about-me""#));
+        assert!(!html.contains("Outside of Work</h2>"));
         for project in HOMEPAGE.projects {
             assert!(html.contains(project.title));
             assert!(html.contains(project.description));

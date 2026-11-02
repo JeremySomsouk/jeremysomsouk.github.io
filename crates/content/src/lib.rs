@@ -119,8 +119,6 @@ pub struct Homepage {
     pub projects_id: &'static str,
     pub projects: &'static [ProjectMetadata],
     pub resume: &'static [ResumeSection],
-    pub hobbies_title: &'static str,
-    pub hobbies: Markdown,
 }
 
 #[cfg(test)]
@@ -134,14 +132,10 @@ mod tests {
 
     #[test]
     fn prose_is_preserved_from_legacy_yaml() {
-        let prose = [HOMEPAGE.profile.about, HOMEPAGE.hobbies]
-            .into_iter()
-            .chain(
-                HOMEPAGE
-                    .resume
-                    .iter()
-                    .flat_map(|section| section.entries.iter().map(|entry| entry.description)),
-            );
+        let prose = HOMEPAGE
+            .resume
+            .iter()
+            .flat_map(|section| section.entries.iter().map(|entry| entry.description));
         for markdown in prose {
             assert!(!markdown.0.trim().is_empty());
             // YAML block indentation is the only removed formatting.
@@ -149,6 +143,7 @@ mod tests {
                 assert!(LEGACY.lines().any(|old| old.trim_start() == line), "{line}");
             }
         }
+        assert!(!HOMEPAGE.profile.about.0.trim().is_empty());
         assert!(
             HOMEPAGE
                 .profile
@@ -168,7 +163,6 @@ mod tests {
             profile.email,
             &profile.image.src[1..],
             HOMEPAGE.projects_title,
-            HOMEPAGE.hobbies_title,
         ] {
             assert!(LEGACY.contains(value), "{value}");
         }
