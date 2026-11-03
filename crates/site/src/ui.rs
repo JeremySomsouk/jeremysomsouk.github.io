@@ -64,11 +64,13 @@ pub fn ResumeEntry(
     period: String,
     #[prop(optional)] id: Option<&'static str>,
     #[prop(optional_no_strip)] url: Option<&'static str>,
+    #[prop(optional_no_strip)] logo: Option<site_content::Image>,
     children: Children,
 ) -> impl IntoView {
     view! {
-        <article class="resume-entry">
+        <article class="resume-entry" data-employer=id aria-labelledby=id>
             <header class="resume-details">
+                {logo.map(|image| view! { <div class="employer-logo"><img src=image.src alt="" width=image.width height=image.height loading="lazy" decoding="async"/></div> })}
                 <h3 id=id>{title}</h3><p class="resume-subtitle">{subtitle}</p>
                 <p class="resume-period">{period}</p>
                 {url.map(|href| view! { <a href=href target="_blank" rel="noopener noreferrer">{href.trim_start_matches("https://")}</a> })}

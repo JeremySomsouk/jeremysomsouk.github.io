@@ -240,7 +240,11 @@ def verify():
     for path in public_assets:
         if path.suffix == ".svg":
             svg = ET.fromstring((PREVIEW / path).read_text())
-            require(svg.attrib.get("viewBox") == ("0 0 64 64" if str(path) == "guessr/icon.svg" else "0 0 24 24"), "Unexpected icon dimensions")
+            expected_viewbox = {
+                "guessr/icon.svg": "0 0 64 64",
+                "images/employers/happn.svg": "0 0 144.568 100",
+            }.get(path.as_posix(), "0 0 24 24")
+            require(svg.attrib.get("viewBox") == expected_viewbox, "Unexpected icon dimensions")
             require(all(element.tag.rsplit("}", 1)[-1] in ({"svg", "path", "rect", "circle"} if str(path) == "guessr/icon.svg" else {"svg", "path"}) for element in svg.iter()), "Unexpected SVG element")
             require(all(not key.startswith("on") and "href" not in key for element in svg.iter() for key in element.attrib), "Active SVG content")
 

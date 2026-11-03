@@ -64,6 +64,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         manifest.add_static_asset(&root.join("docs"), OutputPath::new(asset)?)?;
     }
     for asset in [
+        "images/employers/doctolib.png",
+        "images/employers/blablacar.webp",
+        "images/employers/happn.svg",
         "surprise/index.html",
         "surprise/memes/cheers.jpg",
         "surprise/memes/pikachu.jpg",

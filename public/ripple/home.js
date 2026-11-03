@@ -14,7 +14,7 @@ function position() {
   const box = root.getBoundingClientRect();
   const about = root.querySelector('#about-me').closest('section').getBoundingClientRect();
   const title = root.querySelector('#things-i-m-building').getBoundingClientRect();
-  const cards = root.querySelector('.project-grid').getBoundingClientRect();
+  const cards = root.querySelector('.project-explorer').getBoundingClientRect();
   const w = box.width;
   const points = [[w/2,about.bottom-box.top+8], [w-8,title.bottom-box.top+6], [w-8,cards.bottom-box.top+8],
     [8,title.bottom-box.top+6], [8,cards.bottom-box.top+8], [w/2,cards.bottom-box.top+24]];

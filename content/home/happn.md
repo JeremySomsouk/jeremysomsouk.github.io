@@ -1,4 +1,5 @@
-Developing within a team of 13 back-end developers for the maintenance of the happn API and the creation of new Java microservices.
-- Leading the specifications and design of new features
-- Improvements and maintenance of Java back-end microservices
-- Creation of a microservice of data storage for CRM purposes
+I was part of a 13-person back-end team maintaining the happn API and building Java microservices.
+
+- Led specifications and design for new features.
+- Maintained and improved Java back-end services.
+- Built a data storage microservice for CRM.

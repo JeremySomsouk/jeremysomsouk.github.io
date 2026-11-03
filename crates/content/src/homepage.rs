@@ -151,6 +151,12 @@ pub const HOMEPAGE: Homepage = Homepage {
             kind: ResumeKind::Experience,
             entries: &[
                 ResumeEntry {
+                    logo: Some(Image {
+                        src: "/images/employers/doctolib.png",
+                        alt: "",
+                        width: 120,
+                        height: 120,
+                    }),
                     heading_id: "doctolib",
                     title: "Doctolib",
                     subtitle: "Software engineer",
@@ -159,6 +165,12 @@ pub const HOMEPAGE: Homepage = Homepage {
                     description: Markdown(include_str!("../../../content/home/doctolib.md")),
                 },
                 ResumeEntry {
+                    logo: Some(Image {
+                        src: "/images/employers/blablacar.webp",
+                        alt: "",
+                        width: 1005,
+                        height: 200,
+                    }),
                     heading_id: "blablacar",
                     title: "BlaBlaCar",
                     subtitle: "Software engineer",
@@ -167,6 +179,12 @@ pub const HOMEPAGE: Homepage = Homepage {
                     description: Markdown(include_str!("../../../content/home/blablacar.md")),
                 },
                 ResumeEntry {
+                    logo: Some(Image {
+                        src: "/images/employers/happn.svg",
+                        alt: "",
+                        width: 145,
+                        height: 100,
+                    }),
                     heading_id: "happn",
                     title: "Happn",
                     subtitle: "Software engineer",
@@ -179,6 +197,7 @@ pub const HOMEPAGE: Homepage = Homepage {
         ResumeSection {
             kind: ResumeKind::Education,
             entries: &[ResumeEntry {
+                logo: None,
                 heading_id: "epita",
                 title: "EPITA",
                 subtitle: "Systems, Networks and Security Engineer diploma",

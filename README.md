@@ -50,6 +50,12 @@ and licenses live in `public/`. The site's own GPL-3.0 notice is
 Cabane game runtime (copied byte-identical into the artifact), registered
 images, `CNAME` and the license.
 
+The homepage project map progressively enhances the static project list. Hover,
+keyboard focus, or a tap reveals one preview; Escape clears it. Without JavaScript
+and in print, all projects remain readable. The full projects index is always linked.
+Employer logos are served locally from `public/images/employers/`; their official
+sources are recorded in `public/licenses/THIRD-PARTY.txt`.
+
 ## Bientôt
 
 Bientôt appears first on the homepage and projects index, with its generated

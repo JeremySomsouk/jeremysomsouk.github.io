@@ -1,6 +1,6 @@
-Development within several teams of back-end developers for the development of the BlaBlaCar bus, carpooling inventory technical platform, and user experience. 
-- Migration of route search for different partners
-- Added discount display for bus trip details
-- Integrated the Zendesk application using our internal APIs
-- Migration and improvement of legacy PHP code bases to Java
-- Designed and implemented user experiences for drivers and user profiles
+I worked across back-end teams on bus travel, carpooling inventory, and the experience for drivers and passengers.
+
+- Migrated partner route search and added discount information to bus trip details.
+- Integrated Zendesk with internal APIs.
+- Migrated and improved services from legacy PHP to Java.
+- Designed and built features for drivers and user profiles.
