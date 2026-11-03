@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "id": "demo-01",
+  "title": "Édition de démonstration",
+  "demo": true,
+  "speakers": [
+    {
+      "id": "a",
+      "name": "Camille Martin",
+      "description": "Personnage fictif · démonstration"
+    },
+    {
+      "id": "b",
+      "name": "Alex Robin",
+      "description": "Personnage fictif · démonstration"
+    },
+    {
+      "id": "c",
+      "name": "Sam Dubois",
+      "description": "Personnage fictif · démonstration"
+    },
+    {
+      "id": "d",
+      "name": "Lou Moreau",
+      "description": "Personnage fictif · démonstration"
+    }
+  ],
+  "rounds": [
+    {
+      "id": "r1",
+      "topic": "Éducation",
+      "statements": [
+        {
+          "id": "q0-0",
+          "text": "Chaque école devrait proposer une heure quotidienne de lecture.",
+          "speakerId": "a",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q0-1",
+          "text": "Les classes doivent accueillir moins de vingt élèves.",
+          "speakerId": "b",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q0-2",
+          "text": "La formation continue des enseignants doit être renforcée.",
+          "speakerId": "c",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q0-3",
+          "text": "Les activités artistiques doivent retrouver une place centrale.",
+          "speakerId": "d",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "topic": "Transports",
+      "statements": [
+        {
+          "id": "q1-0",
+          "text": "Les transports publics devraient être gratuits le week-end.",
+          "speakerId": "b",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q1-1",
+          "text": "Il faut développer les trains de nuit entre les régions.",
+          "speakerId": "c",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q1-2",
+          "text": "Chaque commune devrait disposer de pistes cyclables continues.",
+          "speakerId": "d",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q1-3",
+          "text": "Le covoiturage rural doit bénéficier de nouvelles aides.",
+          "speakerId": "a",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "topic": "Logement",
+      "statements": [
+        {
+          "id": "q2-0",
+          "text": "Les logements vacants doivent être remis en location.",
+          "speakerId": "c",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q2-1",
+          "text": "La rénovation énergétique doit devenir plus accessible.",
+          "speakerId": "d",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q2-2",
+          "text": "Il faut construire davantage près des transports publics.",
+          "speakerId": "a",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        },
+        {
+          "id": "q2-3",
+          "text": "Les jeunes doivent être accompagnés pour leur premier logement.",
+          "speakerId": "b",
+          "source": {
+            "title": "Texte fictif pour tester le jeu",
+            "context": "Cette déclaration a été inventée et ne représente aucune personnalité politique.",
+            "date": null,
+            "url": null
+          }
+        }
+      ]
+    }
+  ]
+}

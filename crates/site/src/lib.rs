@@ -27,3 +27,6 @@ pub use guess::{render_guess, render_guess_redirect};
 
 mod nuance;
 pub use nuance::render_nuance;
+
+mod political;
+pub use political::render_political;
