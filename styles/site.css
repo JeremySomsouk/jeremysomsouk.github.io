@@ -258,7 +258,7 @@ body.site-page { margin: 0; }
 .site-shell .project-explorer.is-enhanced .project-card[hidden], .project-map-hint[hidden] { display: none; }
 .site-shell .project-explorer .project-preview { aspect-ratio: 2 / 1; }
 .site-shell [data-project="guessr"] .project-preview, .site-shell [data-project="ripple"] .project-preview, .site-shell [data-project="nuance"] .project-preview { object-fit: cover; }
-.site-shell .project-explorer.is-enhanced .project-preview { max-height: 10rem; object-fit: cover; border-radius: .3rem; }
+.site-shell .project-explorer.is-enhanced .project-preview { height: 10rem; object-fit: contain; border-radius: .3rem; }
 .site-shell .project-explorer.is-enhanced .project-body { padding: 1rem 0 0; }
 .site-shell .project-explorer .project-body h3 { font-size: 1.25rem; }
 .site-shell .project-explorer.is-enhanced .project-tags, .site-shell .project-explorer.is-enhanced .project-note { display: none; }
