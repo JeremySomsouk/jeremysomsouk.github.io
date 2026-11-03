@@ -10,3 +10,7 @@ past and present employers. Retrieved from official sites on 2026-11-03:
 - Doctolib: https://info.doctolib.fr/ (embedded navbar logo, unchanged PNG)
 - BlaBlaCar: https://newsroom.blablacar.com/wp-content/uploads/2026/02/cropped-blablacar-logo.webp
 - happn: https://www.happn.com/ (embedded "Logo happn" SVG, decoded without changes)
+
+EPITA school logo: trademark of EPITA, used to identify the school attended.
+Retrieved unchanged on 2026-11-04 from the official website:
+https://www.epita.fr/wp-content/uploads/2026/10/logo-epita-sans-baseline-bleu.webp

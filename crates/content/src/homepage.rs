@@ -197,7 +197,12 @@ pub const HOMEPAGE: Homepage = Homepage {
         ResumeSection {
             kind: ResumeKind::Education,
             entries: &[ResumeEntry {
-                logo: None,
+                logo: Some(Image {
+                    src: "/images/employers/epita.webp",
+                    alt: "",
+                    width: 300,
+                    height: 203,
+                }),
                 heading_id: "epita",
                 title: "EPITA",
                 subtitle: "Systems, Networks and Security Engineer diploma",
