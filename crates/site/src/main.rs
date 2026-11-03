@@ -67,6 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "images/employers/doctolib.png",
         "images/employers/blablacar.webp",
         "images/employers/happn.svg",
+        "images/employers/epita.webp",
         "surprise/index.html",
         "surprise/memes/cheers.jpg",
         "surprise/memes/pikachu.jpg",
