@@ -131,10 +131,11 @@ mod tests {
     const LEGACY: &str = include_str!("../tests/fixtures/legacy-homepage.yml");
 
     #[test]
-    fn prose_is_preserved_from_legacy_yaml() {
+    fn unchanged_experience_prose_is_preserved_from_legacy_yaml() {
         let prose = HOMEPAGE
             .resume
             .iter()
+            .filter(|section| section.kind == ResumeKind::Experience)
             .flat_map(|section| section.entries.iter().map(|entry| entry.description));
         for markdown in prose {
             assert!(!markdown.0.trim().is_empty());

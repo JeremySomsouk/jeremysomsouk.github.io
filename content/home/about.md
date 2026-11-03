@@ -1,9 +1,9 @@
-Hi, I'm Jeremy, a software engineer at Doctolib, previously at BlaBlaCar and happn. I like taking an idea from the first sketch to <mark>something people can use</mark>.
+Hi, I'm Jeremy. I'm a software engineer at Doctolib, and before that I worked at BlaBlaCar and happn.
 
-I work with <mark>Java</mark> and build personal projects in <mark>Rust</mark>: Bientôt for parents preparing together, Tessera for working with coding agents, and La cabane à découvertes for kids learning through play.
+I write <mark>Java</mark> at work and mostly <mark>Rust</mark> for my own projects. I like seeing an idea turn into <mark>something people can use</mark>. Sometimes that's a tool, sometimes it's a game the kids get to try.
 
-I also make a pretty good <mark>phở</mark> and keep learning how to be a <mark>great dad</mark>. The kids are more interested in testing my games than reviewing my code.
+I make a pretty good <mark>phở</mark>, play video games and chess, and take photos. I'm also learning how to be a <mark>great dad</mark>.
 
-<p id="a-little-more-about-me">Outside of work, I enjoy gaming, photography, and chess. I also help out on school trips when I can. On a recent visit to the Musée de l'Air et de l'Espace, the kids were more interested in a fire extinguisher than the planes. I write about days like that, and the things I'm building, <a href="/blog/">on the blog</a>.</p>
+<p id="a-little-more-about-me">I help out on school trips when I can. Last time we went to the Musée de l'Air et de l'Espace, a fire extinguisher got more attention than the planes. Some of those moments end up <a href="/blog/">on the blog</a>, along with whatever I'm building.</p>
 
 <a class="projects-jump" href="#personal-projects">Discover my projects ↓</a>

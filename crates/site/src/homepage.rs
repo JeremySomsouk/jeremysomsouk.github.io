@@ -116,7 +116,7 @@ mod tests {
             HOMEPAGE.profile.name,
             HOMEPAGE.profile.email,
             "<mark>great dad</mark>",
-            "gaming, photography, and chess",
+            "play video games and chess, and take photos",
         ] {
             assert!(html.contains(text), "Missing {text}");
         }
