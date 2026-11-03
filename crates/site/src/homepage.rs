@@ -35,7 +35,7 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
                     {section.entries.iter().map(|entry| view! {
                         <ResumeEntry id=entry.heading_id title=entry.title.to_owned()
                             subtitle=entry.subtitle.to_owned() period=entry.period.to_owned()
-                            url=entry.url>
+                            url=entry.url logo=entry.logo>
                             <Prose content=entry.description.0.to_owned()/>
                         </ResumeEntry>
                     }).collect_view()}
@@ -59,36 +59,22 @@ pub fn render_homepage() -> Result<String, serde_json::Error> {
 fn ProjectExplorer() -> impl IntoView {
     let home = &HOMEPAGE;
     view! {
-                <div class="project-explorer" data-project-explorer="">
-                    <nav class="project-tree" aria-label="Project topics" hidden=true>
-                        <span class="project-tree-root" aria-hidden="true">"Explore"</span>
-                        {[
-                            ("all", "All projects"),
-                            ("games", "Games & play"),
-                            ("tools", "Developer tools"),
-                            ("family", "Family & everyday life"),
-                            ("experiments", "Experiments"),
-                            ("reflection", "Space to think"),
-                        ].into_iter().map(|(topic, label)| view! {
-                            <button type="button" data-topic=topic data-topic-label=label aria-pressed=if topic == "all" { "true" } else { "false" } aria-controls=home.projects_id>
-                                <span class="topic-dot" aria-hidden="true"></span>{label}
-                                <span class="topic-count" aria-hidden="true"></span>
-                            </button>
-                        }).collect_view()}
-                    </nav>
-                    <div class="project-explorer-content">
-                        <div class="project-explorer-heading">
-                            <p data-project-status="" role="status" aria-live="polite">"Explore my projects"</p>
-                            <a href="/projects/">"All projects →"</a>
-                        </div>
-                        <div class="project-grid" id=home.projects_id tabindex="0" aria-label="Projects">
-                            {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() invitation=project.slug == "cabane"/> }.into_any()).collect_view()}
-                            <GuessrProjectCard/>
-                            <RippleProjectCard/>
-                            <NuanceProjectCard/>
-                        </div>
-                    </div>
+        <div class="project-explorer" id=home.projects_id data-project-explorer="">
+            <div class="project-explorer-heading">
+                <p data-project-status="" role="status" aria-live="polite">"Explore my projects"</p>
+                <a href="/projects/">"All projects →"</a>
+            </div>
+            <div class="project-map" hidden=true aria-label="Project map"></div>
+            <div class="project-map-preview">
+                <p class="project-map-hint" hidden=true>"Pick a project. See where it leads."</p>
+                <div class="project-grid" id="project-map-details" tabindex="0" aria-label="Projects">
+                    {home.projects.iter().map(|project| view! { <ProjectCard project=project.clone() show_details=true/> }.into_any()).collect_view()}
+                    <GuessrProjectCard/>
+                    <RippleProjectCard/>
+                    <NuanceProjectCard/>
                 </div>
+            </div>
+        </div>
     }.into_any()
 }
 
@@ -116,7 +102,7 @@ mod tests {
             HOMEPAGE.profile.name,
             HOMEPAGE.profile.email,
             "<mark>great dad</mark>",
-            "gaming, photography, and chess",
+            "play video games and chess, and take photos",
         ] {
             assert!(html.contains(text), "Missing {text}");
         }
@@ -128,13 +114,15 @@ mod tests {
             assert!(html.contains(project.destination.url));
             assert!(html.contains(project.image.src));
         }
-        assert!(!html.contains("Cabane features and technologies"));
         assert!(html.contains(r#"class="cabane-entrance""#));
         for section in HOMEPAGE.resume {
             for entry in section.entries {
                 assert!(html.contains(entry.title));
                 assert!(html.contains(entry.period));
                 assert!(html.contains(&format!("id=\"{}\"", entry.heading_id)));
+                if let Some(logo) = &entry.logo {
+                    assert!(html.contains(logo.src));
+                }
             }
         }
         for forbidden in [".wasm", "modulepreload", "noindex", "href=\"#\""] {

@@ -6,10 +6,10 @@ records in their original order. Projects are typed fields rather than copied
 HTML cards. No new copy or hosted Mélimo app is added.
 
 A frozen snapshot of the removed legacy Jekyll configuration is kept at
-`crates/content/tests/fixtures/legacy-homepage.yml`; the Rust preservation
-tests compare the unchanged resume prose against that fixture, so the parity
-evidence survives the Jekyll removal. The about section has since been rewritten
-and now includes hobbies. Its former section anchor is retained for old links.
+`crates/content/tests/fixtures/legacy-homepage.yml` as a historical reference.
+The introduction, experience, and EPITA copy have since been rewritten;
+tests check current content completeness and rendering rather than exact legacy wording.
+The former about section anchor is retained for old links.
 
 Edit prose here and metadata in the Rust records. No front matter or parser is
 needed for these compile-time homepage records. Article loading is a separate
